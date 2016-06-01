@@ -1,6 +1,11 @@
 ---
 - hosts: all
   become: yes
+
+  # install jdk7
+  roles:
+    - bas-ansible-roles-collection.oracle-jdk7
+
   tasks:
     # create apis group
     - group: name=apis state=present
@@ -16,6 +21,3 @@
 
     - name: create apis/logs directory
       file: path=apis/logs state=directory group=apis owner=osu_apis
-
-
-

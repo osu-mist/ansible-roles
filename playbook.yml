@@ -2,17 +2,19 @@
 - hosts: all
   become: yes
 
-  # install jdk7
+  # Use Ansible Galaxy role to install Oricle JDK 7
+  # To install role: ansible-galaxy install bas-ansible-roles-collection.oracle-jdk7
   roles:
     - bas-ansible-roles-collection.oracle-jdk7
 
   tasks:
-    # create apis group
+    # Create apis group
     - group: name=apis state=present
 
-    # create osu_apis user
+    # Create osu_apis user
     - user: name=osu_apis comment="OSU APIs" group=apis
 
+    # Create directories
     - name: create apis directory
       file: path=apis state=directory group=apis owner=osu_apis
 

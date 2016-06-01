@@ -1,0 +1,21 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+    # create apis group
+    - group: name=apis state=present
+
+    # create osu_apis user
+    - user: name=osu_apis comment="OSU APIs" group=apis
+
+    - name: create apis directory
+      file: path=apis state=directory group=apis owner=osu_apis
+
+    - name: create apis/keytool_files directory
+      file: path=apis/keytool_files state=directory group=apis owner=osu_apis mode=0555
+
+    - name: create apis/logs directory
+      file: path=apis/logs state=directory group=apis owner=osu_apis
+
+
+

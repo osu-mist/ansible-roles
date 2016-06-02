@@ -1,0 +1,2 @@
+---
+ansible_tmp_dir: .ansible/tmp

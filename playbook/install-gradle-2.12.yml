@@ -1,0 +1,5 @@
+---
+  - hosts: all
+    become: yes
+    roles:
+    - { role: install-gradle-2.12 } 

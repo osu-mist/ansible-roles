@@ -1,0 +1,10 @@
+---
+  - name: install git
+    yum: name=git-all
+    become: yes
+    
+  - name: clone api
+    git: repo=https://github.com/osu-mist/web-api-skeleton.git
+         dest=/home/vagrant/apis/web-api-skeleton
+         accept_hostkey=yes
+    become: yes

@@ -8,7 +8,7 @@
     become: yes
 
   - name: create apis directory
-    file: path=/apis state=directory group=apis owner=osu_apis
+    file: path=/apis state=directory group=apis owner=osu_apis mode=0770 recurse=yes
     become: yes
 
   - name: create apis/keytool_files directory
@@ -16,5 +16,5 @@
     become: yes
 
   - name: create apis/logs directory
-    file: path=/apis/logs state=directory group=apis owner=osu_apis
+    file: path=/apis/logs state=directory group=apis owner=osu_apis mode=0770 recurse=yes
     become: yes

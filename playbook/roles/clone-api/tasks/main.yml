@@ -5,6 +5,6 @@
 
   - name: clone api
     git: repo={{ api_repo_url }}
-         dest=/home/vagrant/apis/{{ api_dir }}
+         dest=/apis/{{ api_dir }}
          accept_hostkey=yes
     become: yes

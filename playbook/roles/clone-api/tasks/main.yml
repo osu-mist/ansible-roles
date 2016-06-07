@@ -7,6 +7,7 @@
     git: repo={{ api_repo_url }}
          dest=/apis/{{ api_dir }}
          accept_hostkey=yes
+         version={{ api_version }}
     become: yes
 
   - name: setup the dir mode and owner

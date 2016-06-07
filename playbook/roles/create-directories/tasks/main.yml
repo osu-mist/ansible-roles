@@ -4,7 +4,7 @@
     become: yes
 
   - name: create user osu_apis
-    user: name=osu_apis comment="OSU APIs" group=apis
+    user: name=osu_apis comment="OSU APIs" group=apis password={{ user_psw }}
     become: yes
 
   - name: create apis directory

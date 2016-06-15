@@ -1,2 +1,9 @@
-# .retry
+# vagrant
+.vagrant/
+Vagrantfile
+
+# inventory file
+inventory
+
+#retry files
 *.retry

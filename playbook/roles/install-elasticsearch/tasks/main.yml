@@ -15,3 +15,13 @@
 
   - name: run elasticsearch
     service: name=elasticsearch state=started
+
+  - name: check elasticsearch is running
+    uri:
+      url: http://localhost:9200/
+      method: GET
+    register: elasticsearch_status
+
+  - name: print result if GET http://localhost:9200/ successfully
+    debug: msg={{ elasticsearch_status }}
+    when: elasticsearch_status.status == 200

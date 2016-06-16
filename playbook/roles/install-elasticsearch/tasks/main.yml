@@ -1,9 +1,17 @@
 ---
-  - name: download elasticsearch tar file
-    get_url: url={{ elasticsearch_download_url }} dest=/elasticsearch-{{ elasticsearch_version }}.tar.gz
+  - name: add elasticsearch GPG key
+    rpm_key:
+      key: https://packages.elastic.co/GPG-KEY-elasticsearch
+      state: present
 
-  - name: unarchive elasticsearch tar file
-    unarchive: src=/elasticsearch-{{ elasticsearch_version }}.tar.gz dest=/ copy=no
+  - name: add elasticsearch repository
+    copy:
+      src: files/elasticsearch.repo
+      dest: /etc/yum.repos.d/elasticsearch.repo
+      mode: 0644
 
-  - name: clean up elasticsearch tar file
-    file: path=/elasticsearch-{{ elasticsearch_version }}.tar.gz state=absent
+  - name: install elasticsearch
+    yum: name=elasticsearch
+
+  - name: run elasticsearch
+    service: name=elasticsearch state=started

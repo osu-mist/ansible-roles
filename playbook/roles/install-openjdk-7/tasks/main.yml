@@ -6,4 +6,4 @@
     lineinfile: dest=/home/{{ ansible_ssh_user }}/.bashrc line="export JAVA_HOME="{{ java_home }}""
 
   - name: source .bashrc file
-    shell: source /home/{{ ansible_ssh_user }}/.bashrc
+    shell: . /home/{{ ansible_ssh_user }}/.bashrc

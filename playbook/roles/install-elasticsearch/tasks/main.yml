@@ -13,6 +13,9 @@
   - name: install elasticsearch
     yum: name=elasticsearch
 
+  - name: configure elasticsearch to automatically start during bootup
+    shell: chkconfig --add elasticsearch
+
   - name: run elasticsearch
     service: name=elasticsearch state=started
 

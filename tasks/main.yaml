@@ -1,9 +1,11 @@
 ---
 - name: install npm
   yum: name=npm state=installed
+  sudo: true
 
 - name: install git
   yum: name=git state=installed
+  sudo: true
 
 - name: update hubot repo
   git: dest=/home/vagrant/hubot repo={{hubot_repo}} update=yes

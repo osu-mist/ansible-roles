@@ -1,0 +1,14 @@
+---
+- name: install npm
+  yum: name=npm state=installed
+
+- name: install git
+  yum: name=git state=installed
+
+- name: get hubot configuration
+  git: dest=/home/vagrant/hubot repo={{hubot_repo}} update=yes
+
+- name: install hubot
+  shell: npm install
+  args:
+    chdir: /home/vagrant/hubot

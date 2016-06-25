@@ -5,8 +5,11 @@
 - name: install git
   yum: name=git state=installed
 
-- name: get hubot configuration
+- name: update hubot repo
   git: dest=/home/vagrant/hubot repo={{hubot_repo}} update=yes
+
+- name: install hubot configuration
+  template: src=config.sh.j2 dest=/home/vagrant/hubot/config.sh
 
 - name: install hubot
   shell: npm install

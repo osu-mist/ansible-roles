@@ -1,0 +1,12 @@
+[supervisord]
+http_port=127.0.0.1:9001
+
+[supervisorctl]
+
+[program:hubot]
+command=/home/hubot/hubot/bin/hubot --adapter {{ hubot_adapter }}
+autostart=true
+autorestart=true
+log_stdout=true
+log_stderr=true
+logfile=/var/log/hubot/hubot.log

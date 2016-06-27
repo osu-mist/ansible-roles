@@ -1,5 +1,6 @@
 ---
 hubot_repo: /vagrant/hubot.git
+hubot_adapter: irc
 hubot_irc_server: '{{ vault_hubot_irc_server }}'
 hubot_irc_rooms: '{{ vault_hubot_irc_rooms }}'
 hubot_irc_nick: '{{ vault_hubot_irc_nick }}'

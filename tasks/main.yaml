@@ -7,13 +7,23 @@
   yum: name=git state=installed
   sudo: true
 
+- name: create hubot user
+  user: name=hubot comment="beep boop i am a robot" state=present
+  sudo: true
+
 - name: update hubot repo
-  git: dest=/home/vagrant/hubot repo={{hubot_repo}} update=yes
+  git: dest=/home/hubot/hubot repo={{hubot_repo}} update=yes
+  sudo: true
+  sudo_user: hubot
 
 - name: install hubot configuration
-  template: src=config.sh.j2 dest=/home/vagrant/hubot/config.sh
+  template: src=config.sh.j2 dest=/home/hubot/hubot/config.sh
+  sudo: true
+  sudo_user: hubot
 
-- name: install hubot
+- name: install hubot packages
   shell: npm install
   args:
-    chdir: /home/vagrant/hubot
+    chdir: /home/hubot/hubot
+  sudo: true
+  sudo_user: hubot

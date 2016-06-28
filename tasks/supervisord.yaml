@@ -44,6 +44,6 @@
     mode: 0700
   sudo: true
 
-- name: ensure supervisord is running
-  service: name=supervisord state=started
+- name: ensure supervisord is running and enabled
+  service: name=supervisord state=started enabled=yes
   sudo: true

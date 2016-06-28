@@ -8,6 +8,10 @@
   yum: name=python-pip state=installed
   sudo: true
 
+- name: install python-meld3
+  yum: name=python-meld3 state=installed
+  sudo: true
+
 - name: install supervisord (pip)
   pip: name=supervisor state=present version=3.3
   sudo: true
@@ -31,6 +35,13 @@
     name: /etc/supervisord.conf.d
     state: directory
     mode: 0755
+  sudo: true
+
+- name: create /var/log/supervisor
+  file:
+    name: /var/log/supervisor
+    state: directory
+    mode: 0700
   sudo: true
 
 - name: ensure supervisord is running

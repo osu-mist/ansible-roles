@@ -1,4 +1,5 @@
 This is a role for ansible which installs hubot.
+It also installs supervisord to monitor hubot.
 
 Requires ansible 1.6 or above.
 

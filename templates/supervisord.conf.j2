@@ -1,12 +1,15 @@
+# /etc/supervisord.conf
+# configuration for supervisord
+
 [supervisord]
-http_port=127.0.0.1:9001
+logfile=/var/log/supervisor/supervisord.log
+pidfile=/var/run/supervisord.pid
+
+[unix_http_server]
+file=/var/tmp/supervisor.sock
 
 [supervisorctl]
+serverurl=unix:///var/tmp/supervisor.sock
 
-[program:hubot]
-command=/home/hubot/hubot/bin/hubot --adapter {{ hubot_adapter }}
-autostart=true
-autorestart=true
-log_stdout=true
-log_stderr=true
-logfile=/var/log/hubot/hubot.log
+[include]
+files=/etc/supervisord.conf.d/*.conf

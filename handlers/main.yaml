@@ -1,8 +1,8 @@
 ---
 - name: restart supervisord
-  shell: 'true'
+  service: name=supervisord state=restarted
+  sudo: true
 
 - name: restart hubot 
-  supervisorctl: name=hubot state=restarted config=/home/hubot/supervisord.conf
+  supervisorctl: name=hubot state=restarted
   sudo: true
-  sudo_user: hubot

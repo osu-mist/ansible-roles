@@ -1,4 +1,7 @@
 ---
+
+- include: supervisord.yaml
+
 - name: install npm
   yum: name=npm state=installed
   sudo: true
@@ -7,27 +10,35 @@
   yum: name=git state=installed
   sudo: true
 
-- name: install supervisord
-  yum: name=supervisor state=installed
-  sudo: true
-
 - name: create hubot user
-  user: name=hubot comment="beep boop i am a robot" state=present
+  user:
+    name: hubot
+    comment: "beep boop i am a robot"
+    state: present
   sudo: true
 
 - name: ensure /var/log/hubot exists
-  file: path=/var/log/hubot state=directory mode=0755 owner=hubot
+  file:
+    path: /var/log/hubot
+    state: directory
+    mode: 0755
+    owner: hubot
   sudo: true
 
 - name: update hubot repo
-  git: dest=/home/hubot/hubot repo={{hubot_repo}} update=yes
+  git:
+    dest: /home/hubot/hubot
+    repo: '{{hubot_repo}}'
+    update: yes
   sudo: true
   sudo_user: hubot
   notify:
     - restart hubot
 
 - name: install hubot configuration
-  template: src=config.sh.j2 dest=/home/hubot/hubot/config.sh
+  template:
+    src: config.sh.j2
+    dest: /home/hubot/hubot/config.sh
   sudo: true
   sudo_user: hubot
   notify:
@@ -43,14 +54,14 @@
     - restart hubot
 
 - name: install hubot service
-  template: src=supervisord.conf.j2 dest=/home/hubot/supervisord.conf
+  template:
+    src: hubot.conf.j2
+    dest: /etc/supervisord.conf.d/hubot.conf
   sudo: true
-  sudo_user: hubot
   notify:
     - restart supervisord
     - restart hubot    
 
 - name: ensure hubot is running
-  supervisorctl: name=hubot state=started config=/home/hubot/supervisord.conf
+  supervisorctl: name=hubot state=started
   sudo: true
-  sudo_user: hubot

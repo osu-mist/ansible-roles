@@ -1,0 +1,38 @@
+---
+
+- name: uninstall supervisord (yum)
+  yum: name=supervisor state=absent
+  sudo: true
+
+- name: install pip
+  yum: name=python-pip state=installed
+  sudo: true
+
+- name: install supervisord (pip)
+  pip: name=supervisor state=present version=3.3
+  sudo: true
+
+- name: install supervisord init script
+  copy:
+    src: supervisord
+    dest: /etc/rc.d/init.d/supervisord
+    mode: 0755
+  sudo: true
+
+- name: install supervisord config
+  template:
+    src: supervisord.conf.j2
+    dest: /etc/supervisord.conf
+  sudo: true
+  notify: restart supervisord
+
+- name: create supervisord service dir
+  file:
+    name: /etc/supervisord.conf.d
+    state: directory
+    mode: 0755
+  sudo: true
+
+- name: ensure supervisord is running
+  service: name=supervisord state=started
+  sudo: true

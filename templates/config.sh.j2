@@ -1,7 +1,6 @@
 # ~hubot/hubot/config.sh
 # environment variables for hubot
 
-export HUBOT_IRC_SERVER={{hubot_irc_server}}
-export HUBOT_IRC_ROOMS={{hubot_irc_rooms}}
-export HUBOT_IRC_NICK={{hubot_irc_nick}}
-export HUBOT_IRC_UNFLOOD=true
+{% for name, value in hubot_env|dictsort %}
+export {{ name | quote }}={{ value | quote }}
+{% endfor %}

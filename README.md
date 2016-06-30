@@ -14,3 +14,14 @@ For example:
     - hosts: all
       roles:
         - ansible-hubot
+
+Vars
+----
+
+`hubot_repo` The URL of the hubot git repo. By default, ansible-hubot looks for it at /vagrant/hubot.git.
+
+`hubot_adapter` The adapter to use. Defaults to irc, but you can use any [hubot adapter][]
+
+`hubot_env` A dict of extra environment variables to set when running hubot. This is typically where you would put login credentials or other sensitive settings that can't be committed directly to the hubot repo.
+
+[hubot adapter]: https://www.npmjs.com/search?q=hubot+adapter

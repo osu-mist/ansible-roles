@@ -60,8 +60,20 @@
   sudo: true
   notify:
     - restart supervisord
-    - restart hubot    
+    - restart hubot
+
+# force supervisord to load the hubot config
+# in case this was a fresh install
+# XXX remove
+- name: restart supervisord
+  service: name=supervisord state=restarted
+  sudo: true
 
 - name: ensure hubot is running
   supervisorctl: name=hubot state=started
   sudo: true
+  register: hubot_running
+
+  # could be "hubot: started"
+  # or       "hubot: ERROR (already started)"
+  failed_when: '("started" not in hubot_running.msg)'

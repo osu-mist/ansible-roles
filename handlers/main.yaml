@@ -1,8 +1,8 @@
 ---
 - name: restart supervisord
   service: name=supervisord state=restarted
-  sudo: true
+  become: true
 
 - name: restart hubot 
   supervisorctl: name=hubot state=restarted
-  sudo: true
+  become: true

@@ -4,18 +4,18 @@
 
 - name: install npm
   yum: name=npm state=installed
-  sudo: true
+  become: true
 
 - name: install git
   yum: name=git state=installed
-  sudo: true
+  become: true
 
 - name: create hubot user
   user:
     name: hubot
     comment: "beep boop i am a robot"
     state: present
-  sudo: true
+  become: true
 
 - name: ensure /var/log/hubot exists
   file:
@@ -23,15 +23,15 @@
     state: directory
     mode: 0755
     owner: hubot
-  sudo: true
+  become: true
 
 - name: update hubot repo
   git:
     dest: /home/hubot/hubot
     repo: '{{hubot_repo}}'
     update: yes
-  sudo: true
-  sudo_user: hubot
+  become: true
+  become_user: hubot
   notify:
     - restart hubot
 
@@ -39,8 +39,8 @@
   template:
     src: local.env.j2
     dest: /home/hubot/hubot/local.env
-  sudo: true
-  sudo_user: hubot
+  become: true
+  become_user: hubot
   notify:
     - restart hubot
 
@@ -48,8 +48,8 @@
   shell: npm install
   args:
     chdir: /home/hubot/hubot
-  sudo: true
-  sudo_user: hubot
+  become: true
+  become_user: hubot
   notify:
     - restart hubot
 
@@ -57,23 +57,20 @@
   template:
     src: hubot.conf.j2
     dest: /etc/supervisord.conf.d/hubot.conf
-  sudo: true
+  become: true
   notify:
     - restart supervisord
     - restart hubot
+  register: install_hubot_service
 
-# force supervisord to load the hubot config
-# in case this was a fresh install
-# XXX remove
-- name: restart supervisord
+# if this is a fresh install
+# force supervisord to load the hubot config right now
+# instead of waiting for the trigger to run
+- name: restart supervisord if need be
   service: name=supervisord state=restarted
-  sudo: true
+  when: 'install_hubot_service|changed'
+  become: true
 
 - name: ensure hubot is running
   supervisorctl: name=hubot state=started
-  sudo: true
-  register: hubot_running
-
-  # could be "hubot: started"
-  # or       "hubot: ERROR (already started)"
-  failed_when: '("started" not in hubot_running.msg)'
+  become: true

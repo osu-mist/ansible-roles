@@ -37,8 +37,8 @@
 
 - name: install hubot configuration
   template:
-    src: config.sh.j2
-    dest: /home/hubot/hubot/config.sh
+    src: local.env.j2
+    dest: /home/hubot/hubot/local.env
   sudo: true
   sudo_user: hubot
   notify:

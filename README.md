@@ -25,7 +25,8 @@ For example:
 Vars
 ----
 
-`hubot_repo` The URL of the hubot git repo. By default, ansible-hubot looks for it at /vagrant/hubot.git.
+`hubot_repo` The URL of the hubot git repo.
+By default, ansible-hubot looks for it at https://github.com/osu-mist/hubot.git
 
 `hubot_adapter` The adapter to use. Defaults to irc, but you can use any [hubot adapter][].
 

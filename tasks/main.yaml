@@ -29,7 +29,17 @@
   git:
     dest: /home/hubot/hubot
     repo: '{{hubot_repo}}'
+    version: master
     update: yes
+  become: true
+  become_user: hubot
+  notify:
+    - restart hubot
+
+- name: install hubot packages
+  npm:
+    path: /home/hubot/hubot
+    state: latest
   become: true
   become_user: hubot
   notify:
@@ -39,15 +49,6 @@
   template:
     src: local.env.j2
     dest: /home/hubot/hubot/local.env
-  become: true
-  become_user: hubot
-  notify:
-    - restart hubot
-
-- name: install hubot packages
-  shell: npm install
-  args:
-    chdir: /home/hubot/hubot
   become: true
   become_user: hubot
   notify:
@@ -68,7 +69,7 @@
 # instead of waiting for the trigger to run
 - name: restart supervisord if need be
   service: name=supervisord state=restarted
-  when: 'install_hubot_service|changed'
+  when: install_hubot_service|changed
   become: true
 
 - name: ensure hubot is running

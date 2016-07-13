@@ -1,0 +1,18 @@
+# /etc/supervisord.conf
+# configuration for supervisord
+
+[supervisord]
+logfile=/var/log/supervisor/supervisord.log
+pidfile=/var/run/supervisord.pid
+
+[unix_http_server]
+file=/var/tmp/supervisor.sock
+
+[rpcinterface:supervisor]
+supervisor.rpcinterface_factory = supervisor.rpcinterface:make_main_rpcinterface
+
+[supervisorctl]
+serverurl=unix:///var/tmp/supervisor.sock
+
+[include]
+files=/etc/supervisord.conf.d/*.conf

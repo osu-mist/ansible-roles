@@ -1,0 +1,4 @@
+---
+- hosts: servers
+  roles:
+    - {name: openjdk-7, become: yes}

@@ -1,0 +1,4 @@
+---
+  - name: install OpenJDK 7
+    yum:
+      name: java-1.7.0-openjdk-devel

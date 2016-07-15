@@ -6,7 +6,7 @@
 
   - name: add elasticsearch repository
     copy:
-      src: files/elasticsearch/elasticsearch.repo
+      src: elasticsearch.repo
       dest: /etc/yum.repos.d/elasticsearch.repo
       mode: 0644
 

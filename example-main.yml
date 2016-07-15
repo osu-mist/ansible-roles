@@ -1,4 +1,4 @@
 ---
 - hosts: servers
   roles:
-    - {name: supervisord, become: yes}
+    - {name: elasticsearch, become: yes}

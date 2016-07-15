@@ -1,5 +1,4 @@
 # Ansible Roles
----------------
 Collect Ansible roles for automatical deployment.
 
 ### Requirements
@@ -35,12 +34,12 @@ Collect Ansible roles for automatical deployment.
 -------------------
 * [Dropwizard API](role/dropwizard-api)
 
-	Description: Create user and group for the API, then deploy the API repo to certain directories.
+	* Description: Create user and group for the API, then deploy the API repo to certain directories.
 
 * [Elasticsearch](role/elasticsearch)
 
-	Description: Install [Elasticsearch](https://www.elastic.co/downloads/elasticsearch) and ensure the service is running.
+	* Description: Install [Elasticsearch](https://www.elastic.co/downloads/elasticsearch) and ensure the service is running.
 
 * [HUBOT](role/hubot)
 
-	Description: Install [HUBOT](https://hubot.github.com/) and ensure the service is running.
+	* Description: Install [HUBOT](https://hubot.github.com/) and ensure the service is running.

@@ -8,3 +8,8 @@ api_version: HEAD
 
 # put the hashed password here, see more detail: http://docs.ansible.com/ansible/faq.html#how-do-i-generate-crypted-passwords-for-the-user-module
 user_psw: changeme
+
+# ==== Hubot ====
+hubot_repo: https://github.com/osu-mist/hubot.git
+hubot_adapter: irc
+hubot_env: {}

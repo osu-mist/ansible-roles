@@ -17,13 +17,13 @@
 
 - name: install supervisord init script
   copy:
-    src: files/supervisord/supervisord
+    src: supervisord
     dest: /etc/rc.d/init.d/supervisord
     mode: 0755
 
 - name: install supervisord config
   template:
-    src: templates/supervisord/supervisord.conf.j2
+    src: supervisord.conf.j2
     dest: /etc/supervisord.conf
   notify: restart supervisord
 

@@ -1,0 +1,6 @@
+---
+  hubot_repo: https://github.com/osu-mist/hubot.git
+  hubot_adapter: irc
+  hubot_env:
+    HUBOT_IRC_SERVER: irc.mibbit.com
+    HUBOT_IRC_ROOMS: "#hunot-test"

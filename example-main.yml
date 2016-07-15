@@ -1,4 +1,4 @@
 ---
 - hosts: servers
   roles:
-    - {name: hutbot, become: yes}
+    - {name: hubot, become: yes}

@@ -1,8 +1,0 @@
----
-- name: restart supervisord
-  service: name=supervisord state=restarted
-  become: true
-
-- name: restart hubot
-  supervisorctl: name=hubot state=restarted
-  become: true

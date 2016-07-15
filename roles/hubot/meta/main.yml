@@ -1,4 +1,4 @@
---- 
+---
   dependencies:
     - {role: supervisord, become: yes}
     - {role: npm, become: yes}

@@ -42,7 +42,6 @@
     template:
       src: hubot.conf.j2
       dest: /etc/supervisord.conf.d/hubot.conf
-    become: true
     notify:
       - restart supervisord
       - restart hubot

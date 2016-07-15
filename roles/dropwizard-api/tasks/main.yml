@@ -1,6 +1,6 @@
 ---
   - name: create group apis
-    group: 
+    group:
       name: apis
       state: present
 

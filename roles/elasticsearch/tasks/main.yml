@@ -14,20 +14,8 @@
     yum:
       name: elasticsearch
 
-  - name: configure elasticsearch to automatically start during bootup
-    shell: chkconfig --add elasticsearch
-
-  - name: run elasticsearch
+  - name: ensure elasticsearch is running and enabled
     service:
       name: elasticsearch
       state: started
-
-  - name: check elasticsearch is running
-    uri:
-      url: http://localhost:9200/
-      method: GET
-    register: elasticsearch_status
-
-  - name: print result if GET http://localhost:9200/ successfully
-    debug: msg={{ elasticsearch_status }}
-    when: elasticsearch_status.status == 200
+      enabled: yes

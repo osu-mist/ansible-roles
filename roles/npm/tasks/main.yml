@@ -1,0 +1,4 @@
+- name: install npm
+  yum:
+    name: npm
+    state: installed

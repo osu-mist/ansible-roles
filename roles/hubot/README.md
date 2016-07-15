@@ -1,27 +1,3 @@
-This is a role for ansible which installs hubot.
-It also installs supervisord to monitor hubot.
-
-Assumes the remote is CentOS 6.7.
-
-Requires ansible 2.1.
-
-Usage
-----
-
-Check this repo out into your roles/ directory.
-In your ansible playbook, add the `ansible-hubot` role to whichever hosts you
-want to install hubot on.
-
-For example:
-
-    - hosts: all
-      roles:
-        - ansible-hubot
-
-      vars:
-        hubot_adapter: irc
-        hubot_env: ...
-
 Vars
 ----
 

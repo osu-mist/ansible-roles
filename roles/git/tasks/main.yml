@@ -1,3 +1,4 @@
 ---
   - name: install git
-    yum: name=git-all
+    yum:
+      name: git-all

@@ -7,8 +7,8 @@ Collect Ansible roles for automatical deployment.
 
 	**Inventory File Example:**
 	```
-	[jenkins-servers]
-	jenkins-servers ansible_ssh_host=127.0.0.1 ansible_ssh_port=2222 ansible_ssh_user=vagrant ansible_ssh_private_key_file=.vagrant/machines/default/virtualbox/private_key
+	[servers]
+	servers ansible_ssh_host=127.0.0.1 ansible_ssh_port=2222 ansible_ssh_user=vagrant ansible_ssh_private_key_file=.vagrant/machines/default/virtualbox/private_key
 	```
 
 2. All roles are developed base on [CentOS 6.7](http://vault.centos.org/6.7/), ensure remoted machines have the same OS.

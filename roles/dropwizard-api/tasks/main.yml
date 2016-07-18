@@ -1,4 +1,6 @@
 ---
+  # Set up user and group
+
   - name: create group apis
     group:
       name: apis
@@ -11,53 +13,79 @@
       group: apis
       password: "{{ user_psw }}"
 
-  - name: create apis directory
+  # Create directories
+
+  - name: create apis directory structure
     file:
-      path: /apis
+      path: '{{ item }}'
       state: directory
       group: apis
       owner: osu_apis
       mode: 0770
-      recurse: yes
+    with_items:
+      - /apis
+      - /apis/apis
+      - /apis/config
+      - /apis/logs
+      - /apis/run.d
 
-  - name: create apis/apis directory
-    file:
-      path: /apis/apis
-      state: directory
-      group: apis
-      owner: osu_apis
-      mode: 0770
-      recurse: yes
-
-  - name: create apis/keytool_files directory
+  - name: create /apis/keytool_files directory
     file:
       path: /apis/keytool_files
       state: directory
       group: apis
       owner: osu_apis
       mode: 0555
-      recurse: yes
 
-  - name: create apis/logs directory
+  # Install supervisor
+
+  - name: create /apis/supervisor directory
     file:
-      path: /apis/logs
+      path: /apis/supervisor
       state: directory
       group: apis
       owner: osu_apis
-      mode: 0770
-      recurse: yes
+      mode: 0750
 
-  - name: clone api
-    git:
-      repo: "{{ api_repo_url }}"
-      dest: /apis/apis/{{ api_dir }}
-      accept_hostkey: yes
-      version: "{{ api_version }}"
-
-  - name: setup the dir mode and owner
-    file:
-      path: /apis/apis/{{ api_dir }}
+  - name: install config file for the api supervisor
+    copy:
+      src: supervisord.conf
+      dest: /apis/supervisor/supervisord.conf
       group: apis
       owner: osu_apis
-      mode: 0770
-      recurse: yes
+      mode: 0644
+
+  - name: copy api job template
+    copy:
+      src: api-service-template.conf
+      dest: /apis/run.d/template
+      group: apis
+      owner: osu_apis
+      mode: 0644
+
+  - name: copy scripts
+    copy:
+      src: '{{ item }}'
+      dest: '/apis/{{ item }}'
+      group: apis
+      owner: osu_apis
+      mode: 0754
+    with_items:
+      - jenkins-run.sh
+      - supervisord-run.sh
+
+  - name: create api_supervisor job
+    copy:
+      src: api_supervisor.conf
+      dest: /etc/supervisord.conf.d/api_supervisor.conf
+      mode: 0644
+
+  - name: reload api_supervisord job
+    supervisorctl:
+      name: api_supervisor
+      state: present
+
+  - name: ensure the api supervisor is started
+    supervisorctl:
+      name: api_supervisor
+      state: started

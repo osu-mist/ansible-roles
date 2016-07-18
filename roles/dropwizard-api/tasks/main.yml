@@ -20,6 +20,15 @@
       mode: 0770
       recurse: yes
 
+  - name: create apis/apis directory
+    file:
+      path: /apis/apis
+      state: directory
+      group: apis
+      owner: osu_apis
+      mode: 0770
+      recurse: yes
+
   - name: create apis/keytool_files directory
     file:
       path: /apis/keytool_files
@@ -41,13 +50,13 @@
   - name: clone api
     git:
       repo: "{{ api_repo_url }}"
-      dest: /apis/{{ api_dir }}
+      dest: /apis/apis/{{ api_dir }}
       accept_hostkey: yes
       version: "{{ api_version }}"
 
   - name: setup the dir mode and owner
     file:
-      path: /apis/{{ api_dir }}
+      path: /apis/apis/{{ api_dir }}
       group: apis
       owner: osu_apis
       mode: 0770

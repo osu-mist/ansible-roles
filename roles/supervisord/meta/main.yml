@@ -1,3 +1,3 @@
 ---
   dependencies:
-    - {role: pip, become: yes}
+    - { role: pip, become: yes }

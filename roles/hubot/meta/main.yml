@@ -1,5 +1,5 @@
 ---
   dependencies:
-    - {role: supervisord, become: yes}
-    - {role: npm, become: yes}
-    - {role: git, become: yes}
+    - { role: supervisord, become: yes }
+    - { role: npm, become: yes }
+    - { role: git, become: yes }

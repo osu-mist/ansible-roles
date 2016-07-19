@@ -22,8 +22,8 @@ Collect Ansible roles for automatical deployment.
 	---
 	- hosts: servers
 	  roles:
-	    - {role: dropwizard-api, become: yes}
-    	- {role: hubot, become: yes}
+	    - { role: dropwizard-api, become: yes }
+    	- { role: hubot, become: yes }
 	```
 
 2. To run the Ansbile playbook, simply execute the following command:

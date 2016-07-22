@@ -3,11 +3,13 @@
   yum:
     name: supervisor
     state: absent
+  when: ansible_distribution == 'CentOS'
 
 - name: install python-meld3
   yum:
     name: python-meld3
     state: installed
+  when: ansible_distribution == 'CentOS'
 
 - name: install supervisord (pip)
   pip:

@@ -1,5 +1,6 @@
-- name: install npm
-  yum:
-    name: npm
-    state: installed
-  when: ansible_distribution == 'CentOS'
+---
+  - name: install npm
+    yum:
+      name: npm
+      state: installed
+    when: ansible_distribution == 'CentOS'

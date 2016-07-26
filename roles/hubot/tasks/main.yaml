@@ -25,7 +25,7 @@
   - name: install hubot packages
     npm:
       path: /home/hubot/hubot
-      state: latest
+      state: present
     become_user: hubot
     notify:
       - restart hubot

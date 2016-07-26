@@ -2,3 +2,4 @@
   dependencies:
     - { role: openjdk-7, become: yes }
     - { role: git, become: yes }
+    - { role: supervisord, become: yes }

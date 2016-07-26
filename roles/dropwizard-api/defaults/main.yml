@@ -1,7 +1,3 @@
 ---
-api_dir: api-examples
-api_repo_url: https://github.com/osu-mist/{{ api_dir }}.git
-api_version: HEAD
-
 # put the hashed password here, see more detail: http://docs.ansible.com/ansible/faq.html#how-do-i-generate-crypted-passwords-for-the-user-module
 user_psw: changeme

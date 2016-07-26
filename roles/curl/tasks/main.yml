@@ -1,10 +1,10 @@
 ---
-  - name: install git
+  - name: install curl
     yum:
-      name: git-all
+      name: curl
     when: ansible_distribution == 'CentOS'
 
-  - name: install git
+  - name: install curl
     apt:
-      name: git
+      name: curl
     when: ansible_distribution == 'Debian'

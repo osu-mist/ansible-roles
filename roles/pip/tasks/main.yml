@@ -1,11 +1,13 @@
----  
+---
   - name: install pip
     yum:
       name: python-pip
       state: installed
+      update_cache: yes
     when: ansible_distribution == 'CentOS'
 
   - name: install pip
     apt:
       name: python-pip
+      update_cache: yes
     when: ansible_distribution == 'Debian'

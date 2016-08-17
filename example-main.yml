@@ -2,5 +2,3 @@
 - hosts: servers
   roles:
     - { role: dropwizard-api, become: yes }
-    - { role: elasticsearch, become: yes }
-    - { role: hubot, become: yes }

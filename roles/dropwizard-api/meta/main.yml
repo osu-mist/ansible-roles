@@ -4,3 +4,4 @@
     - { role: git, become: yes }
     - { role: supervisord, become: yes }
     - { role: mysql-client, become: yes }
+    - { role: mysql-server, become: yes }

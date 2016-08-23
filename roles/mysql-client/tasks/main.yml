@@ -4,9 +4,3 @@
       name: mysql
       state: present
     when: ansible_distribution == 'CentOS'
-
-  - name: install mysql client
-    apt:
-      name: mysql-client
-      update_cache: yes
-    when: ansible_distribution == 'Debian'

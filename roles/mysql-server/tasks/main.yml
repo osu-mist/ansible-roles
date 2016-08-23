@@ -5,12 +5,6 @@
       state: present
     when: ansible_distribution == 'CentOS'
 
-  - name: install mysql-server
-    apt:
-      name: mysql-server
-      update_cache: yes
-    when: ansible_distribution == 'Debian'
-
   - name: config to allow local connections only
     lineinfile:
       dest: /etc/my.cnf
@@ -18,14 +12,6 @@
       insertafter: '^\[mysqld\]'
       state: present
     when: ansible_distribution == 'CentOS'
-
-  - name: config to allow local connections only
-    lineinfile:
-      dest: /etc/mysql/my.cnf
-      line: 'bind-address = 127.0.0.1'
-      insertafter: '^\[mysqld\]'
-      state: present
-    when: ansible_distribution == 'Debian'
 
   - name: start mysql service
     service: name=mysqld state=started

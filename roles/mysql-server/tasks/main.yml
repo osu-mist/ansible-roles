@@ -1,0 +1,17 @@
+---
+  - name: install mysql-server
+    yum:
+      name: mysql-server
+      state: present
+    when: ansible_distribution == 'CentOS'
+
+  - name: config to allow local connections only
+    lineinfile:
+      dest: /etc/my.cnf
+      line: 'bind-address = 127.0.0.1'
+      insertafter: '^\[mysqld\]'
+      state: present
+    when: ansible_distribution == 'CentOS'
+
+  - name: start mysql service
+    service: name=mysqld state=started

@@ -1,0 +1,6 @@
+---
+  - name: install mysql client
+    yum:
+      name: mysql
+      state: present
+    when: ansible_distribution == 'CentOS'

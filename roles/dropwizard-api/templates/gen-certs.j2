@@ -1,0 +1,30 @@
+keytool \
+    -genkeypair \
+    -dname "CN=Jane Doe, OU=Enterprise Computing Services, O=Oregon State University, L=Corvallis, S=Oregon, C=US" \
+    -ext "san=dns:localhost,ip:127.0.0.1" \
+    -alias doej \
+    -keyalg RSA \
+    -keysize 2048 \
+    -sigalg SHA256withRSA \
+    -validity 365 \
+    -storepass password \
+    -keypass password \
+    -keystore doej.keystore
+
+keytool \
+    -exportcert \
+    -rfc \
+    -alias "doej" \
+    -keystore doej.keystore \
+    -storepass password \
+    -keypass password \
+    -file doej.pem
+
+keytool \
+    -importcert \
+    -alias "doej" \
+    -file doej.pem \
+    -storepass password \
+    -keypass password \
+    -noprompt \
+    -keystore doej.truststore

@@ -1,0 +1,5 @@
+---
+  - name: copy gen-certs.sh to dest
+    template:
+      src: gen-certs.j2
+      dest: /apis/gen-certs.sh

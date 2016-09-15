@@ -1,30 +1,30 @@
 keytool \
     -genkeypair \
-    -dname "CN=Jane Doe, OU=Enterprise Computing Services, O=Oregon State University, L=Corvallis, S=Oregon, C=US" \
-    -ext "san=dns:localhost,ip:127.0.0.1" \
-    -alias doej \
-    -keyalg RSA \
-    -keysize 2048 \
-    -sigalg SHA256withRSA \
-    -validity 365 \
-    -storepass password \
-    -keypass password \
-    -keystore doej.keystore
+    -dname "{{ key_dname }}" \
+    -ext "{{ key_ext }}" \
+    -alias {{ key_alias }} \
+    -keyalg {{ key_alg }} \
+    -keysize {{ key_size }} \
+    -sigalg {{ sig_alg }} \
+    -validity {{ key_validity }} \
+    -storepass {{ store_psd }} \
+    -keypass {{ key_psd }} \
+    -keystore {{ key_alias }}.keystore
 
 keytool \
     -exportcert \
     -rfc \
-    -alias "doej" \
-    -keystore doej.keystore \
-    -storepass password \
-    -keypass password \
-    -file doej.pem
+    -alias {{ key_alias }} \
+    -keystore {{ key_alias }}.keystore \
+    -storepass {{ store_psd }} \
+    -keypass {{ key_psd }} \
+    -file {{ key_alias }}.pem
 
 keytool \
     -importcert \
-    -alias "doej" \
-    -file doej.pem \
-    -storepass password \
-    -keypass password \
+    -alias {{ key_alias }} \
+    -file {{ key_alias }}.pem \
+    -storepass {{ store_psd }} \
+    -keypass {{ key_psd }} \
     -noprompt \
-    -keystore doej.truststore
+    -keystore {{ key_alias }}.truststore

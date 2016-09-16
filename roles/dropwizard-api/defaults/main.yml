@@ -3,9 +3,9 @@
 user_psw: changeme
 
 # certs vars
-key_dname: CN=Jane Doe, OU=Enterprise Computing Services, O=Oregon State University, L=Corvallis, S=Oregon, C=US
+key_dname: CN=User Name, OU=Enterprise Computing Services, O=Oregon State University, L=Corvallis, S=Oregon, C=US
 key_ext: san=dns:localhost,ip:127.0.0.1
-key_alias: doej
+key_alias: alias
 key_alg: RSA
 key_size: 2048
 sig_alg: SHA256withRSA

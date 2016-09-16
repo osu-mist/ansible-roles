@@ -3,3 +3,36 @@
     template:
       src: gen-certs.j2
       dest: /apis/gen-certs.sh
+    become_user: osu_apis
+
+  - name: stat gen-certs.sh
+    stat:
+      path: /apis/gen-certs.sh
+    register: gen_certs_stat
+
+  - name: run gen-certs.sh
+    command: sh /apis/gen-certs.sh
+    when: gen_certs_stat.stat.exists
+    register: script_result
+
+  - name: script debug
+    debug:
+      msg: "{{ script_result }}"
+
+  - name: clean up gen-certs.sh
+    file: 
+      path: /apis/gen-certs.sh
+      state: absent
+
+  - name: stat certs
+    stat:
+      path: /apis/{{ item }}
+    with_items:
+      - "{{ key_alias }}.keystore"
+      - "{{ key_alias }}.truststore"
+    register: certs_stat
+
+  - name: move certs to keytool_files
+    command: mv /apis/{{ item.item }} /apis/keytool_files/{{ item.item }} -f
+    when: "{{ item.stat.exists }}"
+    with_items: "{{ certs_stat.results }}"

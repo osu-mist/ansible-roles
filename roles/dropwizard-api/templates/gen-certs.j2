@@ -1,5 +1,5 @@
-keystore="/apis/{{ key_alias }}.keystore"
-truststore="/apis/{{ key_alias }}.truststore"
+keystore="/apis/keytool_files/{{ key_alias }}.keystore"
+truststore="/apis/keytool_files/{{ key_alias }}.truststore"
 
 GenerateKey () {
 	keytool \
@@ -13,73 +13,78 @@ GenerateKey () {
 		-validity {{ key_validity }} \
 		-storepass {{ store_psd }} \
 		-keypass {{ key_psd }} \
-		-keystore {{ key_alias }}.keystore
+		-keystore $1
 }
 
 ImportCert () {
 	keytool \
+	-exportcert \
+	-rfc \
+	-alias {{ key_alias }} \
+	-keystore $1 \
+	-storepass {{ store_psd }} \
+	-keypass {{ key_psd }} \
+	-file /apis/{{ key_alias }}.pem
+
+	keytool \
 		-importcert \
 		-alias {{ key_alias }} \
-		-file {{ key_alias }}.pem \
+		-file /apis/{{ key_alias }}.pem \
 		-storepass {{ store_psd }} \
 		-keypass {{ key_psd }} \
 		-noprompt \
-		-keystore {{ key_alias }}.truststore
+		-keystore $2
+	
+	# clean up pem file
+	rm /apis/{{ key_alias }}.pem
 }
 
+# Keystore
 if [ -f $keystore ]; then
 	echo "$keystore already exists!"
 
 	alias_exist=$(keytool -list -v -keystore $keystore -storepass {{ store_psd }} | grep {{ key_alias }})
 	if [ $? -eq 0 ]; then
-		echo "Alias: {{ key_alias }} already exists! Renewing {{ key_alias }} ..."
+		echo "Keystore: {{ key_alias }} already exists! Renewing {{ key_alias }} ..."
 		keytool \
 			-delete \
 			-alias {{ key_alias }} \
-			-keystore {{ key_alias }}.keystore \
+			-keystore $keystore \
 			-storepass {{ store_psd }}
-		GenerateKey
+		GenerateKey $keystore
 		keytool -list -v -keystore $keystore -storepass {{ store_psd }} | grep "Valid"
 	else
-		echo "{{ key_alias }} does not exist! Adding {{ key_alias }} ..." 
-		GenerateKey
+		echo "Keystore: {{ key_alias }} does not exist! Adding {{ key_alias }} ..." 
+		GenerateKey $keystore
 		keytool -list -v -keystore $keystore -storepass {{ store_psd }} | grep "Valid"
 	fi
 
 else
-	echo "$keystore does not exist! Gnerating $keystore ..."
-	GenerateKey
+	echo "Keystore: $keystore does not exist! Gnerating $keystore ..."
+	GenerateKey "/apis/{{ key_alias }}.keystore"
 fi
 
-keytool \
-	-exportcert \
-	-rfc \
-	-alias {{ key_alias }} \
-	-keystore {{ key_alias }}.keystore \
-	-storepass {{ store_psd }} \
-	-keypass {{ key_psd }} \
-	-file {{ key_alias }}.pem
-
+# Truststore
 if [ -f $truststore ]; then
 	echo "$truststore already exists!"
 
 	alias_exist=$(keytool -list -v -keystore $truststore -storepass {{ store_psd }} | grep {{ key_alias }})
 	if [ $? -eq 0 ]; then
-		echo "Alias: {{ key_alias }} already exists! Renewing {{ key_alias }} ..."
+		echo "Truststore: {{ key_alias }} already exists! Renewing {{ key_alias }} ..."
 		keytool \
 			-delete \
 			-alias {{ key_alias }} \
-			-keystore {{ key_alias }}.truststore \
+			-keystore $truststore \
 			-storepass {{ store_psd }}
-		ImportCert
+		ImportCert $keystore $truststore
 		keytool -list -v -keystore $truststore -storepass {{ store_psd }} | grep "Valid"
 	else
-		echo "{{ key_alias }} does not exist! Adding {{ key_alias }} ..." 
-		ImportCert
+		echo "Truststore: {{ key_alias }} does not exist! Adding {{ key_alias }} ..." 
+		ImportCert $keystore $truststore
 		keytool -list -v -keystore $truststore -storepass {{ store_psd }} | grep "Valid"
 	fi
 
 else
-	echo "$truststore does not exist! Gnerating $truststore ..."
-	ImportCert
+	echo "Truststore: $truststore does not exist! Gnerating $truststore ..."
+	ImportCert "/apis/{{ key_alias }}.keystore" "/apis/{{ key_alias }}.truststore"
 fi

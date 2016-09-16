@@ -39,7 +39,6 @@
 
   - name: generate / refresh certs
     include: gen-certs.yml
-    become_user: osu_apis
 
   # Install supervisor
 

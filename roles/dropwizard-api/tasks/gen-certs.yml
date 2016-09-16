@@ -14,6 +14,7 @@
     command: sh /apis/gen-certs.sh
     when: gen_certs_stat.stat.exists
     register: script_result
+    become_user: osu_apis
 
   - name: script debug
     debug:

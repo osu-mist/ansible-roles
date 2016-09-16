@@ -21,7 +21,7 @@
       msg: "{{ script_result }}"
 
   - name: clean up gen-certs.sh
-    file: 
+    file:
       path: /apis/gen-certs.sh
       state: absent
 

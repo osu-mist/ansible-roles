@@ -1,6 +1,7 @@
 ---
 # put the hashed password here, see more detail: http://docs.ansible.com/ansible/faq.html#how-do-i-generate-crypted-passwords-for-the-user-module
-user_password: changeme
+default_password: password
+user_password: password
 
 # certs vars
 key_dname: CN=User Name, OU=Enterprise Computing Services, O=Oregon State University, L=Corvallis, S=Oregon, C=US

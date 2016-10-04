@@ -6,6 +6,11 @@
       name: apis
       state: present
 
+  - name: check if modify user password or not
+    fail:
+      msg: "Please enter a new password for osu_apis!"
+    when: user_password == default_password
+
   - name: create user osu_apis
     user:
       name: osu_apis

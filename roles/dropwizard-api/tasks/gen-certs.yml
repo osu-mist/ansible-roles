@@ -1,4 +1,9 @@
 ---
+  - name: check if modify keytool passwords or not
+    fail:
+      msg: "Please enter new passwords for keystore and truststore!"
+    when: store_password == default_password or key_password == default_password
+
   - name: copy gen-certs.sh to dest
     template:
       src: gen-certs.j2

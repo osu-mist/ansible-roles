@@ -11,7 +11,7 @@
       name: osu_apis
       comment: "OSU APIs"
       group: apis
-      password: "{{ user_psw }}"
+      password: "{{ user_password }}"
 
   # Create directories
 

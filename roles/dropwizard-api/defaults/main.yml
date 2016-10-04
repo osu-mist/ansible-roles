@@ -1,6 +1,6 @@
 ---
 # put the hashed password here, see more detail: http://docs.ansible.com/ansible/faq.html#how-do-i-generate-crypted-passwords-for-the-user-module
-user_psw: changeme
+user_password: changeme
 
 # certs vars
 key_dname: CN=User Name, OU=Enterprise Computing Services, O=Oregon State University, L=Corvallis, S=Oregon, C=US
@@ -10,5 +10,5 @@ key_alg: RSA
 key_size: 2048
 sig_alg: SHA256withRSA
 key_validity: 365
-store_psd: password
-key_psd: password
+store_password: password
+key_password: password

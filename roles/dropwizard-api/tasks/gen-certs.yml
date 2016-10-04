@@ -16,10 +16,6 @@
     register: script_result
     become_user: osu_apis
 
-  - name: script debug
-    debug:
-      msg: "{{ script_result }}"
-
   - name: clean up gen-certs.sh
     file:
       path: /apis/gen-certs.sh

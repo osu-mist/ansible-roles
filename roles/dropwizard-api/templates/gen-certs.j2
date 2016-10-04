@@ -4,36 +4,36 @@ truststore="/apis/keytool_files/{{ key_alias }}.truststore"
 GenerateKey () {
 	keytool \
 		-genkeypair \
-		-dname "{{ key_dname }}" \
-		-ext "{{ key_ext }}" \
-		-alias {{ key_alias }} \
+		-dname {{ key_dname | quote }} \
+		-ext {{ key_ext | quote }} \
+		-alias {{ key_alias | quote }} \
 		-keyalg {{ key_alg }} \
 		-keysize {{ key_size }} \
 		-sigalg {{ sig_alg }} \
 		-validity {{ key_validity }} \
-		-storepass {{ store_psd }} \
-		-keypass {{ key_psd }} \
-		-keystore $1
+		-storepass {{ store_password }} \
+		-keypass {{ key_password }} \
+		-keystore "$1"
 }
 
 ImportCert () {
 	keytool \
-	-exportcert \
-	-rfc \
-	-alias {{ key_alias }} \
-	-keystore $1 \
-	-storepass {{ store_psd }} \
-	-keypass {{ key_psd }} \
-	-file /apis/{{ key_alias }}.pem
+		-exportcert \
+		-rfc \
+		-alias {{ key_alias | quote }} \
+		-keystore "$1" \
+		-storepass {{ store_password }} \
+		-keypass {{ key_password }} \
+		-file /apis/{{ key_alias }}.pem
 
 	keytool \
 		-importcert \
-		-alias {{ key_alias }} \
+		-alias {{ key_alias | quote }} \
 		-file /apis/{{ key_alias }}.pem \
-		-storepass {{ store_psd }} \
-		-keypass {{ key_psd }} \
+		-storepass {{ store_password }} \
+		-keypass {{ key_password }} \
 		-noprompt \
-		-keystore $2
+		-keystore "$2"
 	
 	# clean up pem file
 	rm /apis/{{ key_alias }}.pem
@@ -43,48 +43,48 @@ ImportCert () {
 if [ -f $keystore ]; then
 	echo "$keystore already exists!"
 
-	alias_exist=$(keytool -list -v -keystore $keystore -storepass {{ store_psd }} | grep {{ key_alias }})
-	if [ $? -eq 0 ]; then
+	alias_exist="$(keytool -list -v -keystore "$keystore" -storepass {{ store_password }} | grep {{ key_alias }})"
+	if [ "$?" -eq 0 ]; then
 		echo "Keystore: {{ key_alias }} already exists! Renewing {{ key_alias }} ..."
 		keytool \
 			-delete \
-			-alias {{ key_alias }} \
-			-keystore $keystore \
-			-storepass {{ store_psd }}
-		GenerateKey $keystore
-		keytool -list -v -keystore $keystore -storepass {{ store_psd }} | grep "Valid"
+			-alias {{ key_alias | quote }} \
+			-keystore "$keystore" \
+			-storepass {{ store_password }}
+		GenerateKey "$keystore"
+		keytool -list -v -keystore "$keystore" -storepass {{ store_password }} | grep "Valid"
 	else
 		echo "Keystore: {{ key_alias }} does not exist! Adding {{ key_alias }} ..." 
-		GenerateKey $keystore
-		keytool -list -v -keystore $keystore -storepass {{ store_psd }} | grep "Valid"
+		GenerateKey "$keystore"
+		keytool -list -v -keystore "$keystore" -storepass {{ store_password }} | grep "Valid"
 	fi
 
 else
-	echo "Keystore: $keystore does not exist! Gnerating $keystore ..."
+	echo "Keystore: "$keystore" does not exist! Generating "$keystore" ..."
 	GenerateKey "/apis/{{ key_alias }}.keystore"
 fi
 
 # Truststore
-if [ -f $truststore ]; then
+if [ -f "$truststore" ]; then
 	echo "$truststore already exists!"
 
-	alias_exist=$(keytool -list -v -keystore $truststore -storepass {{ store_psd }} | grep {{ key_alias }})
-	if [ $? -eq 0 ]; then
+	alias_exist=$(keytool -list -v -keystore "$truststore" -storepass {{ store_password }} | grep {{ key_alias }})
+	if [ "$?" -eq 0 ]; then
 		echo "Truststore: {{ key_alias }} already exists! Renewing {{ key_alias }} ..."
 		keytool \
 			-delete \
-			-alias {{ key_alias }} \
-			-keystore $truststore \
-			-storepass {{ store_psd }}
-		ImportCert $keystore $truststore
-		keytool -list -v -keystore $truststore -storepass {{ store_psd }} | grep "Valid"
+			-alias {{ key_alias | quote }} \
+			-keystore "$truststore" \
+			-storepass {{ store_password }}
+		ImportCert "$keystore" "$truststore"
+		keytool -list -v -keystore "$truststore" -storepass {{ store_password }} | grep "Valid"
 	else
 		echo "Truststore: {{ key_alias }} does not exist! Adding {{ key_alias }} ..." 
-		ImportCert $keystore $truststore
-		keytool -list -v -keystore $truststore -storepass {{ store_psd }} | grep "Valid"
+		ImportCert "$keystore" "$truststore"
+		keytool -list -v -keystore "$truststore" -storepass {{ store_password }} | grep "Valid"
 	fi
 
 else
-	echo "Truststore: $truststore does not exist! Gnerating $truststore ..."
+	echo "Truststore: "$truststore" does not exist! Generating "$truststore" ..."
 	ImportCert "/apis/{{ key_alias }}.keystore" "/apis/{{ key_alias }}.truststore"
 fi

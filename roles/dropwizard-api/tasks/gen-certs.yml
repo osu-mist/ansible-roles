@@ -10,16 +10,12 @@
       dest: /apis/gen-certs.sh
     become_user: osu_apis
 
-  - name: stat gen-certs.sh
-    stat:
-      path: /apis/gen-certs.sh
-    register: gen_certs_stat
-
   - name: run gen-certs.sh
     command: sh /apis/gen-certs.sh
-    when: gen_certs_stat.stat.exists
     register: script_result
     become_user: osu_apis
+    tags:
+      - skip_ansible_lint
 
   - name: clean up gen-certs.sh
     file:

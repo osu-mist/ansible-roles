@@ -43,8 +43,12 @@ ImportCert () {
 if [ -f $keystore ]; then
 	echo "$keystore already exists!"
 
-	alias_exist="$(keytool -list -v -keystore "$keystore" -storepass {{ store_password }} | grep {{ key_alias }})"
-	if [ "$?" -eq 0 ]; then
+	keystore_error_check="$(keytool -list -v -keystore "$keystore" -storepass {{ store_password }} | grep error)"
+	keystore_alias_check="$(keytool -list -v -keystore "$keystore" -storepass {{ store_password }} | grep {{ key_alias }})"
+	if [ ! -z "$keystore_error_check" ]; then
+		echo "$keystore_error_check"
+		exit 1
+	elif [ ! -z "$keystore_alias_check" ]; then
 		echo "Keystore: {{ key_alias }} already exists! Renewing {{ key_alias }} ..."
 		keytool \
 			-delete \
@@ -68,8 +72,12 @@ fi
 if [ -f "$truststore" ]; then
 	echo "$truststore already exists!"
 
-	alias_exist=$(keytool -list -v -keystore "$truststore" -storepass {{ store_password }} | grep {{ key_alias }})
-	if [ "$?" -eq 0 ]; then
+	truststore_error_check="$(keytool -list -v -keystore "$truststore" -storepass {{ store_password }} | grep error)"
+	truststore_alias_check="$(keytool -list -v -keystore "$truststore" -storepass {{ store_password }} | grep {{ key_alias }})"
+	if [ ! -z "$truststore_error_check" ]; then
+		echo "$truststore_error_check"
+		exit 1
+	elif [ ! -z "$truststore_alias_check" ]; then
 		echo "Truststore: {{ key_alias }} already exists! Renewing {{ key_alias }} ..."
 		keytool \
 			-delete \

@@ -9,7 +9,7 @@
   - name: check if modify user password or not
     fail:
       msg: "Please enter a new password for osu_apis!"
-    when: user_password == default_password
+    when: user_password == "password"
 
   - name: create user osu_apis
     user:
@@ -44,9 +44,6 @@
     with_items:
       - /apis/keytool_files
       - /apis/keytool_files/backup
-
-  - name: generate / refresh certs
-    include: gen-certs.yml
 
   # Install supervisor
 

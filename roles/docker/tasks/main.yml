@@ -1,0 +1,39 @@
+---
+  
+  - name: ensure that APT works with the https method
+    apt:
+      update_cache: yes
+      name: apt-transport-https
+
+  - name: ensure CA certificates are installed
+    apt:
+      name: ca-certificates
+
+  - name: add GPG key
+    apt_key:
+      keyserver: hkp://p80.pool.sks-keyservers.net:80
+      id: 58118E89F3A912897C070ADBF76221572C52609D 
+
+  - name: copy docker.list
+    copy:
+      src: files/docker.list
+      dest: /etc/apt/sources.list.d/docker.list
+      force: no
+
+  - name: apt update
+    apt:
+      update_cache: yes
+
+  - name: verify APT is pulling from the right repository
+    command: apt-cache policy docker-engine
+
+  - name: apt update and install
+    apt:
+      update_cache: yes
+      name: docker-engine
+
+  - name: start docker
+    service:
+      name: docker
+      state: started
+    

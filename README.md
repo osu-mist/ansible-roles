@@ -32,6 +32,10 @@ Collect Ansible roles for automatical deployment.
 
 ### Main Roles List
 -------------------
+* [docker](roles/docker)
+
+	* Description: This role installs Docker on to a Debian Jessie 8.X system.
+	
 * [dropwizard-api](roles/dropwizard-api)
 
 	* Description: Create user and group for the API, then deploy the API repo to certain directories.

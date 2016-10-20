@@ -1,5 +1,4 @@
 ---
-  
   - name: ensure that APT works with the https method
     apt:
       update_cache: yes
@@ -11,8 +10,8 @@
 
   - name: add GPG key
     apt_key:
-      keyserver: hkp://p80.pool.sks-keyservers.net:80
-      id: 58118E89F3A912897C070ADBF76221572C52609D 
+      keyserver: "{{ keyserver }}"
+      id: "{{ keyserver_id }}"
 
   - name: copy docker.list
     copy:
@@ -24,9 +23,6 @@
     apt:
       update_cache: yes
 
-  - name: verify APT is pulling from the right repository
-    command: apt-cache policy docker-engine
-
   - name: apt update and install
     apt:
       update_cache: yes
@@ -36,4 +32,3 @@
     service:
       name: docker
       state: started
-    

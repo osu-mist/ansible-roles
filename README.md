@@ -38,7 +38,7 @@ Collect Ansible roles for automatical deployment.
 
 * [keytools](roles/keytools)
 
-	* Description: Generate / Refresh certificates and backup old certificates.
+	* Description: Generate / refresh certificates and backup old certificates.
 
 * [elasticsearch](roles/elasticsearch)
 

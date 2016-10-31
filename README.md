@@ -34,7 +34,11 @@ Collect Ansible roles for automatical deployment.
 -------------------
 * [dropwizard-api](roles/dropwizard-api)
 
-	* Description: Create user and group for the API, then deploy the API repo to certain directories.
+	* Description: Create user and group for the API. Also, deploy the API repo to certain directories.
+
+* [keytools](roles/keytools)
+
+	* Description: Generate / refresh certificates and backup old certificates.
 
 * [elasticsearch](roles/elasticsearch)
 

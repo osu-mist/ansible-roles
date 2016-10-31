@@ -6,12 +6,17 @@
       name: apis
       state: present
 
+  - name: check if modify user password or not
+    fail:
+      msg: "Please enter a new password for osu_apis!"
+    when: user_password == "password"
+
   - name: create user osu_apis
     user:
       name: osu_apis
       comment: "OSU APIs"
       group: apis
-      password: "{{ user_psw }}"
+      password: "{{ user_password }}"
 
   # Create directories
 
@@ -31,11 +36,14 @@
 
   - name: create /apis/keytool_files directory
     file:
-      path: /apis/keytool_files
+      path: "{{ item }}"
       state: directory
       group: apis
       owner: osu_apis
       mode: 0555
+    with_items:
+      - /apis/keytool_files
+      - /apis/keytool_files/backup
 
   # Install supervisor
 

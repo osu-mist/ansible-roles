@@ -7,3 +7,6 @@ inventory
 
 #retry files
 *.retry
+
+#MacOSX
+.DS_Store

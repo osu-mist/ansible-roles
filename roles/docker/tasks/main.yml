@@ -1,0 +1,34 @@
+---
+  - name: ensure that APT works with the https method
+    apt:
+      update_cache: yes
+      name: apt-transport-https
+
+  - name: ensure CA certificates are installed
+    apt:
+      name: ca-certificates
+
+  - name: add GPG key
+    apt_key:
+      keyserver: "{{ keyserver }}"
+      id: "{{ keyserver_id }}"
+
+  - name: copy docker.list
+    copy:
+      src: files/docker.list
+      dest: /etc/apt/sources.list.d/docker.list
+      force: no
+
+  - name: apt update
+    apt:
+      update_cache: yes
+
+  - name: apt update and install
+    apt:
+      update_cache: yes
+      name: docker-engine
+
+  - name: start docker
+    service:
+      name: docker
+      state: started

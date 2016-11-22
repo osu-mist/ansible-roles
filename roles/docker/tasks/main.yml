@@ -1,0 +1,9 @@
+---
+
+- name: CentOS
+  include: centos.yml
+  when: 'ansible_distribution == "CentOS"'
+
+- name: Debian
+  include: debian.yml
+  when: 'ansible_distribution == "Debian"'

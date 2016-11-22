@@ -1,0 +1,19 @@
+---
+
+- name: add docker repo
+  copy:
+    src: docker.repo
+    dest: /etc/yum.repos.d/docker.repo
+    mode: 0644
+
+- name: install docker-engine
+  yum:
+    name: docker-engine
+    state: installed
+    update_cache: true
+
+- name: enable docker service
+  service:
+    name: docker
+    enabled: yes
+    state: started

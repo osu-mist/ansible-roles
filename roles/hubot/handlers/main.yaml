@@ -1,5 +1,0 @@
----
-  - name: restart hubot
-    supervisorctl:
-      name: hubot
-      state: restarted

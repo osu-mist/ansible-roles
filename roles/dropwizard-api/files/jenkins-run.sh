@@ -21,7 +21,8 @@ if [ ! -d /apis/apis/"$api" ]; then
 fi
 
 # Make service if it does not exist
-if [ ! -e /apis/run.d/"$api".conf ]; then
+# Replace service if it is older than the template
+if [ ! -e /apis/run.d/"$api".conf ] || [ /apis/run.d/"$api".conf -ot /apis/run.d/template ]; then
     echo "Creating a supervisord service file for $api."
     sed -e s/API/"$api"/g </apis/run.d/template >/apis/run.d/"$api".conf
 fi
@@ -40,7 +41,7 @@ xsupervisorctl restart "$api"
 if [ "$(xsupervisorctl pid "$api")" -eq 0 ]; then
     # print out the log so we can see what went wrong
     echo "Failed to start $api."
-    echo "Printing the last 10000 characters of ${api}.log:"
+    echo "Printing the last 10000 characters of the log for ${api}:"
     xsupervisorctl tail -10000 "$api"
     exit 1
 fi

@@ -7,10 +7,10 @@ GenerateKey () {
 		-dname {{ key_dname | quote }} \
 		-ext {{ key_ext | quote }} \
 		-alias {{ key_alias | quote }} \
-		-keyalg {{ key_alg }} \
-		-keysize {{ key_size }} \
-		-sigalg {{ sig_alg }} \
-		-validity {{ key_validity }} \
+		-keyalg {{ key_alg | quote }} \
+		-keysize {{ key_size | quote }} \
+		-sigalg {{ sig_alg | quote }} \
+		-validity {{ key_validity | quote }} \
 		-storepass {{ store_password | quote }} \
 		-keypass {{ key_password | quote }} \
 		-keystore "$1"
@@ -24,19 +24,19 @@ ImportCert () {
 		-keystore "$1" \
 		-storepass {{ store_password | quote}} \
 		-keypass {{ key_password | quote }} \
-		-file /apis/{{ key_alias }}.pem
+		-file /apis/{{ key_alias | quote }}.pem
 
 	keytool \
 		-importcert \
 		-alias {{ key_alias | quote }} \
-		-file /apis/{{ key_alias }}.pem \
+		-file /apis/{{ key_alias | quote }}.pem \
 		-storepass {{ store_password | quote }} \
 		-keypass {{ key_password | quote }} \
 		-noprompt \
 		-keystore "$2"
 	
 	# clean up pem file
-	rm /apis/{{ key_alias }}.pem
+	rm /apis/{{ key_alias | quote }}.pem
 }
 
 # Keystore
@@ -44,7 +44,7 @@ if [ -f $keystore ]; then
 	echo "$keystore already exists!"
 
 	keystore_error_check="$(keytool -list -v -keystore "$keystore" -storepass {{ store_password | quote }} | grep error)"
-	keystore_alias_check="$(keytool -list -v -keystore "$keystore" -storepass {{ store_password | quote }} | grep {{ key_alias }})"
+	keystore_alias_check="$(keytool -list -v -keystore "$keystore" -storepass {{ store_password | quote }} | grep {{ key_alias | quote }})"
 	if [ ! -z "$keystore_error_check" ]; then
 		echo "$keystore_error_check"
 		exit 1
@@ -65,7 +65,7 @@ if [ -f $keystore ]; then
 
 else
 	echo "Keystore: "$keystore" does not exist! Generating "$keystore" ..."
-	GenerateKey "/apis/{{ key_alias }}.keystore"
+	GenerateKey "/apis/{{ key_alias | quote }}.keystore"
 fi
 
 # Truststore
@@ -73,7 +73,7 @@ if [ -f "$truststore" ]; then
 	echo "$truststore already exists!"
 
 	truststore_error_check="$(keytool -list -v -keystore "$truststore" -storepass {{ store_password | quote }} | grep error)"
-	truststore_alias_check="$(keytool -list -v -keystore "$truststore" -storepass {{ store_password | quote }} | grep {{ key_alias }})"
+	truststore_alias_check="$(keytool -list -v -keystore "$truststore" -storepass {{ store_password | quote }} | grep {{ key_alias | quote }})"
 	if [ ! -z "$truststore_error_check" ]; then
 		echo "$truststore_error_check"
 		exit 1
@@ -94,5 +94,5 @@ if [ -f "$truststore" ]; then
 
 else
 	echo "Truststore: "$truststore" does not exist! Generating "$truststore" ..."
-	ImportCert "/apis/{{ key_alias }}.keystore" "/apis/{{ key_alias }}.truststore"
+	ImportCert "/apis/{{ key_alias | quote }}.keystore" "/apis/{{ key_alias }}.truststore"
 fi

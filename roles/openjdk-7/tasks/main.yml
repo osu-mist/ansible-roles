@@ -1,10 +1,10 @@
 ---
-  - name: install OpenJDK 7
+  - name: install OpenJDK 7 (CentOS)
     yum:
       name: java-1.7.0-openjdk-devel
     when: ansible_distribution == 'CentOS'
 
-  - name: install OpenJDK 7
+  - name: install OpenJDK 7 (Debian)
     apt:
       name: openjdk-7-jdk
       update_cache: yes

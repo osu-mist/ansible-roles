@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # supervisord-run.sh - starts an api in the foreground
 # usually run indirectly by a supervisord job
 # it is not meant to be called directly
@@ -12,9 +12,26 @@ name=$(basename "$(pwd)")
 node="$(whoami)@$(hostname):$name"
 archive=$(ls "$name"-*-all.jar | sort | tail -1)
 config=/apis/config/$name.yaml
+env=/apis/apis/$name/environment.env
 
 if [ ! -e "$config" ]; then
     config=/apis/apis/$name/configuration.yaml
+fi
+
+# Read environment file
+# Only allow variables that start with a capital letter
+# to prevent them from overwriting our own variables.
+# Don't allow overwriting the PATH variable.
+if [ -r "$env" ]; then
+    while IFS='\n' read -r line; do
+        case "$line" in
+        PATH=*)
+            ;;
+        [A-Z]*=*)
+            export "$line"
+            ;;
+        esac
+    done <"$env"
 fi
 
 if [ -e /apis/appd/javaagent.jar ]

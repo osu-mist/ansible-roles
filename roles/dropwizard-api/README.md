@@ -9,6 +9,14 @@ The general process of deploying an API is
    /apis/config/API.yaml is present. Can either be installed
    ahead of time or copied along with the jar
 
+3. Write environment variables to /apis/env/API.env, in the form
+
+        PORT=8080
+        USER=admin
+        PASSWORD=!@#$^*"'
+
+    etc. No quoting is necessary.
+
 3. Run /apis/jenkins-run.sh API
 
 ... where API stands for the name of the api.

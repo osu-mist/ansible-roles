@@ -25,11 +25,15 @@ fi
 if [ -r "$env" ]; then
     while IFS='\n' read -r line; do
         case "$line" in
+        \#*|'')
+            ;; # comment
         PATH=*)
-            ;;
+            ;; # not allowed
         [A-Z]*=*)
             export "$line"
             ;;
+        *)
+            echo "ignoring invalid line \"$line\""
         esac
     done <"$env"
 fi

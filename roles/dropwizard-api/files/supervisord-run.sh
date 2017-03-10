@@ -12,7 +12,7 @@ name=$(basename "$(pwd)")
 node="$(whoami)@$(hostname):$name"
 archive=$(ls "$name"-*-all.jar | sort | tail -1)
 config=/apis/config/$name.yaml
-env=/apis/apis/$name/environment.env
+env=/apis/env/$name.env
 
 if [ ! -e "$config" ]; then
     config=/apis/apis/$name/configuration.yaml

@@ -1,6 +1,7 @@
 ---
   dependencies:
     - { role: openjdk-7, become: yes }
+    - { role: openjdk-8, become: yes }
     - { role: git, become: yes }
     - { role: supervisord, become: yes }
     - { role: mysql-client, become: yes }

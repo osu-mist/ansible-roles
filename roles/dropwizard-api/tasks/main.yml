@@ -88,12 +88,18 @@
       dest: /etc/supervisord.conf.d/api_supervisor.conf
       mode: 0644
 
+  - debug:
+      msg: "Deprecated: Not going to start or reload supervisord."
+    when: inventory_hostname != "api-dev"
+
   - name: reload api_supervisord job
     supervisorctl:
       name: api_supervisor
       state: present
+    when: inventory_hostname == "api-dev"
 
   - name: ensure the api supervisor is started
     supervisorctl:
       name: api_supervisor
       state: started
+    when: inventory_hostname == "api-dev"

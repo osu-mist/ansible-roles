@@ -8,16 +8,16 @@
 
   - name: check if modify user password or not
     fail:
-      msg: "Please enter a new password for osu_apis!"
+      msg: "Please enter a new password for {{ user }}!"
     when: user_password == ""
 
-  - name: create user osu_apis
+  - name: create user "{{ user }}"
     user:
-      name: osu_apis
+      name: "{{ user }}"
       comment: "OSU APIs"
       group: apis
       password: "{{ user_password }}"
-
+  
   # Create directories
 
   - name: create apis directory structure
@@ -25,81 +25,59 @@
       path: '{{ item }}'
       state: directory
       group: apis
-      owner: osu_apis
+      owner: "{{ user }}"
       mode: 0770
     with_items:
       - /apis
       - /apis/apis
       - /apis/config
       - /apis/logs
-      - /apis/run.d
 
   - name: create /apis/keytool_files directory
     file:
       path: "{{ item }}"
       state: directory
       group: apis
-      owner: osu_apis
+      owner: "{{ user }}"
       mode: 0555
     with_items:
       - /apis/keytool_files
       - /apis/keytool_files/backup
 
-  # Install supervisor
+  # Pull docker image for api's
 
-  - name: create /apis/supervisor directory
-    file:
-      path: /apis/supervisor
-      state: directory
-      group: apis
-      owner: osu_apis
-      mode: 0750
+  - name: pull an image
+    docker_image:
+      name: "{{ docker_image }}"
 
-  - name: install config file for the api supervisor
-    copy:
-      src: supervisord.conf
-      dest: /apis/supervisor/supervisord.conf
-      group: apis
-      owner: osu_apis
-      mode: 0644
+  # Copy scripts
 
-  - name: copy api job template
-    copy:
-      src: api-service-template.conf
-      dest: /apis/run.d/template
+  - name: copy wrapper script
+    template:
+      src: files/jenkins-run.j2
+      dest: /apis/jenkins-run.sh
       group: apis
-      owner: osu_apis
-      mode: 0644
-
-  - name: copy scripts
-    copy:
-      src: '{{ item }}'
-      dest: '/apis/{{ item }}'
-      group: apis
-      owner: osu_apis
+      owner: "{{ user }}"
       mode: 0754
+      force: yes
+
+  - name: copy script
+    template:
+      src: files/start-container.j2
+      dest: "{{ script_path }}"
+      group: apis
+      owner: "{{ user }}"
+      mode: 0554
+      force: yes
+
+  # Add lines to sudoers file so jenkins can run the scripts
+  # This also prevents adding apis user to the docker group
+
+  - name: add new lines to sudoers file
+    lineinfile:
+      dest: /etc/sudoers
+      insertafter: '## Allow root to run any commands anywhere'
+      line: "{{ item }}"
     with_items:
-      - jenkins-run.sh
-      - supervisord-run.sh
-
-  - name: create api_supervisor job
-    copy:
-      src: api_supervisor.conf
-      dest: /etc/supervisord.conf.d/api_supervisor.conf
-      mode: 0644
-
-  - debug:
-      msg: "Deprecated: Not going to start or reload supervisord."
-    when: inventory_hostname != "api-dev"
-
-  - name: reload api_supervisord job
-    supervisorctl:
-      name: api_supervisor
-      state: present
-    when: inventory_hostname == "api-dev"
-
-  - name: ensure the api supervisor is started
-    supervisorctl:
-      name: api_supervisor
-      state: started
-    when: inventory_hostname == "api-dev"
+      - "Defaults:{{ user}} !requiretty"
+      - "{{ user }} ALL=(ALL) NOPASSWD: {{ script_path }}"

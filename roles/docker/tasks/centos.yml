@@ -17,3 +17,16 @@
     name: docker
     enabled: yes
     state: started
+
+# install pip to allow use of docker image and container ansible module
+
+- name: install epel-release
+  yum:
+    name: epel-release
+    state: installed
+
+- name: install pip
+  yum:
+    name: python-pip
+    state: installed
+    update_cache: yes

@@ -27,6 +27,7 @@ node="{{ user }}@$(hostname):$api"
 archive=$(ls "$api"-*-all.jar | sort | tail -1)
 config=/apis/config/$api.yaml
 env=/apis/env/$api.env
+keytool_path=/apis/keytool_files
 
 if [ ! -e "$config" ]; then
     config=/apis/apis/$api/configuration.yaml
@@ -44,45 +45,33 @@ docker rm -f $api &
 sleep 3
 
 echo "Start container"
-if [ -e /apis/appd/javaagent.jar ]
-then
-    docker run \
-        -d \
-        --name "$api" \
-        --label jar=$archive \
-        --restart always \
-        --user="$uid:$gid" \
-        --workdir="$api_path" \
-        --env-file "$env" \
-        --network host \
-        --health-cmd='curl -k -fsS --user $USER:$PASSWD https://localhost:$PORT/api/v1' \
-        --health-interval=1m \
-        --volume /apis/keytool_files/apidev.keystore:/apis/keytool_files/apidev.keystore:ro \
-        --volume /apis/keytool_files/apidev.truststore:/apis/keytool_files/apidev.truststore:ro \
-        --volume $api_path:$api_path \
-        --volume $config:$config \
-        --volume /apis/appd:/apis/appd \
-        {{ docker_image }} \
-        /bin/bash -c "java -javaagent:/apis/appd/javaagent.jar -Dappdynamics.agent.applicationName=$api -Dappdynamics.agent.tierName=$api -Dappdynamics.agent.nodeName=$node -jar $archive server $config"
-else
-    docker run \
-        -d \
-        --name "$api" \
-        --label jar=$archive \
-        --restart always \
-        --user="$uid:$gid" \
-        --workdir="$api_path" \
-        --env-file "$env" \
-        --network host \
-        --health-cmd='curl -k -fsS --user $USER:$PASSWD https://localhost:$PORT/api/v1' \
-        --health-interval=1m \
-        --volume /apis/keytool_files/apidev.keystore:/apis/keytool_files/apidev.keystore:ro \
-        --volume /apis/keytool_files/apidev.truststore:/apis/keytool_files/apidev.truststore:ro \
-        --volume $api_path:$api_path \
-        --volume $config:$config \
-        {{ docker_image }} \
-        /bin/bash -c "java -jar $archive server $config"
+
+appd_mount=""
+java_command="java -jar $archive server $config"
+
+if [ -e /apis/appd/javaagent.jar ]; then
+    appd_mount="--volume /apis/appd:/apis/appd"
+    java_command="java -javaagent:/apis/appd/javaagent.jar -Dappdynamics.agent.applicationName=$api -Dappdynamics.agent.tierName=$api -Dappdynamics.agent.nodeName=$node -jar $archive server $config"
 fi
+
+docker run \
+    -d \
+    --name "$api" \
+    --label jar=$archive \
+    --restart always \
+    --user="$uid:$gid" \
+    --workdir="$api_path" \
+    --env-file "$env" \
+    --network host \
+    --health-cmd='curl -k -fsS --user $USER:$PASSWD https://localhost:$PORT/api/v1' \
+    --health-interval=1m \
+    --volume $keytool_path/apidev.keystore:$keytool_path/apidev.keystore:ro \
+    --volume $keytool_path/apidev.truststore:$keytool_path/apidev.truststore:ro \
+    --volume $api_path:$api_path \
+    --volume $config:$config:ro \
+    $appd_mount \
+    {{ docker_image }} \
+    /bin/bash -c "$java_command"
 
 if [[ ! $(docker ps -q -f name=$api) ]]; then
     echo "ERROR: Container not running"

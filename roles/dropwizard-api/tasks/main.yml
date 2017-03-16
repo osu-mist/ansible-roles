@@ -31,7 +31,6 @@
       - /apis
       - /apis/apis
       - /apis/config
-      - /apis/logs
 
   - name: create /apis/keytool_files directory
     file:

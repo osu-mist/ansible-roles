@@ -44,6 +44,3 @@ Collect Ansible roles for automatical deployment.
 
 	* Description: Install [Elasticsearch](https://www.elastic.co/downloads/elasticsearch) and ensure the service is running.
 
-* [hubot](roles/hubot)
-
-	* Description: Install [HUBOT](https://hubot.github.com/) and ensure the service is running.

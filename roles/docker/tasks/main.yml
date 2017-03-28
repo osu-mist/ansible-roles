@@ -11,6 +11,8 @@
 # Kind of like doing update_cache for apt. Issue: https://github.com/ansible/ansible/issues/10810
 - name: Make sure pip upgraded
   command: easy_install -U pip
+  tags:
+    - skip_ansible_lint
 
 - name: install docker-py
   pip:

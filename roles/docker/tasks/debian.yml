@@ -29,10 +29,3 @@
     name: docker
     enabled: yes
     state: started
-
-# install pip to allow use of docker image and container ansible module
-
-- name: install pip
-  apt:
-    name: python-pip
-    state: present

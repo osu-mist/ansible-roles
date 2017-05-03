@@ -1,0 +1,59 @@
+#!/bin/sh
+# usage: start-container.sh WEBAPP-NAME
+
+set -eu
+
+webapp=${1:-}
+if [ -z "$webapp" ]; then
+    echo 2>&1 "usage: start-container.sh WEBAPP-NAME"
+    exit 1
+fi
+if [ "$(echo $webapp | tr -d "A-Za-z0-9-_")" ]; then
+    echo 2>&1 "invalid webapp name: $webapp"
+    exit 1
+fi
+if [ ! -d /opt/docker/workspace/"$webapp" ]; then
+    echo 2>&1 "webapp does not exist: $webapp"
+    exit 1
+fi
+
+webapp_path=/opt/docker/workspace/"$webapp"
+cd $webapp_path &&
+
+keytool_path=/opt/keytool_files
+
+uid="$(id -u {{ user }})"
+gid="$(id -g {{ user }})"
+
+# Stop and destroy container if it's already running.
+echo "Stop existing container"
+docker rm -f $webapp &
+
+# Sometimes docker will still think a container exists after doing "docker rm"
+# Pause the script for a few seconds before creating the container again
+sleep 3
+
+echo "Build image"
+docker build --tag="$webapp" .
+
+echo "Start container"
+
+java_command="java xyz "
+
+docker run \
+    -d \
+    --name "$webapp" \
+    --restart always \
+    --user="$uid:$gid" \
+    --workdir="$webapp_path" \
+    --network host \
+    --volume $keytool_path/apiweb.keystore:$keytool_path/apiweb.keystore:ro \
+    --volume $keytool_path/apiweb.truststore:$keytool_path/apiweb.truststore:ro \
+    --volume $webapp_path:$webapp_path \
+    --volume $config:$config:ro \
+    "$webapp"
+
+if [[ ! $(docker ps -q -f name=$webapp) ]]; then
+    echo "ERROR: Container not running"
+    exit 1
+fi

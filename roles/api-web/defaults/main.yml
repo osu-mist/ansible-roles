@@ -1,0 +1,4 @@
+---
+user: "osu_web"
+group: "osu_web"
+script_path: "/opt/docker/start-container.sh"

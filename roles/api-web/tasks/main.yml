@@ -6,11 +6,17 @@
       name: "{{ group }}"
       state: present
 
+  - name: check if modify user password or not
+    fail:
+      msg: "Please enter a new password for {{ user }}!"
+    when: user_password == ""
+
   - name: create user "{{ user }}"
     user:
       name: "{{ user }}"
       comment: "User for web apps"
       group: "{{ group }}"
+      password: "{{ user_password }}"
 
   # Create directories
 
@@ -37,7 +43,16 @@
       - /opt/keytool_files
       - /opt/keytool_files/backup
 
-  - name: copy script
+  - name: copy jenkins script
+    template:
+      src: templates/jenkins-start-app.j2
+      dest: "{{ jenkins_script_path }}"
+      group: "{{ group }}"
+      owner: "{{ user }}"
+      mode: 0754
+      force: yes
+
+  - name: copy start container script
     template:
       src: templates/start-container.j2
       dest: "{{ script_path }}"

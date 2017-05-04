@@ -18,7 +18,7 @@ if [ ! -d /opt/docker/workspace/"$webapp" ]; then
 fi
 
 webapp_path=/opt/docker/workspace/"$webapp"
-cd $webapp_path &&
+cd "$webapp_path" &&
 
 keytool_path=/opt/keytool_files
 
@@ -38,15 +38,13 @@ docker build --tag="$webapp" .
 
 echo "Start container"
 
-java_command="java xyz "
-
 docker run \
     -d \
     --name "$webapp" \
     --restart always \
     --user="$uid:$gid" \
     --workdir="$webapp_path" \
-    --network host \
+    --publish 8089:8000 \ # todo: refactor this
     --volume $keytool_path/apiweb.keystore:$keytool_path/apiweb.keystore:ro \
     --volume $keytool_path/apiweb.truststore:$keytool_path/apiweb.truststore:ro \
     --volume $webapp_path:$webapp_path \

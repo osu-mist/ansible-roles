@@ -1,0 +1,8 @@
+#!/bin/sh
+# usage: start-container.sh WEBAPP-NAME
+
+set -eu
+
+webapp=${1:-}
+
+sudo {{ script_path|e }} $webapp

@@ -14,8 +14,10 @@
   tags:
     - skip_ansible_lint
 
-- name: install docker-py
+- name: install docker tools
   pip:
-    name: docker-py
+    name: "{{ item }}"
     state: present
-    version: 1.9.0 # Ansible bug workaround. Issue: https://github.com/ansible/ansible/issues/17495
+  with_items:
+    - docker
+    - docker-compose

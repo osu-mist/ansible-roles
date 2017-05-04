@@ -48,7 +48,7 @@ docker run \
     --volume $keytool_path/apiweb.keystore:$keytool_path/apiweb.keystore:ro \
     --volume $keytool_path/apiweb.truststore:$keytool_path/apiweb.truststore:ro \
     --volume $webapp_path:$webapp_path \
-    --volume $config:$config:ro \
+    --volume /opt/docker/consent-app/config.py:config.py:ro \ #todo: refactor this
     "$webapp"
 
 if [[ ! $(docker ps -q -f name=$webapp) ]]; then

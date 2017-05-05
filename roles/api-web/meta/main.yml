@@ -1,0 +1,4 @@
+---
+  dependencies:
+    - { role: docker, become: yes }
+    - { role: git, become: yes }

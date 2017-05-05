@@ -1,0 +1,8 @@
+---
+user: "osu_web"
+group: "osu_web"
+script_path: "/opt/docker/start-container.sh"
+jenkins_script_path: "/opt/docker/jenkins-start-app.sh"
+
+# put the hashed password here, see more detail: http://docs.ansible.com/ansible/faq.html#how-do-i-generate-crypted-passwords-for-the-user-module
+user_password: ""

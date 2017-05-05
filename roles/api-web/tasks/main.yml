@@ -1,0 +1,74 @@
+---
+  # Set up user and group
+
+  - name: create group "{{ group }}"
+    group:
+      name: "{{ group }}"
+      state: present
+
+  - name: check if modify user password or not
+    fail:
+      msg: "Please enter a new password for {{ user }}!"
+    when: user_password == ""
+
+  - name: create user "{{ user }}"
+    user:
+      name: "{{ user }}"
+      comment: "User for web apps"
+      group: "{{ group }}"
+      password: "{{ user_password }}"
+
+  # Create directories
+
+  - name: create webp apps directory structure
+    file:
+      path: '{{ item }}'
+      state: directory
+      group: "{{ group }}"
+      owner: "{{ user }}"
+      mode: 0770
+    with_items:
+      - /opt
+      - /opt/docker
+      - /opt/docker/workspace
+
+  - name: create /opt/keytool_files directory
+    file:
+      path: "{{ item }}"
+      state: directory
+      group: "{{ group }}"
+      owner: "{{ user }}"
+      mode: 0555
+    with_items:
+      - /opt/keytool_files
+      - /opt/keytool_files/backup
+
+  - name: copy jenkins script
+    template:
+      src: templates/jenkins-start-app.j2
+      dest: "{{ jenkins_script_path }}"
+      group: "{{ group }}"
+      owner: "{{ user }}"
+      mode: 0754
+      force: yes
+
+  - name: copy start container script
+    template:
+      src: templates/start-container.j2
+      dest: "{{ script_path }}"
+      group: "{{ group }}"
+      owner: "{{ user }}"
+      mode: 0754
+      force: yes
+
+  # Add lines to sudoers file so jenkins can run the scripts
+  # This also prevents adding apis user to the docker group
+
+  - name: add new lines to sudoers file
+    lineinfile:
+      dest: /etc/sudoers
+      insertafter: '## Allow root to run any commands anywhere'
+      line: "{{ item }}"
+    with_items:
+      - "Defaults:{{ user}} !requiretty"
+      - "{{ user }} ALL=(ALL) NOPASSWD: {{ script_path }}"

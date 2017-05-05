@@ -27,31 +27,34 @@ gid="$(id -g {{ user }})"
 
 # Stop and destroy container if it's already running.
 echo "Stop existing container"
-docker rm -f $webapp &
+container_tag=${webapp//-/}
+docker rm -f $container_tag &
 
 # Sometimes docker will still think a container exists after doing "docker rm"
 # Pause the script for a few seconds before creating the container again
 sleep 3
 
 echo "Build image"
-docker build --tag="$webapp" .
+docker build --tag="$container_tag" .
 
 echo "Start container"
 
+#todo: refactor this
+# todo: refactor this
 docker run \
     -d \
-    --name "$webapp" \
+    --name "$container_tag" \
     --restart always \
     --user="$uid:$gid" \
     --workdir="$webapp_path" \
-    --publish 8089:8000 \ # todo: refactor this
+    --publish 8089:8000 \
     --volume $keytool_path/apiweb.keystore:$keytool_path/apiweb.keystore:ro \
     --volume $keytool_path/apiweb.truststore:$keytool_path/apiweb.truststore:ro \
     --volume $webapp_path:$webapp_path \
-    --volume /opt/docker/consent-app/config.py:config.py:ro \ #todo: refactor this
-    "$webapp"
+    --volume /opt/docker/workspace/consent-app/config.py:/src/config.py:ro \
+    "$container_tag"
 
-if [[ ! $(docker ps -q -f name=$webapp) ]]; then
+if [[ ! $(docker ps -q -f name=$container_tag) ]]; then
     echo "ERROR: Container not running"
     exit 1
 fi

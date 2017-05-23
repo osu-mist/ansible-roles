@@ -2,8 +2,8 @@ key_dname: CN=User Name, OU=Enterprise Computing Services, O=Oregon State Univer
 key_ext: san=dns:localhost,ip:127.0.0.1
 key_alias: alias
 key_alg: RSA
-key_size: 2048
+key_size: "2048"
 sig_alg: SHA256withRSA
-key_validity: 365
+key_validity: "365"
 store_password: password
 key_password: password

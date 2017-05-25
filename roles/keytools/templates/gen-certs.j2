@@ -34,9 +34,6 @@ ImportCert () {
 		-keypass {{ key_password | quote }} \
 		-noprompt \
 		-keystore "$2"
-	
-	# clean up pem file
-	rm /apis/{{ key_alias | quote }}.pem
 }
 
 # Keystore

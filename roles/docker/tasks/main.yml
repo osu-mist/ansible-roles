@@ -14,10 +14,9 @@
   tags:
     - skip_ansible_lint
 
+# Install old version of docker-compose, workaround for ansible issue https://github.com/ansible/ansible/issues/20492
 - name: install docker tools
   pip:
-    name: "{{ item }}"
+    name: "docker-compose"
     state: present
-  with_items:
-    - docker
-    - docker-compose
+    version: "1.9.0"

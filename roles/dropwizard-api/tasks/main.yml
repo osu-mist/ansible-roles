@@ -43,12 +43,26 @@
       - /apis/keytool_files
       - /apis/keytool_files/backup
 
-  # Pull docker image for api's
+  # Build docker image for api's
+  
+  - name: copy dockerfile
+    copy:
+      src: files/Dockerfile
+      dest: /tmp/Dockerfile
+      owner: root
+      group: root
+      mode: 0744
 
-  - name: pull an image
+  - name: build docker image
     docker_image:
+      path: /tmp
       name: "{{ docker_image }}"
 
+  - name: delete dockerfile
+    file:
+      state: absent
+      path: /tmp/Dockerfile
+      
   # Copy scripts
 
   - name: copy wrapper script

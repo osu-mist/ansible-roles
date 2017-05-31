@@ -14,10 +14,8 @@
   tags:
     - skip_ansible_lint
 
-- name: install docker tools
+# Install docker-compose which also installs the docker python library required by some ansible docker modules
+- name: install docker-compose
   pip:
-    name: "{{ item }}"
+    name: "docker-compose"
     state: present
-  with_items:
-    - docker
-    - docker-compose

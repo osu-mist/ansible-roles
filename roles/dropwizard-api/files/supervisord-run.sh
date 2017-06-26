@@ -7,9 +7,7 @@
 
 set -eu
 
-#cd "$(dirname "$0")"
 name=$(basename "$(pwd)")
-node="$(whoami)@$(hostname):$name"
 archive=$(ls "$name"-*-all.jar | sort | tail -1)
 config=/apis/config/$name.yaml
 env=/apis/env/$name.env
@@ -38,19 +36,7 @@ if [ -r "$env" ]; then
     done <"$env"
 fi
 
-if [ -e /apis/appd/javaagent.jar ]
-then
-    exec java \
-        -javaagent:/apis/appd/javaagent.jar \
-        -Dappdynamics.agent.applicationName="$name" \
-        -Dappdynamics.agent.tierName="$name" \
-        -Dappdynamics.agent.nodeName="$node" \
-        -jar "$archive" \
-        server \
-        "$config"
-else
-    exec java \
-        -jar "$archive" \
-        server \
-        "$config"
-fi
+exec java \
+    -jar "$archive" \
+    server \
+    "$config"

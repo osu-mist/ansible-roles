@@ -23,7 +23,6 @@ fi
 api_path=/apis/apis/$api
 cd $api_path &&
 
-node="{{ user }}@$(hostname):$api"
 archive=$(ls "$api"-*-all.jar | sort | tail -1)
 config=/apis/config/$api.yaml
 env=/apis/env/$api.env
@@ -46,13 +45,7 @@ sleep 3
 
 echo "Start container"
 
-appd_mount=""
 java_command="java -jar $archive server $config"
-
-if [ -e /apis/appd/javaagent.jar ]; then
-    appd_mount="--volume /apis/appd:/apis/appd"
-    java_command="java -javaagent:/apis/appd/javaagent.jar -Dappdynamics.agent.applicationName=$api -Dappdynamics.agent.tierName=$api -Dappdynamics.agent.nodeName=$node -jar $archive server $config"
-fi
 
 docker run \
     -d \
@@ -69,7 +62,6 @@ docker run \
     --volume $keytool_path/apidev.truststore:$keytool_path/apidev.truststore:ro \
     --volume $api_path:$api_path \
     --volume $config:$config:ro \
-    $appd_mount \
     {{ docker_image }} \
     /bin/bash -c "$java_command"
 

@@ -1,17 +1,12 @@
 ---
-  - name: install mysql-server
-    yum:
-      name: mysql-server
-      state: present
-    when: ansible_distribution == 'CentOS'
-
-  - name: config to allow local connections only
-    lineinfile:
-      dest: /etc/my.cnf
-      line: 'bind-address = 127.0.0.1'
-      insertafter: '^\[mysqld\]'
-      state: present
-    when: ansible_distribution == 'CentOS'
-
-  - name: start mysql service
-    service: name=mysqld state=started
+  - name: start mysql container
+    docker_container:
+      name: mysql-db
+      image: "mysql"
+      restart_policy: always
+      env:
+        MYSQL_ROOT_PASSWORD: "{{ mysql_root_password }}"
+      volumes:
+        - "/var/lib/mysql:/var/lib/mysql"
+      ports:
+        - "3306:3306"

@@ -8,5 +8,4 @@
         MYSQL_ROOT_PASSWORD: "{{ mysql_root_password }}"
       volumes:
         - "/var/lib/mysql:/var/lib/mysql"
-      ports:
-        - "3306:3306"
+      network_mode: host

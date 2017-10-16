@@ -1,21 +1,7 @@
 ---
-  - name: add elasticsearch GPG key
-    rpm_key:
-      key: https://packages.elastic.co/GPG-KEY-elasticsearch
-      state: present
-
-  - name: add elasticsearch repository
-    copy:
-      src: elasticsearch.repo
-      dest: /etc/yum.repos.d/elasticsearch.repo
-      mode: 0644
-
-  - name: install elasticsearch
-    yum:
+  - name: start elasticsearch container
+    docker_container:
       name: elasticsearch
-
-  - name: ensure elasticsearch is running and enabled
-    service:
-      name: elasticsearch
-      state: started
-      enabled: yes
+      image: "elasticsearch:{{ es_version }}"
+      restart_policy: always
+      network_mode: host

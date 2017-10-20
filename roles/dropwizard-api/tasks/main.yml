@@ -44,7 +44,7 @@
       - /apis/keytool_files/backup
 
   # Build docker image for api's
-  
+
   - name: copy dockerfile
     copy:
       src: files/Dockerfile
@@ -62,7 +62,7 @@
     file:
       state: absent
       path: /tmp/Dockerfile
-      
+
   # Copy scripts
 
   - name: copy wrapper script

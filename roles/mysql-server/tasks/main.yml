@@ -2,7 +2,7 @@
   - name: start mysql container
     docker_container:
       name: mysql-db
-      image: "mysql"
+      image: "mysql:5.7"
       restart_policy: always
       env:
         MYSQL_ROOT_PASSWORD: "{{ mysql_root_password }}"

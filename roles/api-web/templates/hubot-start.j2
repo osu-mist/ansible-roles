@@ -1,0 +1,7 @@
+#!/bin/sh
+
+set -eu
+
+docker build -t hubot {{ hubot_path|quote }}
+
+docker run --volume {{ hubot_path|quote }}/local.env:/src/hubot/local.env:ro --name="hubot" hubot

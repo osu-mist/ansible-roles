@@ -17,7 +17,10 @@ echo "Start container"
 
 docker build -t $CONTAINER_NAME {{ hubot_path|quote }}
 
-docker run --volume {{ hubot_path|quote }}/local.env:/src/hubot/local.env:ro --name="$CONTAINER_NAME" $CONTAINER_NAME
+docker run \
+    --volume {{ hubot_path|quote }}/local.env:/src/hubot/local.env:ro \
+    --name="$CONTAINER_NAME" $CONTAINER_NAME \
+    --restart always
 
 if [[ ! $(docker ps -q -f name=$CONTAINER_NAME) ]]; then
     echo "ERROR: Container not running"

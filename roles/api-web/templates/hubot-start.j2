@@ -2,6 +2,19 @@
 
 set -eu
 
-docker build -t hubot {{ hubot_path|quote }}
+# Name for container and image tag
+CONTAINER_NAME=hubot
 
-docker run --volume {{ hubot_path|quote }}/local.env:/src/hubot/local.env:ro --name="hubot" hubot
+# Stop and destroy container if it's already running.
+echo "Stop existing container"
+docker rm -f $CONTAINER_NAME &
+
+# Sometimes docker will still think a container exists after doing "docker rm"
+# Pause the script for a few seconds before creating the container again
+sleep 8
+
+echo "Start container"
+
+docker build -t $CONTAINER_NAME {{ hubot_path|quote }}
+
+docker run --volume {{ hubot_path|quote }}/local.env:/src/hubot/local.env:ro --name="$CONTAINER_NAME" $CONTAINER_NAME

@@ -13,14 +13,15 @@ docker rm -f $CONTAINER_NAME &
 # Pause the script for a few seconds before creating the container again
 sleep 8
 
-echo "Start container"
-
+echo "Build container image"
 docker build -t $CONTAINER_NAME {{ hubot_path|quote }}
 
+echo "Start container"
 docker run \
     --volume {{ hubot_path|quote }}/local.env:/src/hubot/local.env:ro \
-    --name="$CONTAINER_NAME" $CONTAINER_NAME \
-    --restart always
+    --name="$CONTAINER_NAME" \
+    --restart always \
+    $CONTAINER_NAME
 
 if [[ ! $(docker ps -q -f name=$CONTAINER_NAME) ]]; then
     echo "ERROR: Container not running"

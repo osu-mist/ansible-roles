@@ -56,6 +56,7 @@
       - { src: "jenkins-start-app.j2", dest: "{{ jenkins_script_path }}" }
       - { src: "start-container.j2", dest: "{{ script_path }}" }
       - { src: "hubot-start.j2", dest: "{{ hubot_script_path }}" }
+      - { src: "jenkins-hubot-start.j2", dest: "{{ hubot_jenkins_script_path }}" }
 
   # Add lines to sudoers file so jenkins can run the scripts
   # This also prevents adding apis user to the docker group

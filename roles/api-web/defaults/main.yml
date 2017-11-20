@@ -7,6 +7,7 @@ jenkins_script_path: "{{ docker_base_path }}/jenkins-start-app.sh"
 
 hubot_path: "{{ docker_base_path }}/workspace/hubot"
 hubot_script_path: "{{ hubot_path }}/hubot-start.sh"
+hubot_jenkins_script_path: "{{ hubot_path }}/jenkins-hubot-start.sh"
 
 # put the hashed password here, see more detail: http://docs.ansible.com/ansible/faq.html#how-do-i-generate-crypted-passwords-for-the-user-module
 user_password: ""

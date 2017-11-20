@@ -50,7 +50,7 @@
       dest: "{{ item.dest }}"
       group: "{{ group }}"
       owner: "{{ user }}"
-      mode: 0754
+      mode: 0554
       force: yes
     with_items:
       - { src: "jenkins-start-app.j2", dest: "{{ jenkins_script_path }}" }

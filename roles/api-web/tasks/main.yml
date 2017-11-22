@@ -20,7 +20,7 @@
 
   # Create directories
 
-  - name: create webp apps directory structure
+  - name: create web apps directory structure
     file:
       path: '{{ item }}'
       state: directory
@@ -31,6 +31,7 @@
       - /opt
       - /opt/docker
       - /opt/docker/workspace
+      - "{{ hubot_path }}"
 
   - name: create /opt/keytool_files directory
     file:
@@ -43,23 +44,19 @@
       - /opt/keytool_files
       - /opt/keytool_files/backup
 
-  - name: copy jenkins script
+  - name: copy scripts
     template:
-      src: templates/jenkins-start-app.j2
-      dest: "{{ jenkins_script_path }}"
+      src: "templates/{{ item.src }}"
+      dest: "{{ item.dest }}"
       group: "{{ group }}"
       owner: "{{ user }}"
-      mode: 0754
+      mode: 0554
       force: yes
-
-  - name: copy start container script
-    template:
-      src: templates/start-container.j2
-      dest: "{{ script_path }}"
-      group: "{{ group }}"
-      owner: "{{ user }}"
-      mode: 0754
-      force: yes
+    with_items:
+      - { src: "jenkins-start-app.j2", dest: "{{ jenkins_script_path }}" }
+      - { src: "start-container.j2", dest: "{{ script_path }}" }
+      - { src: "hubot-start.j2", dest: "{{ hubot_script_path }}" }
+      - { src: "jenkins-hubot-start.j2", dest: "{{ hubot_jenkins_script_path }}" }
 
   # Add lines to sudoers file so jenkins can run the scripts
   # This also prevents adding apis user to the docker group
@@ -70,5 +67,6 @@
       insertafter: '## Allow root to run any commands anywhere'
       line: "{{ item }}"
     with_items:
-      - "Defaults:{{ user}} !requiretty"
+      - "Defaults:{{ user }} !requiretty"
       - "{{ user }} ALL=(ALL) NOPASSWD: {{ script_path }}"
+      - "{{ user }} ALL=(ALL) NOPASSWD: {{ hubot_script_path }}"

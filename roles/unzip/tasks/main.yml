@@ -1,0 +1,10 @@
+---
+  - name: install unzip
+    yum:
+      name: unzip
+    when: ansible_distribution == 'CentOS'
+
+  - name: install unzip
+    apt:
+      name: unzip
+    when: ansible_distribution == 'Debian'

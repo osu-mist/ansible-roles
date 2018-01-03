@@ -42,30 +42,32 @@ docker rm -f $api &
 # Sometimes docker will still think a container exists after doing "docker rm"
 # Pause the script for a few seconds before creating the container again
 until [[ ! "$(docker ps -aq -f name=$api)" ]]; do
-    echo "Start container"
-
-    java_command="java -jar $archive server $config"
-
-    docker run \
-      -d \
-      --name "$api" \
-      --label jar=$archive \
-      --restart always \
-      --user="$uid:$gid" \
-      --workdir="$api_path" \
-      --env-file "$env" \
-      --network host \
-      --health-cmd='curl -k -fsS --user $USER:$PASSWD https://localhost:$PORT/api/v1' \
-      --health-interval=1m \
-      --volume $keytool_path/apidev.keystore:$keytool_path/apidev.keystore:ro \
-      --volume $keytool_path/apidev.truststore:$keytool_path/apidev.truststore:ro \
-      --volume $api_path:$api_path \
-      --volume $config:$config:ro \
-      {{ docker_image }} \
-      /bin/bash -c "$java_command"
-
-    if [[ ! $(docker ps -q -f name=$api) ]]; then
-      echo "ERROR: Container not running"
-      exit 1
-    fi
+    sleep 1
 done
+
+echo "Start container"
+
+java_command="java -jar $archive server $config"
+
+docker run \
+    -d \
+    --name "$api" \
+    --label jar=$archive \
+    --restart always \
+    --user="$uid:$gid" \
+    --workdir="$api_path" \
+    --env-file "$env" \
+    --network host \
+    --health-cmd='curl -k -fsS --user $USER:$PASSWD https://localhost:$PORT/api/v1' \
+    --health-interval=1m \
+    --volume $keytool_path/apidev.keystore:$keytool_path/apidev.keystore:ro \
+    --volume $keytool_path/apidev.truststore:$keytool_path/apidev.truststore:ro \
+    --volume $api_path:$api_path \
+    --volume $config:$config:ro \
+    {{ docker_image }} \
+    /bin/bash -c "$java_command"
+
+if [[ ! $(docker ps -q -f name=$api) ]]; then
+    echo "ERROR: Container not running"
+    exit 1
+fi

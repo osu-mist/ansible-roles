@@ -38,7 +38,7 @@ gid="$(id -g {{ user }})"
 # Stop and destroy container if it's already running
 if [[ "$(docker ps -aq -f name=$api)" ]]; then
     echo "Stop existing container"
-    docker rm -f "$api" &
+    docker rm -f "$api"
 
     # Sometimes docker will still think a container exists after doing "docker rm"
     # Pause the script for a few seconds before creating the container again

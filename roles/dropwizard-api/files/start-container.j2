@@ -35,15 +35,17 @@ fi
 uid="$(id -u {{ user }})"
 gid="$(id -g {{ user }})"
 
-# Stop and destroy container if it's already running.
-echo "Stop existing container"
-docker rm -f $api &
+# Stop and destroy container if it's already running
+if [[ "$(docker ps -aq -f name=$api)" ]]; then
+    echo "Stop existing container"
+    docker rm -f "$api" &
 
-# Sometimes docker will still think a container exists after doing "docker rm"
-# Pause the script for a few seconds before creating the container again
-until [[ ! "$(docker ps -aq -f name=$api)" ]]; do
-    sleep 1
-done
+    # Sometimes docker will still think a container exists after doing "docker rm"
+    # Pause the script for a few seconds before creating the container again
+    until [[ ! "$(docker ps -aq -f name=$api)" ]]; do
+        sleep 1
+    done
+fi
 
 echo "Start container"
 

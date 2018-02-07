@@ -1,19 +1,30 @@
 ---
+  - name: ensure old versions of Docker are not present
+    yum:
+      name: "{{ item }}"
+      state: absent
+    with_items:
+      - docker
+      - docker-common
+      - docker-engine
+      - docker-selinux
 
-- name: add docker repo
-  copy:
-    src: docker.repo
-    dest: /etc/yum.repos.d/docker.repo
-    mode: 0644
+  - name: install required packages
+    yum:
+      name: "{{ item }}"
+    with_items:
+      - yum-utils
+      - device-mapper-persistent-data
+      - lvm2
 
-- name: install docker-engine
-  yum:
-    name: docker-engine
-    state: installed
-    update_cache: true
+  - name: add Docker repository
+    get_url:
+      url: https://download.docker.com/linux/centos/docker-ce.repo
+      dest: /etc/yum.repos.d/docker-ce.repo
+      owner: root
+      group: root
+      mode: 0644
 
-- name: enable docker service
-  service:
-    name: docker
-    enabled: yes
-    state: started
+  - name: install Docker CE
+    yum:
+      name: "docker-ce-{{ centos_docker_ce_version }}"

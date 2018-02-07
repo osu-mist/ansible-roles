@@ -21,19 +21,13 @@
 
 - name: add docker repo
   apt_repository:
-    repo: 'deb [arch=amd64] {{debian_apt_repo}} {{ansible_distribution_release}} stable'
+    repo: 'deb [arch=amd64] {{ debian_apt_repo }} {{ ansible_distribution_release }} stable'
     filename: docker
     state: present
     update_cache: true
 
 - name: install docker
   apt:
-    name: 'docker-ce={{debian_docker_version}}'
+    name: 'docker-ce={{ debian_docker_ce_version }}'
     state: present
     update_cache: true
-
-- name: enable docker service
-  service:
-    name: docker
-    enabled: yes
-    state: started

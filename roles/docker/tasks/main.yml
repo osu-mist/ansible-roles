@@ -8,6 +8,12 @@
   include: debian.yml
   when: 'ansible_distribution == "Debian"'
 
+- name: enable docker service
+  service:
+    name: docker
+    enabled: yes
+    state: started
+
 # Kind of like doing update_cache for apt. Issue: https://github.com/ansible/ansible/issues/10810
 - name: Make sure pip upgraded
   command: easy_install -U pip

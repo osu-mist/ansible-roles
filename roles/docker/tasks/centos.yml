@@ -7,7 +7,6 @@
       - docker
       - docker-common
       - docker-engine
-      - docker-selinux
 
   - name: install required packages
     yum:

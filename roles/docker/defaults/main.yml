@@ -1,6 +1,6 @@
 ---
 debian_apt_repo: https://download.docker.com/linux/debian
 
-docker_ce_version: 17.12.0
+docker_ce_version: 17.12.1
 debian_docker_ce_version: "{{ docker_ce_version }}~ce-0~debian"
 centos_docker_ce_version: "{{ docker_ce_version }}.ce"

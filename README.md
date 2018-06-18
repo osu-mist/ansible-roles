@@ -1,9 +1,9 @@
-# Ansible Roles
+# Ansible Roles ![Ansible](https://img.shields.io/badge/ansible-2.4-blue.svg)
 Collect Ansible roles for automatical deployment.
 
 ### Requirements
 ----------------
-1. [Ansible (version 2.1)](https://github.com/ansible/ansible) should be [installed](http://docs.ansible.com/ansible/intro_installation.html) first. In addition, we should also prepare an Ansible `inventory` file to run this playbook.
+1. [Ansible (version 2.4)](https://github.com/ansible/ansible) should be [installed](http://docs.ansible.com/ansible/intro_installation.html) first. In addition, we should also prepare an Ansible `inventory` file to run this playbook.
 
 	**Inventory File Example:**
 	```
@@ -43,4 +43,3 @@ Collect Ansible roles for automatical deployment.
 * [elasticsearch](roles/elasticsearch)
 
 	* Description: Install [Elasticsearch](https://www.elastic.co/downloads/elasticsearch) and ensure the service is running.
-

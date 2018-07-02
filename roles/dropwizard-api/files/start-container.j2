@@ -56,7 +56,7 @@ docker run \
     -d \
     --name "$api" \
     --label jar=$archive \
-    --restart always \
+    --restart on-failure:3 \
     --user="$uid:$gid" \
     --workdir="$api_path" \
     --env-file "$env" \

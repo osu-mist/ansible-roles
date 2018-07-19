@@ -1,12 +1,15 @@
 ---
-  - name: "create shell script to script directory"
-    copy:
-      src: "{{ start_express_container_script }}"
-      dest: "{{ api_home }}/{{ start_express_container_script }}"
+  - name: "create shell scripts to script directory"
+    template:
+      src: "{{ item.script }}.j2"
+      dest: "{{ api_home }}/{{ item.script }}"
       group: "{{ api_group }}"
       owner: "{{ api_user }}"
-      mode: 0554
+      mode: "{{ item.mode }}"
       force: yes
+    with_items:
+      - { script: "{{ jenkins_run_express_script }}", mode: "0754" }
+      - { script: "{{ start_express_container_script }}", mode: "0554" }
 
   - name: "add new lines to sudoers file"
     lineinfile:

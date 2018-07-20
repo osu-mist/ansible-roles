@@ -3,8 +3,8 @@ api_path=/apis/apis/$api_name
 
 cd $api_path
 
-rm `ls "$api_name"-*.tar | sort -r | awk 'NR>3'` # only keep the 3 of the most recent artifacts
-archive=$(ls "$api_name"-*.tar | sort | tail -1)
+rm `ls $api_name-*.tar | sort -r | awk 'NR>3'` # only keep the 3 of the most recent artifacts
+archive=$(ls $api_name-*.tar | sort | tail -1)
 
 re="$api_name-([0-9]+).tar"
 
@@ -13,3 +13,13 @@ if [[ $archive =~ $re ]]; then
 fi
 
 docker import $archive $api_name:$tag
+
+docker run -d \
+           --workdir /usr/src/$api_name \
+           --volume /apis/keytool_files:/usr/src/$api_name/keytool_files \
+           --volume $api_path/logs:/usr/src/$api_name/logs \
+           --network host \
+           --user=$uid:$gid \
+           --name $api_name \
+           $api_name:$tag \
+           gulp run

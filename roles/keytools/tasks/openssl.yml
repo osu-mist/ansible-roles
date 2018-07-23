@@ -1,0 +1,13 @@
+---
+  - name: "copy {{ gen_openssl_certs_script }} to destination"
+    template:
+      src: "{{ gen_openssl_certs_script }}.j2"
+      dest: "{{ keytool_files_path }}/{{ gen_openssl_certs_script }}"
+
+  - name: "run {{ gen_openssl_certs_script }}"
+    command: sh "{{ keytool_files_path }}/{{ gen_openssl_certs_script }}"
+
+  - name: "clean up {{ gen_openssl_certs_script }}"
+    file:
+      path: "{{ keytool_files_path }}/{{ gen_openssl_certs_script }}"
+      state: absent

@@ -1,3 +1,6 @@
+mkdir -p {{ openssl_backup_path }}
+chown -R {{ api_user }}:{{ api_group }} {{ openssl_backup_path }}
+
 for cert_file in {{ keytool_files_path }}/{{ key_alias }}.*; do
   if [ -e $cert_file ]; then
     mv "$cert_file" {{ openssl_backup_path }}/

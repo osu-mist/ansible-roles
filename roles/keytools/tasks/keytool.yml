@@ -1,0 +1,56 @@
+---
+  - name: check if modify keytool passwords or not
+    fail:
+      msg: "Please enter new passwords for keystore and truststore!"
+    when: store_password == "password" or key_password == "password"
+
+  - name: copy gen-keytool-certs.sh to dest
+    template:
+      src: gen-keytool-certs.sh.j2
+      dest: /apis/gen-keytool-certs.sh
+    become_user: osu_apis
+
+  - name: run gen-keytool-certs.sh
+    command: sh /apis/gen-keytool-certs.sh
+    register: script_result
+    become_user: osu_apis
+    tags:
+      - skip_ansible_lint
+
+  - debug: msg={{ script_result.stdout_lines }}
+
+  - name: clean up gen-keytool-certs.sh
+    file:
+      path: /apis/gen-keytool-certs.sh
+      state: absent
+
+  - name: stat new certs
+    stat:
+      path: /apis/{{ item }}
+    with_items:
+      - "{{ key_alias }}.keystore"
+      - "{{ key_alias }}.truststore"
+      - "{{ key_alias }}.pem"
+    register: new_certs_stat
+
+  - name: stat old certs
+    stat:
+      path: /apis/keytool_files/{{ item }}
+    with_items:
+      - "{{ key_alias }}.keystore"
+      - "{{ key_alias }}.truststore"
+      - "{{ key_alias }}.pem"
+    register: old_certs_stat
+
+  - name: backup certs to keytool_files/backup
+    command: mv /apis/keytool_files/{{ item.old_cert.item }} /apis/keytool_files/backup/{{ item.new_cert.item }}-{{ ansible_date_time.iso8601 }}
+    when: "{{ item.old_cert.stat.exists }} and {{ item.new_cert.stat.exists }}"
+    with_items:
+      - { old_cert: "{{ old_certs_stat.results[0] }}", new_cert: "{{ new_certs_stat.results[0] }}" }
+      - { old_cert: "{{ old_certs_stat.results[1] }}", new_cert: "{{ new_certs_stat.results[1] }}" }
+      - { old_cert: "{{ old_certs_stat.results[2] }}", new_cert: "{{ new_certs_stat.results[2] }}" }
+
+  - name: move certs to keytool_files
+    command: mv /apis/{{ item.item }} /apis/keytool_files/{{ item.item }}
+    when: "{{ item.stat.exists }}"
+    with_items: "{{ new_certs_stat.results }}"

@@ -14,12 +14,6 @@
     enabled: yes
     state: started
 
-# Kind of like doing update_cache for apt. Issue: https://github.com/ansible/ansible/issues/10810
-- name: Make sure pip upgraded
-  command: easy_install -U pip
-  tags:
-    - skip_ansible_lint
-
 # Install docker-compose which also installs the docker python library required by some ansible docker modules
 - name: install docker-compose
   pip:

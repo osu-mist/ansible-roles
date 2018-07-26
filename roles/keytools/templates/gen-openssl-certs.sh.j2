@@ -1,3 +1,10 @@
+#!/bin/sh
+# gen-openssl-certs.sh - generate certificates by openssl
+
+# usage: gen-openssl-certs.sh
+
+set -eu
+
 mkdir -p {{ openssl_backup_path }}
 chown -R {{ api_user }}:{{ api_group }} {{ openssl_backup_path }}
 

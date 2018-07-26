@@ -1,3 +1,11 @@
+#!/bin/sh
+# start-express-container.sh - starts an express api with docker
+# usually called remotely by jenkins
+
+# usage: start-express-container.sh API-NAME
+
+set -eu
+
 api_name=$1
 api_path=/apis/apis/$api_name
 env=/apis/env/$api_name.env

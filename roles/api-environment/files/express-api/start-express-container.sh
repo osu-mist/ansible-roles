@@ -31,8 +31,8 @@ if [[ $image_id ]]; then
   docker rmi $image_id --force
 fi
 
-rm `ls $api_name-*.tar | sort -r | awk 'NR>3'` # only keep the 3 of the most recent artifacts
-archive=$(ls $api_name-*.tar | sort | tail -1)
+rm `find $api_name-*.tar | sort -r | awk 'NR>3'` # only keep the 3 of the most recent artifacts
+archive=$(find $api_name-*.tar | sort | tail -1)
 
 re="$api_name-([0-9]+).tar"
 

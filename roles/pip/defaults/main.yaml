@@ -1,0 +1,3 @@
+---
+# Version of pip to be installed
+pip_version: 18.0

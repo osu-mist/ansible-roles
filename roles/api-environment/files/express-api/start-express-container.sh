@@ -7,10 +7,20 @@
 set -eu
 
 api_name=$1
+artifact_tag=$2
 api_path=/apis/apis/$api_name
 env=/apis/env/$api_name.env
 
 cd $api_path
+
+rm `find $api_name-*.tar | sort -r | awk 'NR>3'` # only keep the 3 of the most recent artifacts
+archive=$(find $api_name-*.tar | sort | tail -1)
+
+if [[ $archive != "$api_name-$artifact_tag.tar" ]]; then
+  # Exit with non-zero code if artifact not found
+  echo "ERROR: Artifact not found"
+  exit 1
+fi
 
 # Stop and destroy container if it's already running
 if [[ "$(docker ps -aq -f name=$api_name)" ]]; then
@@ -31,16 +41,7 @@ if [[ $image_id ]]; then
   docker rmi $image_id --force
 fi
 
-rm `find $api_name-*.tar | sort -r | awk 'NR>3'` # only keep the 3 of the most recent artifacts
-archive=$(find $api_name-*.tar | sort | tail -1)
-
-re="$api_name-([0-9]+).tar"
-
-if [[ $archive =~ $re ]]; then
-  tag=${BASH_REMATCH[1]}
-fi
-
-docker import $archive $api_name:$tag
+docker import $archive $api_name:$artifact_tag
 
 docker run -d \
            --workdir /usr/src/$api_name \
@@ -50,7 +51,7 @@ docker run -d \
            --network host \
            --health-cmd='curl -k -fsS --user $USER:$PASSWD https://localhost:$PORT/api/v1' \
            --name $api_name \
-           $api_name:$tag \
+           $api_name:$artifact_tag \
            gulp run
 
 if [[ ! $(docker ps -q -f name=$api_name) ]]; then

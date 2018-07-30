@@ -13,7 +13,7 @@
       update_password: on_create
       state: present
 
-  - name: create apis directory structure
+  - name: "create apis directory structure"
     file:
       path: "{{ api_home }}/{{ item.path }}"
       state: directory
@@ -27,11 +27,19 @@
       - { path: "keytool_files", mode: "0555" }
       - { path: "keytool_files/backup", mode: "0555" }
 
-  - name: add new lines to sudoers file
+  - name: "check if line present in sudoers file"
+    lineinfile:
+      path: /etc/sudoers
+      line: "{{ disable_requiretty_for_api_user }}"
+    register: content_has_line
+    check_mode: yes
+
+  - name: "add new lines to sudoers file"
     lineinfile:
       path: /etc/sudoers
       insertafter: '## Allow root to run any commands anywhere'
-      line: "Defaults:{{ api_user }} !requiretty"
+      line: "{{ disable_requiretty_for_api_user }}"
+    when: content_has_line is changed
 
   - name: "setup environment for dropwizard api"
     import_tasks: dropwizard-api.yml

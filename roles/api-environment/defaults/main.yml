@@ -5,6 +5,7 @@ api_user: "osu_apis"
 api_group: "apis"
 api_home: "/apis"
 # api_user_password: ""
+disable_requiretty_for_api_user: "Defaults:{{ api_user }} !requiretty"
 
 # variables for dropwizard api
 dropwizard_api: false

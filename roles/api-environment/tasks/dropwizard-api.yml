@@ -1,0 +1,39 @@
+---
+  # Build docker image for api's
+  - name: copy dockerfile
+    copy:
+      src: dropwizard-api/Dockerfile
+      dest: /tmp/Dockerfile
+      owner: root
+      group: root
+      mode: 0744
+
+  - name: build docker image
+    docker_image:
+      path: /tmp
+      name: "{{ dropwizard_docker_image }}"
+
+  - name: delete dockerfile
+    file:
+      state: absent
+      path: /tmp/Dockerfile
+
+  - name: copy scripts
+    template:
+      src: dropwizard-api/{{ item.script }}.j2
+      dest: "{{ api_home }}/{{ item.script }}"
+      group: "{{ api_group }}"
+      owner: "{{ api_user }}"
+      mode: "{{ item.mode }}"
+      force: yes
+    with_items:
+      - { script: "jenkins-run.sh", mode: "0754" }
+      - { script: "start-container.sh", mode: "0554" }
+
+  # Add lines to sudoers file so jenkins can run the scripts
+  # This also prevents adding apis user to the docker group
+  - name: add new lines to sudoers file
+    lineinfile:
+      path: /etc/sudoers
+      insertafter: '## Allow root to run any commands anywhere'
+      line: "{{ api_user }} ALL=(ALL) NOPASSWD: {{ start_dropwizard_container_path }}"

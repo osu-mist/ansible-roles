@@ -1,0 +1,42 @@
+---
+  - name: "create group {{ api_group }}"
+    group:
+      name: "{{ api_group }}"
+      state: present
+
+  - name: "create user {{ api_user }}"
+    user:
+      name: "{{ api_user }}"
+      comment: "OSU APIs"
+      group: "{{ api_group }}"
+      password: "{{ api_user_password }}"
+      update_password: on_create
+      state: present
+
+  - name: create apis directory structure
+    file:
+      path: "{{ api_home }}/{{ item.path }}"
+      state: directory
+      group: "{{ api_group }}"
+      owner: "{{ api_user }}"
+      mode: "{{ item.mode }}"
+    with_items:
+      - { path: "", mode: "0770" }
+      - { path: "apis", mode: "0770" }
+      - { path: "config", mode: "0770" }
+      - { path: "keytool_files", mode: "0555" }
+      - { path: "keytool_files/backup", mode: "0555" }
+
+  - name: add new lines to sudoers file
+    lineinfile:
+      path: /etc/sudoers
+      insertafter: '## Allow root to run any commands anywhere'
+      line: "Defaults:{{ api_user }} !requiretty"
+
+  - name: "setup environment for dropwizard api"
+    import_tasks: dropwizard-api.yml
+    when: dropwizard_api
+
+  - name: "setup environment for express api"
+    import_tasks: express-api.yml
+    when: express_api

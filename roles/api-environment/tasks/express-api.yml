@@ -17,8 +17,15 @@
       mode: "0754"
       force: yes
 
+  - name: "check if line present in sudoers file"
+    lineinfile:
+      path: /etc/sudoers
+      line: "{{ api_user }} ALL=(ALL) NOPASSWD: {{ start_express_container_path }}"
+    register: content_has_line
+    check_mode: yes
+
   - name: "add new lines to sudoers file"
     lineinfile:
       path: /etc/sudoers
-      insertafter: '## Allow root to run any commands anywhere'
+      insertafter: "{{ disable_requiretty_for_api_user }}"
       line: "{{ api_user }} ALL=(ALL) NOPASSWD: {{ start_express_container_path }}"

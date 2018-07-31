@@ -44,3 +44,4 @@
       path: /etc/sudoers
       insertafter: "{{ disable_requiretty_for_api_user }}"
       line: "{{ api_user }} ALL=(ALL) NOPASSWD: {{ start_dropwizard_container_path }}"
+    when: content_has_line is changed

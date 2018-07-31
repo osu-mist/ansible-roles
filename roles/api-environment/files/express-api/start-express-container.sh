@@ -50,7 +50,9 @@ docker run -d \
            --volume $api_path/logs:/usr/src/$api_name/logs \
            --network host \
            --health-cmd='curl -k -fsS --user $USER:$PASSWD https://localhost:$PORT/api/v1' \
+           --health-interval=1m \
            --name $api_name \
+           --restart on-failure:3 \
            $api_name:$artifact_tag \
            gulp run
 

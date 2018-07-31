@@ -31,12 +31,13 @@ By enabling `dropwizard_api: true`, this role will start the process of setting 
   2. Ensure that either `/apis/apis/<api_name>/configuration.yaml` or `/apis/config/<api_name>.yaml` is present. Can either be installed ahead of time or copied along with the jar
   3. Write environment variables to `/apis/env/<api_name>.env`, in the form:
 
-    ```
-    # This line is a comment
-    PORT=8080
-    USER=admin
-    PASSWORD=!@#$^*"'
-    ```
+      ```
+      # This line is a comment
+      PORT=8080
+      USER=admin
+      PASSWORD=!@#$^*"'
+      ```
+
     etc. No quoting is necessary. Variables must start with an uppercase letter, and setting PATH is not allowed.
 
   4. Run `/apis/jenkins-run.sh <api_name>`

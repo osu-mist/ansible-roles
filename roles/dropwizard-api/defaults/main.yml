@@ -1,8 +1,0 @@
----
-user: "osu_apis"
-script_path: "/apis/start-container.sh"
-
-# put the hashed password here, see more detail: http://docs.ansible.com/ansible/faq.html#how-do-i-generate-crypted-passwords-for-the-user-module
-user_password: ""
-
-docker_image: "openjdk8-america-los-angeles"

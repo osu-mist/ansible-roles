@@ -1,5 +1,0 @@
----
-  dependencies:
-    - { role: docker, become: yes }
-    - { role: git, become: yes }
-    - { role: mysql-client, become: yes }

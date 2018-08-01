@@ -15,7 +15,7 @@ cd $api_path
 
 # only keep the 3 of the most recent artifacts
 old_artifacts=$(find $api_name-*.tar | sort -r | awk 'NR>3')
-if [[ ! -z $old_artifacts ]]; then
+if [ ! -z $old_artifacts ]; then
   rm $old_artifacts
 fi
 

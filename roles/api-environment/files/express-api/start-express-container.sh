@@ -14,12 +14,13 @@ env=/apis/env/$api_name.env
 cd $api_path
 
 # only keep the 3 of the most recent artifacts
-old_artifacts=$(find $api_name-*.tar | sort -r | awk 'NR>3')
-if [ ! -z $old_artifacts ]; then
-  rm $old_artifacts
+total_artifacts=$(find -type f -name "$api_name-*.tar" | wc -l)
+if [ $total_artifacts -gt 3 ]; then
+  echo "Remove old artifacts from workspace."
+  rm $(find $api_name-*.tar -printf "%T@ %p\n" | sort -n | head -$((total_artifacts - 3)) | cut -f2- -d" ")
 fi
 
-archive=$(find $api_name-*.tar | sort | tail -1)
+archive=$(find $api_name-*.tar -printf "%T@ %p\n" | sort | tail -1 | cut -f2- -d" ")
 
 if [[ $archive != "$api_name-$artifact_tag.tar" ]]; then
   # Exit with non-zero code if artifact not found

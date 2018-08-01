@@ -13,7 +13,12 @@ env=/apis/env/$api_name.env
 
 cd $api_path
 
-rm `find $api_name-*.tar | sort -r | awk 'NR>3'` # only keep the 3 of the most recent artifacts
+# only keep the 3 of the most recent artifacts
+old_artifacts=$(find $api_name-*.tar | sort -r | awk 'NR>3')
+if [[ ! -z $old_artifacts ]]; then
+  rm $old_artifacts
+fi
+
 archive=$(find $api_name-*.tar | sort | tail -1)
 
 if [[ $archive != "$api_name-$artifact_tag.tar" ]]; then

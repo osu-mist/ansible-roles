@@ -1,10 +1,14 @@
 ---
 # variables for generic api
-# note: define {{ api_user_password }} in your playbook level
 api_user: "osu_apis"
 api_group: "apis"
 api_home: "/apis"
+
+# DO NOT put plaintext passwords in your playbook or host_vars; instead, use
+# Using Vault in playbooks(https://docs.ansible.com/ansible/latest/user_guide/playbooks_vault.html)
+# to encrypt sensitive data.
 # api_user_password: ""
+
 disable_requiretty_for_api_user: "Defaults:{{ api_user }} !requiretty"
 
 # variables for dropwizard api

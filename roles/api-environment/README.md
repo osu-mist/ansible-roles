@@ -5,23 +5,7 @@ This role sets up servers environment to run different kind of APIs within docke
 
 ## Generic Tasks
 
-In this stage, an api user will be created if not exists yet. **DO NOT** put the user password in `defaults/mains.yml`, instead, define your user password at the playbook level. For example:
-
-```yaml
----
-  - hosts: api-server
-    pre_tasks:
-      - name: include common variables
-        include_vars: ansible-private-roles/common_vars.yml
-    tasks:
-      - import_role:
-          name: api-environment
-        become: yes
-        vars:
-          dropwizard_api: true
-          express_api: true
-          api_user_password: password
-```
+In this stage, an api user will be created if not exists yet. Please note that **DO NOT** put plaintext passwords in your playbook or host_vars; instead, use [Using Vault in playbooks](https://docs.ansible.com/ansible/latest/user_guide/playbooks_vault.html) to encrypt sensitive data.
 
 ## Dropwizard API
 

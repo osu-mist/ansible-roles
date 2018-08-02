@@ -16,3 +16,8 @@
       name: python-pip
       update_cache: yes
     when: ansible_distribution == 'Debian'
+
+  - name: update pip to latest
+    pip:
+      name: pip
+      state: latest

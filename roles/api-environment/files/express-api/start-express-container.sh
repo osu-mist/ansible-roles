@@ -55,7 +55,7 @@ docker run -d \
            --volume /apis/keytool_files:/usr/src/$api_name/keytool_files \
            --volume $api_path/logs:/usr/src/$api_name/logs \
            --network host \
-           --health-cmd='curl -k -fsS --user $USER:$PASSWD https://localhost:$PORT/api/v1' \
+           --health-cmd='curl -k -fsS --user $USER:$PASSWD https://localhost:$ADMIN_PORT/api/v1' \
            --health-interval=1m \
            --name $api_name \
            --restart on-failure:3 \

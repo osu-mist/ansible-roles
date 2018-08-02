@@ -20,4 +20,4 @@
   - name: update pip to latest
     pip:
       name: pip
-      state: latest
+      version: "{{ pip_version }}"

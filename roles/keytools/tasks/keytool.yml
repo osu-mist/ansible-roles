@@ -8,11 +8,13 @@
     template:
       src: gen-keytool-certs.sh.j2
       dest: /apis/gen-keytool-certs.sh
+    become: yes
     become_user: osu_apis
 
   - name: run gen-keytool-certs.sh
     command: sh /apis/gen-keytool-certs.sh
     register: script_result
+    become: yes
     become_user: osu_apis
     tags:
       - skip_ansible_lint

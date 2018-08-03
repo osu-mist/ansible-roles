@@ -1,9 +1,22 @@
-key_dname: CN=User Name, OU=Enterprise Computing Services, O=Oregon State University, L=Corvallis, S=Oregon, C=US
+api_user: osu_apis
+api_group: apis
+apis_home: /apis
+keytool_files_path: "{{ apis_home }}/keytool_files"
+openssl_backup_path: "{{ keytool_files_path }}/backup/openssl"
+gen_openssl_certs_script: gen-openssl-certs.sh
+
+key_country: US
+key_state: Oreon
+key_location: Corvallis
+key_organization: Oregon State University
+key_organization_unit: Enterprise Computing Services
+key_common_name: User Name
+key_dname: "CN={{ key_common_name }}, OU={{ key_organization_unit }}, O={{ key_organization }}, L={{ key_location }}, S={{ key_state }}, C={{ key_country }}"
 key_ext: san=dns:localhost,ip:127.0.0.1
 key_alias: alias
 key_alg: RSA
 key_size: "2048"
 sig_alg: SHA256withRSA
 key_validity: "365"
-store_password: password
-key_password: password
+by_keytool: false
+by_openssl: false

@@ -1,0 +1,23 @@
+---
+# variables for generic api
+api_user: "osu_apis"
+api_group: "apis"
+api_home: "/apis"
+
+# DO NOT put plaintext passwords in your playbook or host_vars; instead, use
+# Using Vault in playbooks(https://docs.ansible.com/ansible/latest/user_guide/playbooks_vault.html)
+# to encrypt sensitive data.
+# api_user_password: ""
+
+disable_requiretty_for_api_user: "Defaults:{{ api_user }} !requiretty"
+
+# variables for dropwizard api
+dropwizard_api: false
+start_dropwizard_container_path: "{{ api_home }}/start-container.sh"
+dropwizard_docker_image: "openjdk8-america-los-angeles"
+
+# variables for express api
+express_api: false
+jenkins_run_express_script: "jenkins-run-express.sh"
+start_express_container_script: "start-express-container.sh"
+start_express_container_path: "{{ api_home }}/{{ start_express_container_script }}"

@@ -53,6 +53,7 @@ docker run -d \
            --workdir /usr/src/$api_name \
            --env-file $env \
            --volume /apis/keytool_files:/usr/src/$api_name/keytool_files \
+           --volume /apis/oracle/sqlnet.ora:/opt/oracle/instantclient_12_2/network/admin/sqlnet.ora \
            --volume $api_path/logs:/usr/src/$api_name/logs \
            --network host \
            --health-cmd='curl -k -fsS --user $USER:$PASSWD https://localhost:$ADMIN_PORT/api/v1' \

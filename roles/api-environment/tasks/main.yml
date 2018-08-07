@@ -24,8 +24,16 @@
       - { path: "", mode: "0770" }
       - { path: "apis", mode: "0770" }
       - { path: "config", mode: "0770" }
+      - { path: "oracle", mode: "0770" }
       - { path: "keytool_files", mode: "0555" }
       - { path: "keytool_files/backup", mode: "0555" }
+
+  - name: "copy sqlnet.ora to dest"
+    copy:
+      src: "sqlnet.ora"
+      dest: "{{ api_home }}/oracle"
+      owner: "{{ api_user }}"
+      group: "{{ api_group }}"
 
   - name: "check if line present in sudoers file"
     lineinfile:

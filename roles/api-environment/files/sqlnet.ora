@@ -1,9 +1,0 @@
-===== sqlnet.ora =============================================================
-# Wed Jun 13 09:48:47 PDT 2018
-
-SQLNET.CRYPTO_CHECKSUM_CLIENT = REQUESTED
-SQLNET.CRYPTO_CHECKSUM_TYPES_CLIENT = (SHA512,SHA384,SHA256,SHA1)        # 11.2 or greater
-#SQLNET.CRYPTO_CHECKSUM_TYPES_CLIENT = (SHA1)                            # 11.1
-SQLNET.ENCRYPTION_CLIENT = REQUESTED
-SQLNET.ENCRYPTION_TYPES_CLIENT = (AES256,AES192,AES128,3DES168,3DES112)
-==============================================================================

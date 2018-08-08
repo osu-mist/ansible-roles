@@ -49,7 +49,10 @@ fi
 
 docker import $archive $api_name:$artifact_tag
 
+uid="$(id -u {{ api_user }})"
+gid="$(id -g {{ api_user }})"
 docker run -d \
+           --user="$uid:$gid" \
            --workdir /usr/src/$api_name \
            --env-file $env \
            --volume /apis/keytool_files:/usr/src/$api_name/keytool_files \

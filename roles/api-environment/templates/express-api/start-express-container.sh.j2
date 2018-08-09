@@ -55,6 +55,7 @@ gid="$(id -g {{ api_user }})"
 docker run -d \
            --user="$uid:$gid" \
            --workdir /usr/src/$api_name \
+           -e ENABLE_LOGGER=true \
            --env-file $env \
            --volume /apis/keytool_files:/usr/src/$api_name/keytool_files \
            --volume $api_path/logs:/usr/src/$api_name/logs \

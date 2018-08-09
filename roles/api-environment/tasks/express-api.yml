@@ -1,21 +1,15 @@
 ---
-  - name: "copy script to script directory"
-    copy:
-      src: "express-api/{{ start_express_container_script }}"
-      dest: "{{ start_express_container_path }}"
-      group: "{{ api_group }}"
-      owner: "{{ api_user }}"
-      mode: "0554"
-      force: yes
-
   - name: "create shell scripts to script directory"
     template:
-      src: "express-api/{{ jenkins_run_express_script }}.j2"
-      dest: "{{ api_home }}/{{ jenkins_run_express_script }}"
+      src: "express-api/{{ item.script }}.j2"
+      dest: "{{ api_home }}/{{ item.script }}"
       group: "{{ api_group }}"
       owner: "{{ api_user }}"
-      mode: "0754"
+      mode: "{{ item.mode }}"
       force: yes
+    with_items:
+      - { script: "{{ jenkins_run_express_script }}", mode: "0754" }
+      - { script: "{{ start_express_container_script }}", mode: "0554" }
 
   - name: "check if line present in sudoers file"
     lineinfile:

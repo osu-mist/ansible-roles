@@ -2,6 +2,6 @@
   - name: start elasticsearch container
     docker_container:
       name: elasticsearch
-      image: "elasticsearch:{{ es_version }}"
+      image: "docker.elastic.co/elasticsearch/elasticsearch:{{ es_version }}"
       restart_policy: always
       network_mode: host

@@ -1,7 +1,17 @@
 ---
+  - name: set vm.max_map_count
+    command: sysctl -w vm.max_map_count=262144
+
   - name: start elasticsearch container
     docker_container:
       name: elasticsearch
       image: "docker.elastic.co/elasticsearch/elasticsearch:{{ es_version }}"
       restart_policy: always
       network_mode: host
+      env:
+        bootstrap.memory_lock: "true"
+        ES_JAVA_OPTS: "-Xms512m -Xmx512m"
+      ulimits:
+        - memlock:-1:-1
+      volumes:
+        - /usr/share/elasticsearch/data

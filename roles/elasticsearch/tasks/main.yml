@@ -1,4 +1,5 @@
 ---
+  # https://www.elastic.co/guide/en/elasticsearch/reference/current/vm-max-map-count.html
   - name: set vm.max_map_count
     command: sysctl -w vm.max_map_count=262144
 

@@ -32,8 +32,8 @@ if [ ! -e "$config" ]; then
     config=/apis/apis/$api/configuration.yaml
 fi
 
-uid="$(id -u {{ user }})"
-gid="$(id -g {{ user }})"
+uid="$(id -u {{ api_user }})"
+gid="$(id -g {{ api_user }})"
 
 # Stop and destroy container if it's already running
 if [[ "$(docker ps -aq -f name=$api)" ]]; then

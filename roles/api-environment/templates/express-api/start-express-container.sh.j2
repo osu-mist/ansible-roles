@@ -14,7 +14,7 @@ config=/apis/config/$api_name.yaml
 
 cd $api_path
 
-# only keep the 3 of the most recent artifacts
+# Only keep the 3 of the most recent artifacts
 total_artifacts=$(find -type f -name "$api_name-*.tar" | wc -l)
 if [ $total_artifacts -gt 3 ]; then
   echo "Remove old artifacts from workspace."
@@ -48,21 +48,26 @@ if [[ $image_id ]]; then
   docker rmi $image_id --force
 fi
 
+# Create logs folder and make sure the API have access to wrtie logs into it
+mkdir -p $api_path/logs
+chown -R {{ api_user }}:{{ api_group }} $api_path/logs
+
+# Load docker image from the artifact
 docker load --input $archive
 
+# Run API in a container
 uid="$(id -u {{ api_user }})"
 gid="$(id -g {{ api_user }})"
 docker run -d \
-           --user="$uid:$gid" \
+           --user "$uid:$gid" \
            --workdir /usr/src/$api_name \
-           -e ENABLE_LOGGER=true \
            --env-file $env \
            --volume /apis/keytool_files:/usr/src/$api_name/keytool_files \
            --volume $api_path/logs:/usr/src/$api_name/logs \
            --volume $config:/usr/src/$api_name/config/default.yaml:ro \
            --network host \
-           --health-cmd='curl -k -fsS --user $USER:$PASSWD https://localhost:$ADMIN_PORT/api/v1' \
-           --health-interval=1m \
+           --health-cmd 'curl -k -fsS --user $USER:$PASSWD https://localhost:$ADMIN_PORT/api/v1' \
+           --health-interval 1m \
            --name $api_name \
            --restart on-failure:3 \
            $api_name

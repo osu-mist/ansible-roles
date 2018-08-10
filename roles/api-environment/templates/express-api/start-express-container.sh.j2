@@ -48,7 +48,7 @@ if [[ $image_id ]]; then
   docker rmi $image_id --force
 fi
 
-docker import $archive $api_name:$artifact_tag
+docker load --input $archive
 
 uid="$(id -u {{ api_user }})"
 gid="$(id -g {{ api_user }})"
@@ -65,7 +65,7 @@ docker run -d \
            --health-interval=1m \
            --name $api_name \
            --restart on-failure:3 \
-           $api_name:$artifact_tag
+           $api_name
 
 if [[ ! $(docker ps -q -f name=$api_name) ]]; then
    echo "ERROR: Container not running"

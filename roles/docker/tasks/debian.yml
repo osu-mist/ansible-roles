@@ -28,14 +28,14 @@
 
 - name: install docker
   apt:
-    name: 'docker-ce={{ debian_docker_ce_version }}'
+    name: '{{ docker_ce_pkg_name }}={{ debian_docker_ce_version }}'
     state: present
     update_cache: true
 
 - name: Pin docker version
   copy:
-    dest: /etc/apt/preferences.d/docker-ce
+    dest: /etc/apt/preferences.d/{{ docker_ce_pkg_name }}
     content: |
-      Package: docker-ce
+      Package: {{ docker_ce_pkg_name }}
       Pin: version {{ debian_docker_ce_version }}
       Pin-Priority: 1002

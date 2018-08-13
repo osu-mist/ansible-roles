@@ -26,4 +26,11 @@
 
   - name: install Docker CE
     yum:
-      name: "docker-ce-{{ centos_docker_ce_version }}"
+      name: "{{ docker_ce_pkg_name }}-{{ centos_docker_ce_version }}"
+
+  - name: install yum-versionlock
+    yum:
+      name: yum-versionlock
+
+  - name: pin Docker CE version
+    command: yum versionlock add {{ docker_ce_pkg_name }}

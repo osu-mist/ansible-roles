@@ -31,3 +31,11 @@
     name: 'docker-ce={{ debian_docker_ce_version }}'
     state: present
     update_cache: true
+
+- name: Pin docker version
+  copy:
+    dest: /etc/apt/preferences.d/docker-ce
+    content: |
+      Package: docker-ce
+      Pin: version {{ debian_docker_ce_version }}
+      Pin-Priority: 1002

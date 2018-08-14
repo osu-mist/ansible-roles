@@ -1,7 +1,8 @@
 ---
 debian_apt_repo: https://download.docker.com/linux/debian
 
-docker_ce_version: "18.06.0"
+docker_debian_ce_version: "18.03.1"
+docker_centos_ce_version: "18.06.0"
 docker_ce_pkg_name: docker-ce
-debian_docker_ce_version: "{{ docker_ce_version }}~ce-0~debian"
-centos_docker_ce_version: "{{ docker_ce_version }}.ce"
+debian_docker_ce_version: "{{ docker_debian_ce_version }}~ce-0~debian"
+centos_docker_ce_version: "{{ docker_centos_ce_version }}.ce"

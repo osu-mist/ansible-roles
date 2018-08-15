@@ -24,6 +24,22 @@
       group: root
       mode: 0644
 
+  - name: install yum-versionlock
+    yum:
+      name: yum-versionlock
+
+  - name: remove existing Docker CE versionlocks
+    command: yum versionlock delete {{ docker_ce_pkg_name }}
+    args:
+      warn: false
+    register: versionlock_delete
+    failed_when: "versionlock_delete.rc != 0 and 'no matches' not in versionlock_delete.stderr"
+
+  - name: add Docker CE versionlock
+    command: yum versionlock add {{ docker_ce_pkg_name }}-{{ centos_docker_ce_version }}
+    args:
+      warn: false
+
   - name: install Docker CE
     yum:
-      name: "docker-ce-{{ centos_docker_ce_version }}"
+      name: "{{ docker_ce_pkg_name }}-{{ centos_docker_ce_version }}"

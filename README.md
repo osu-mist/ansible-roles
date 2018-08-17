@@ -1,5 +1,5 @@
 # Ansible Roles ![Ansible](https://img.shields.io/badge/Ansible-2.5.6-blue.svg)
-Collect Ansible roles for automatical deployment.
+Collect Ansible roles for automatic deployment.
 
 ### Requirements
 ----------------
@@ -11,24 +11,33 @@ Collect Ansible roles for automatical deployment.
 	servers ansible_ssh_host=127.0.0.1 ansible_ssh_port=2222 ansible_ssh_user=vagrant ansible_ssh_private_key_file=.vagrant/machines/default/virtualbox/private_key
 	```
 
-2. All roles are developed base on [CentOS 6.7](http://vault.centos.org/6.7/), ensure remoted machines have the same OS.
+2. All roles are developed base on [CentOS 6.7](http://vault.centos.org/6.7/), ensure remote machines have the same OS.
 
 ### Usage
 ---------
-1. Modify your Ansbile playbook as needed.
+1. Modify your Ansible playbook as needed.
 
 	**Playbook Example:**
 	```yaml
-	---
-	- hosts: servers
-	  roles:
-	    - { role: dropwizard-api, become: yes }
+  ---
+  - hosts: servers
+    roles:
+      - { role: dropwizard-api, become: yes }
     	- { role: hubot, become: yes }
 	```
 
-2. To run the Ansbile playbook, simply execute the following command:
+2. Copy vault-example.yml to vault.yml, modify values as necessary, and encrypt vault.yml:
+```bash
+$ ansible-vault encrypt vault.yml
+```
+and enter a password for the encrypted file when prompted.
 
-	`ansible-playbook -i inventory example-main.yml`
+3. Run the Ansible playbook:
+```bash
+$ ansible-playbook -i inventory example-main.yml
+```
+and add `--vault-password-file /path/to/vault/password/file` to specify vault password file or `--ask-vault-pass` to be prompted for vault password
+
 
 ### Main Roles List
 -------------------

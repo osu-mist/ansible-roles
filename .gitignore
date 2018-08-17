@@ -8,5 +8,8 @@ Vagrantfile
 # inventory file
 inventory
 
-#retry files
+# retry files
 *.retry
+
+# Vault variables
+vault.yml

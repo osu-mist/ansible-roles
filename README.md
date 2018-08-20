@@ -36,7 +36,7 @@ and enter a password for the encrypted file when prompted.
 ```bash
 $ ansible-playbook -i inventory example-main.yml
 ```
-and add `--vault-password-file /path/to/vault/password/file` to specify vault password file or `--ask-vault-pass` to be prompted for vault password
+and add `--vault-id /path/to/vault/password-file` to specify vault password file or `--vault-id @prompt` to be prompted for vault password
 
 
 ### Main Roles List

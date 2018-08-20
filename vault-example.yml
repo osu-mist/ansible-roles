@@ -1,0 +1,2 @@
+# Modify these values and use ansible-vault to encrypt this file
+mysql_root_password: Null

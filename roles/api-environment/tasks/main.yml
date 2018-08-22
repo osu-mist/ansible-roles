@@ -27,19 +27,43 @@
       - { path: "keytool_files", mode: "0555" }
       - { path: "keytool_files/backup", mode: "0555" }
 
-  - name: "check if line present in sudoers file"
+  - name: "create shell scripts from templates to script directory"
+    template:
+      src: "{{ jenkins_restart_script }}.j2"
+      dest: "{{ api_home }}/{{ jenkins_restart_script }}"
+      group: "{{ api_group }}"
+      owner: "{{ api_user }}"
+      mode: "0754"
+      force: yes
+
+  - name: "create shell scripts from files to script directory"
+    copy:
+      src: "{{ restart_container_script }}"
+      dest: "{{ restart_container_path }}"
+      group: "{{ api_group }}"
+      owner: "{{ api_user }}"
+      mode: "0554"
+      force: yes
+
+  - name: "check if lines present in sudoers file"
     lineinfile:
       path: /etc/sudoers
-      line: "{{ disable_requiretty_for_api_user }}"
-    register: content_has_line
+      line: "{{ item }}"
+    register: content_has_lines
     check_mode: yes
+    with_items:
+      - "{{ disable_requiretty_for_api_user }}"
+      - "{{ api_user }} ALL=(ALL) NOPASSWD: {{ restart_container_path }}"
 
   - name: "add new lines to sudoers file"
     lineinfile:
       path: /etc/sudoers
       insertafter: '## Allow root to run any commands anywhere'
-      line: "{{ disable_requiretty_for_api_user }}"
-    when: content_has_line is changed
+      line: "{{ item.line }}"
+    when: item.status is changed
+    with_items:
+      - { status: "{{ content_has_lines.results[0] }}", line: "{{ disable_requiretty_for_api_user }}"}
+      - { status: "{{ content_has_lines.results[1] }}", line: "{{ api_user }} ALL=(ALL) NOPASSWD: {{ restart_container_path }}"}
 
   - name: "setup environment for dropwizard api"
     import_tasks: dropwizard-api.yml

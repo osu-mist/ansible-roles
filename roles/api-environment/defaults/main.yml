@@ -11,6 +11,11 @@ api_home: "/apis"
 
 disable_requiretty_for_api_user: "Defaults:{{ api_user }} !requiretty"
 
+# variables shared by all apis
+jenkins_restart_script: "jenkins-restart.sh"
+restart_container_script: "restart-container.sh"
+restart_container_path: "{{ api_home }}/{{ restart_container_script }}"
+
 # variables for dropwizard api
 dropwizard_api: false
 start_dropwizard_container_path: "{{ api_home }}/start-container.sh"

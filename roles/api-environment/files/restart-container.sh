@@ -8,7 +8,9 @@ set -eu
 api_name=$1
 
 if [[ $(docker inspect -f {{.State.Running}} $api_name) ]]; then
+  echo "$api_name is running. Restarting container."
   docker restart $api_name
 else
+  echo "$api_name is not running. Starting container."
   docker start $api_name
 fi

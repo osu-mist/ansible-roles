@@ -1,0 +1,4 @@
+---
+
+- name: prune dangling images
+  shell: docker rmi $(docker images --filter "dangling=true" -q --no-trunc)

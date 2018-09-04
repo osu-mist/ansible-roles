@@ -1,4 +1,4 @@
 ---
 
 - name: prune dangling images
-  shell: docker rmi $(docker images --filter "dangling=true" -q --no-trunc)
+  shell: docker image prune --filter "until=336h"

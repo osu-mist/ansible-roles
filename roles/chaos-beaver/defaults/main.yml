@@ -1,0 +1,10 @@
+---
+# file path and name variables
+chaos_home: "/apis/chaos"
+jenkins_kill_script: "jenkins-kill.sh"
+container_kill_script: "kill-container.sh"
+
+# user and permission variables
+chaos_user: "osu_apis"
+chaos_group: "apis"
+disable_requiretty_for_chaos_user: "Defaults:{{ chaos_user }} !requiretty"

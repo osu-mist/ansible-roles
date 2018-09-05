@@ -1,0 +1,40 @@
+---
+- name: "create chaos directory"
+  file:
+    path: "{{chaos_home}}"
+    state: "directory"
+    owner: "{{chaos_user}}"
+    group: "{{chaos_group}}"
+    mode: "0754"
+
+- name: "copy shell script for killing container"
+  copy:
+    src: "{{container_kill_script}}"
+    dest: "{{chaos_home}}/{{container_kill_script}}"
+    owner: "{{chaos_user}}"
+    group: "{{chaos_group}}"
+    mode: "0754"
+
+- name: "generate jenkins kill script"
+  template:
+    src: "{{jenkins_kill_script}}.j2"
+    dest: "{{chaos_home}}/{{jenkins_kill_script}}"
+    owner: "{{chaos_user}}"
+    group: "{{chaos_group}}"
+    mode: "0554"
+
+- name: "check if line present in sudoers file"
+  lineinfile:
+    path: "/etc/sudoers"
+    line: "{{ chaos_user }} ALL=(ALL) NOPASSWD: {{container_kill_script}}"
+  register: "content_has_line"
+  check_mode: yes
+
+# Add lines to sudoers file so jenkins can run the scripts
+# This also prevents adding apis user to the docker group
+- name: "add new lines to sudoers file"
+  lineinfile:
+    path: "/etc/sudoers"
+    insertafter: "{{ disable_requiretty_for_chaos_user }}"
+    line: "{{ chaos_user }} ALL=(ALL) NOPASSWD: {{chaos_home}}/{{container_kill_script}}"
+  when: content_has_line is changed

@@ -1,0 +1,14 @@
+---
+# file path and name variables
+garbage_home: "/apis/docker_garbage_collection/"
+backup_images: "{{garbage_home}}backup_images/"
+backup_containers: "{{garbage_home}}backup_containers/"
+garbage_script: "app.py"
+config_file: "config.yml"
+
+# user variables
+garbage_user: "root"
+garbage_group: "root"
+
+# garbage collection variables
+dangling_image_removal_minimum_age_hours: 0

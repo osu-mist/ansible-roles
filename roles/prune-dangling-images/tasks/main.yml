@@ -1,4 +1,0 @@
----
-
-- name: prune dangling images
-  shell: docker image prune --filter "until=336h" --force

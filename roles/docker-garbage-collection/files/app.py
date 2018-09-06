@@ -3,6 +3,7 @@
 # app.py - docker garbage collection script
 # usage: python app.py CONFIG_FILE_PATH
 
+import os
 import sys
 import yaml
 import subprocess
@@ -48,8 +49,8 @@ def selectOldIDs(config, danglingIDs):
             idCreatedDate = parser.parse(idDetails[0]['Created'])
             if datetime.now(idCreatedDate.tzinfo) - relativedelta(hours=config['dangling_image_removal_minimum_age_hours']).normalized() > idCreatedDate:
                 oldIDs.append(id)
-        except Exception as e:
-            sys.exit('Error inspecting image ' + id + ": " + e)
+        except subprocess.CalledProcessError as e:
+            sys.exit('Error inspecting image ' + id + ": " + e.output)
     return oldIDs
 
 # Backs up a collection of images
@@ -61,9 +62,9 @@ def backupImages(config, danglingIDs):
 def backupImage(imageID, path):
     print ("Backing up " + imageID)
     try:
-        subprocess.call(['docker save --output ' + path + imageID + ".tar " + imageID], shell=True)
-    except Exception as e:
-        sys.exit('Error backing up image ' + imageID + ": " + e)
+        subprocess.check_output(['docker save --output ' + path + imageID + ".tar " + imageID], shell=True)
+    except subprocess.CalledProcessError as e:
+        sys.exit('Error backing up image ' + imageID + ": " + e.output)
 
 # Removes images and corresponding broken containers.
 # Begins by removing the passed images. If an error occurs during this process involving a stopped container, this indicates that
@@ -97,16 +98,19 @@ def backupContainer(config, containerID, imageID):
     try:
         output = subprocess.check_output(['docker commit ' + containerID + ' broken-container:' + imageID], shell = True)
         output = output.split("sha256:", 1)[1].strip()
-        backupImage(output, config['backup_containers'] + '/' + imageID + '/')
+        backupPath = config['backup_containers'] + '/' + imageID + '/'
+        if not os.path.exists(backupPath):
+            os.makedirs(backupPath)
+        backupImage(output, backupPath)
         removeImage(output)
-    except Exception as e:
-        sys.exit('Error backing up container ' + containerID + ": " + e)
+    except subprocess.CalledProcessError as e:
+        sys.exit('Error backing up container ' + containerID + ": " + e.output)
 
 # Removes a container
 def removeContainer(containerID):
     try:
-        subprocess.call(['docker rm ' + containerID], shell = True)
-    except Exception as e:
-        sys.exit('Error removing container ' + containerID + ": " + e)
+        subprocess.check_output(['docker rm ' + containerID], shell = True)
+    except subprocess.CalledProcessError as e:
+        sys.exit('Error removing container ' + containerID + ": " + e.output)
 
 main()

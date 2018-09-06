@@ -16,3 +16,30 @@
         - memlock:-1:-1
       volumes:
         - /usr/share/elasticsearch/data
+
+  - name: download templates from locations-api
+    get_url:
+      url: "{{ locations_api_raw_url }}{{ locations_api_branch }}/{{ item }}"
+      dest: "/tmp/{{ item }}"
+    with_items:
+      - "{{ locations_template_filename }}"
+      - "{{ services_template_filename }}"
+
+  - name: POST templates to elasticsearch
+    command: >
+      curl -H \"Content-Type: application/json\"
+      -XPOST http://localhost:9200/_template/template_{{ item.template_num }}
+      --data-binary \"@/tmp/{{ item.filename }}\"
+    args:
+      warn: no
+    with_items:
+      - { filename: "{{ locations_template_filename }}", template_num: "1" }
+      - { filename: "{{ services_template_filename }}", template_num: "2" }
+
+  - name: clean up template files
+    file:
+      path: /tmp/{{ item }}
+      state: absent
+    with_items:
+      - "{{ locations_template_filename }}"
+      - "{{ services_template_filename }}"

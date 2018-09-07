@@ -3,7 +3,7 @@
 garbage_home: "/apis/docker_garbage_collection/"
 backup_images: "{{garbage_home}}backup_images/"
 backup_containers: "{{garbage_home}}backup_containers/"
-garbage_script: "app.py"
+garbage_script: "garbage-collect.py"
 config_file: "config.yml"
 
 # user variables

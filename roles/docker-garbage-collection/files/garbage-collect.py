@@ -1,6 +1,6 @@
 #!/usr/bin/env  python
 
-# app.py - docker garbage collection script
+# collect-garbage.py - docker garbage collection script
 # usage: python app.py CONFIG_FILE_PATH
 
 import os

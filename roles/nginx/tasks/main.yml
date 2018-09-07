@@ -1,0 +1,29 @@
+---
+  - name: add nginx key
+    apt_key:
+      id: '573BFD6B3D8FBC641079A6ABABF5BD827BD9BF62'
+      data: "{{ lookup('file', 'nginx.gpg') }}"
+      state: present
+
+  - name: add nginx repository
+    apt_repository:
+      repo: "{{ item }}"
+    with_items:
+      - "deb {{ package_repository }}"
+      - "deb-src {{ package_repository }}"
+
+  - name: install nginx
+    apt:
+      name: "{{ package_name }}={{ version }}"
+      state: present
+      update_cache: yes
+
+  - name: remove default nginx configuration
+    file:
+      path: /etc/nginx/conf.d/default.conf
+      state: absent
+
+  - name: run nginx
+    service:
+      name: "{{ package_name }}"
+      state: started

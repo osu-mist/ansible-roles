@@ -68,20 +68,17 @@ def select_old_ids(config, dangling_ids):
 
 
 def backup_images(config, dangling_ids):
-    """Backs up a collection of images"""
+    """Backup a collection ofimages as .tar
+    in configured backup image directory"""
     for id in dangling_ids:
-        backup_image(id, config['backup_images'])
-
-
-def backup_image(image_id, path):
-    """Backup image as .tar in configured backup image directory"""
-    print ("Backing up " + image_id)
-    try:
-        subprocess.check_output(
-            ['docker save --output ' + path + image_id + ".tar " + image_id],
-            shell=True)
-    except subprocess.CalledProcessError as e:
-        sys.exit('Error backing up image ' + image_id + ": " + e.output)
+        print ("Backing up " + id)
+        try:
+            subprocess.check_output(
+                ['docker save --output ' + config['backup_images'] + id +
+                    ".tar " + id],
+                shell=True)
+        except subprocess.CalledProcessError as e:
+            sys.exit('Error backing up image ' + id + ": " + e.output)
 
 
 def collect_garbage(config, dangling_ids):
@@ -117,18 +114,14 @@ def remove_image(image_id):
 
 
 def backup_container(config, container_id, image_id):
-    """ function description """
+    """"""
+    backup_path = config['backup_containers'] + '/' + image_id + '/'
+    if not os.path.exists(backup_path):
+        os.makedirs(backup_path)
     try:
-        output = subprocess.check_output(
-            ['docker commit ' + container_id + ' broken-container:'
-                + image_id],
+        subprocess.check_output(
+            ['docker export ' + container_id + '--output ' + backup_path],
             shell=True)
-        output = output.split("sha256:", 1)[1].strip()
-        backup_path = config['backup_containers'] + '/' + image_id + '/'
-        if not os.path.exists(backup_path):
-            os.makedirs(backup_path)
-        backup_image(output, backup_path)
-        remove_image(output)
     except subprocess.CalledProcessError as e:
         sys.exit('Error container backup: ' + container_id + ": " + e.output)
 

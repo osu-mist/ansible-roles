@@ -141,4 +141,5 @@ def remove_container(container_id):
         sys.exit('Error removing container ' + container_id + ": " + e.output)
 
 
-main()
+if __name__ == '__main__':
+    main()

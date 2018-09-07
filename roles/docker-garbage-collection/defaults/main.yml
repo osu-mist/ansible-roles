@@ -11,4 +11,4 @@ garbage_user: "root"
 garbage_group: "root"
 
 # garbage collection variables
-dangling_image_removal_minimum_age_hours: 0
+dangling_image_removal_minimum_age_hours: 336

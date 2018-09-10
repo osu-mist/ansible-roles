@@ -16,3 +16,13 @@
         - memlock:-1:-1
       volumes:
         - /usr/share/elasticsearch/data
+
+  - name: POST templates to elasticsearch
+    uri:
+      url: "http://localhost:9200/_template/template_{{ item.template_num }}"
+      body: "{{ lookup('url', locations_api_raw_url+locations_api_branch+'/'+item.filename, split_lines=False) }}"
+      method: POST
+      body_format: json
+    with_items:
+      - { filename: "{{ locations_template_filename }}", template_num: "1" }
+      - { filename: "{{ services_template_filename }}", template_num: "2" }

@@ -1,4 +1,4 @@
 ---
 package_name: "nginx"
-version: "1.14.0*"
+version: "1.14.0-1~{{ ansible_distribution_release }}"
 package_repository: "https://nginx.org/packages/debian/ {{ ansible_distribution_release }} {{ package_name }}"

@@ -2,7 +2,7 @@
   - name: add nginx key
     apt_key:
       id: '573BFD6B3D8FBC641079A6ABABF5BD827BD9BF62'
-      data: "{{ lookup('file', 'nginx.gpg') }}"
+      url: https://nginx.org/keys/nginx_signing.key
       state: present
 
   - name: add nginx repository

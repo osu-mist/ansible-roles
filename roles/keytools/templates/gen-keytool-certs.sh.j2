@@ -4,38 +4,38 @@ keystore="{{ keytool_files_path }}/{{ keystore_file }}"
 truststore="{{ keytool_files_path }}/{{ truststore_file }}"
 
 GenerateKey () {
-	keytool \
-		-genkeypair \
-		-dname {{ key_dname | quote }} \
-		-ext {{ key_ext | quote }} \
-		-alias {{ key_alias | quote }} \
-		-keyalg {{ key_alg | quote }} \
-		-keysize {{ key_size | quote }} \
-		-sigalg {{ sig_alg | quote }} \
-		-validity {{ key_validity | quote }} \
-		-storepass {{ store_password | quote }} \
-		-keypass {{ key_password | quote }} \
-		-keystore "$1"
+    keytool \
+        -genkeypair \
+        -dname {{ key_dname | quote }} \
+        -ext {{ key_ext | quote }} \
+        -alias {{ key_alias | quote }} \
+        -keyalg {{ key_alg | quote }} \
+        -keysize {{ key_size | quote }} \
+        -sigalg {{ sig_alg | quote }} \
+        -validity {{ key_validity | quote }} \
+        -storepass {{ store_password | quote }} \
+        -keypass {{ key_password | quote }} \
+        -keystore "$1"
 }
 
 ImportCert () {
-	keytool \
-		-exportcert \
-		-rfc \
-		-alias {{ key_alias | quote }} \
-		-keystore "$1" \
-		-storepass {{ store_password | quote}} \
-		-keypass {{ key_password | quote }} \
-		-file {{ apis_home }}/{{ certificate_file | quote }}
+    keytool \
+        -exportcert \
+        -rfc \
+        -alias {{ key_alias | quote }} \
+        -keystore "$1" \
+        -storepass {{ store_password | quote}} \
+        -keypass {{ key_password | quote }} \
+        -file {{ apis_home }}/{{ certificate_file | quote }}
 
-	keytool \
-		-importcert \
-		-alias {{ key_alias | quote }} \
-		-file {{ apis_home }}/{{ certificate_file | quote }} \
-		-storepass {{ store_password | quote }} \
-		-keypass {{ key_password | quote }} \
-		-noprompt \
-		-keystore "$2"
+    keytool \
+        -importcert \
+        -alias {{ key_alias | quote }} \
+        -file {{ apis_home }}/{{ certificate_file | quote }} \
+        -storepass {{ store_password | quote }} \
+        -keypass {{ key_password | quote }} \
+        -noprompt \
+        -keystore "$2"
 }
 
 ExportPrivateKey () {
@@ -64,63 +64,63 @@ ExportPrivateKey () {
 
 # Keystore
 if [ -f $keystore ]; then
-	echo "$keystore already exists!"
+    echo "$keystore already exists!"
 
-	keystore_error_check="$(keytool -list -v -keystore "$keystore" -storepass {{ store_password | quote }} | grep error)"
-	keystore_alias_check="$(keytool -list -v -keystore "$keystore" -storepass {{ store_password | quote }} | grep {{ key_alias | quote }})"
-	if [ ! -z "$keystore_error_check" ]; then
-		echo "$keystore_error_check"
-		exit 1
-	elif [ ! -z "$keystore_alias_check" ]; then
-		echo "Keystore: {{ key_alias }} already exists! Renewing {{ key_alias }} ..."
-		keytool \
-			-delete \
-			-alias {{ key_alias | quote }} \
-			-keystore "$keystore" \
-			-storepass {{ store_password | quote }}
-		GenerateKey "$keystore"
-		keytool -list -v -keystore "$keystore" -storepass {{ store_password | quote }} | grep "Valid"
-
-        ExportPrivateKey "$keystore"
-	else
-		echo "Keystore: {{ key_alias }} does not exist! Adding {{ key_alias }} ..." 
-		GenerateKey "$keystore"
-		keytool -list -v -keystore "$keystore" -storepass {{ store_password | quote }} | grep "Valid"
+    keystore_error_check="$(keytool -list -v -keystore "$keystore" -storepass {{ store_password | quote }} | grep error)"
+    keystore_alias_check="$(keytool -list -v -keystore "$keystore" -storepass {{ store_password | quote }} | grep {{ key_alias | quote }})"
+    if [ ! -z "$keystore_error_check" ]; then
+        echo "$keystore_error_check"
+        exit 1
+    elif [ ! -z "$keystore_alias_check" ]; then
+        echo "Keystore: {{ key_alias }} already exists! Renewing {{ key_alias }} ..."
+        keytool \
+            -delete \
+            -alias {{ key_alias | quote }} \
+            -keystore "$keystore" \
+            -storepass {{ store_password | quote }}
+        GenerateKey "$keystore"
+        keytool -list -v -keystore "$keystore" -storepass {{ store_password | quote }} | grep "Valid"
 
         ExportPrivateKey "$keystore"
-	fi
+    else
+        echo "Keystore: {{ key_alias }} does not exist! Adding {{ key_alias }} ..." 
+        GenerateKey "$keystore"
+        keytool -list -v -keystore "$keystore" -storepass {{ store_password | quote }} | grep "Valid"
+
+        ExportPrivateKey "$keystore"
+    fi
 
 else
-	echo "Keystore: "$keystore" does not exist! Generating "$keystore" ..."
-	GenerateKey "{{ apis_home }}/{{ keystore_file | quote }}"
+    echo "Keystore: "$keystore" does not exist! Generating "$keystore" ..."
+    GenerateKey "{{ apis_home }}/{{ keystore_file | quote }}"
     ExportPrivateKey "{{ apis_home }}/{{ keystore_file | quote }}"
 fi
 
 # Truststore
 if [ -f "$truststore" ]; then
-	echo "$truststore already exists!"
+    echo "$truststore already exists!"
 
-	truststore_error_check="$(keytool -list -v -keystore "$truststore" -storepass {{ store_password | quote }} | grep error)"
-	truststore_alias_check="$(keytool -list -v -keystore "$truststore" -storepass {{ store_password | quote }} | grep {{ key_alias | quote }})"
-	if [ ! -z "$truststore_error_check" ]; then
-		echo "$truststore_error_check"
-		exit 1
-	elif [ ! -z "$truststore_alias_check" ]; then
-		echo "Truststore: {{ key_alias }} already exists! Renewing {{ key_alias }} ..."
-		keytool \
-			-delete \
-			-alias {{ key_alias | quote }} \
-			-keystore "$truststore" \
-			-storepass {{ store_password | quote }}
-		ImportCert "$keystore" "$truststore"
-		keytool -list -v -keystore "$truststore" -storepass {{ store_password | quote }} | grep "Valid"
-	else
-		echo "Truststore: {{ key_alias }} does not exist! Adding {{ key_alias }} ..." 
-		ImportCert "$keystore" "$truststore"
-		keytool -list -v -keystore "$truststore" -storepass {{ store_password | quote }} | grep "Valid"
-	fi
+    truststore_error_check="$(keytool -list -v -keystore "$truststore" -storepass {{ store_password | quote }} | grep error)"
+    truststore_alias_check="$(keytool -list -v -keystore "$truststore" -storepass {{ store_password | quote }} | grep {{ key_alias | quote }})"
+    if [ ! -z "$truststore_error_check" ]; then
+        echo "$truststore_error_check"
+        exit 1
+    elif [ ! -z "$truststore_alias_check" ]; then
+        echo "Truststore: {{ key_alias }} already exists! Renewing {{ key_alias }} ..."
+        keytool \
+            -delete \
+            -alias {{ key_alias | quote }} \
+            -keystore "$truststore" \
+            -storepass {{ store_password | quote }}
+        ImportCert "$keystore" "$truststore"
+        keytool -list -v -keystore "$truststore" -storepass {{ store_password | quote }} | grep "Valid"
+    else
+        echo "Truststore: {{ key_alias }} does not exist! Adding {{ key_alias }} ..." 
+        ImportCert "$keystore" "$truststore"
+        keytool -list -v -keystore "$truststore" -storepass {{ store_password | quote }} | grep "Valid"
+    fi
 
 else
-	echo "Truststore: "$truststore" does not exist! Generating "$truststore" ..."
-	ImportCert "{{ apis_home }}/{{ keystore_file | quote }}" "{{ apis_home }}/{{ truststore_file }}"
+    echo "Truststore: "$truststore" does not exist! Generating "$truststore" ..."
+    ImportCert "{{ apis_home }}/{{ keystore_file | quote }}" "{{ apis_home }}/{{ truststore_file }}"
 fi

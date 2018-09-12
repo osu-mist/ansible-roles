@@ -18,5 +18,3 @@ key_alg: RSA
 key_size: "2048"
 sig_alg: SHA256withRSA
 key_validity: "365"
-by_keytool: false
-by_openssl: false

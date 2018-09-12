@@ -33,6 +33,7 @@
       - "{{ key_alias }}.keystore"
       - "{{ key_alias }}.truststore"
       - "{{ key_alias }}.pem"
+      - "{{ key_alias }}.key"
     register: new_certs_stat
 
   - name: stat old certs
@@ -42,6 +43,7 @@
       - "{{ key_alias }}.keystore"
       - "{{ key_alias }}.truststore"
       - "{{ key_alias }}.pem"
+      - "{{ key_alias }}.key"
     register: old_certs_stat
 
   - name: backup certs to keytool_files/backup
@@ -51,6 +53,7 @@
       - { old_cert: "{{ old_certs_stat.results[0] }}", new_cert: "{{ new_certs_stat.results[0] }}" }
       - { old_cert: "{{ old_certs_stat.results[1] }}", new_cert: "{{ new_certs_stat.results[1] }}" }
       - { old_cert: "{{ old_certs_stat.results[2] }}", new_cert: "{{ new_certs_stat.results[2] }}" }
+      - { old_cert: "{{ old_certs_stat.results[3] }}", new_cert: "{{ new_certs_stat.results[3] }}" }
 
   - name: move certs to keytool_files
     command: mv /apis/{{ item.item }} /apis/keytool_files/{{ item.item }}

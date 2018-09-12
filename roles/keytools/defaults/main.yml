@@ -2,18 +2,18 @@ api_user: osu_apis
 api_group: apis
 apis_home: /apis
 keytool_files_path: "{{ apis_home }}/keytool_files"
-openssl_backup_path: "{{ keytool_files_path }}/backup/openssl"
+backup_path: "{{ keytool_files_path }}/backup"
 gen_openssl_certs_script: gen-openssl-certs.sh
 
 key_country: US
-key_state: Oreon
+key_state: Oregon
 key_location: Corvallis
 key_organization: Oregon State University
 key_organization_unit: Enterprise Computing Services
 key_common_name: User Name
-key_dname: "CN={{ key_common_name }}, OU={{ key_organization_unit }}, O={{ key_organization }}, L={{ key_location }}, S={{ key_state }}, C={{ key_country }}"
-key_ext: san=dns:localhost,ip:127.0.0.1
-key_alias: alias
+key_dname: "CN={{ ansible_fqdn }}, OU={{ key_organization_unit }}, O={{ key_organization }}, L={{ key_location }}, S={{ key_state }}, C={{ key_country }}"
+key_ext: "san=dns:{{ ansible_fqdn }},dns:{{ ansible_hostname }}"
+key_alias: server
 key_alg: RSA
 key_size: "2048"
 sig_alg: SHA256withRSA

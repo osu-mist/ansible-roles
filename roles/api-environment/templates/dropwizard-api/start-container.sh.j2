@@ -67,7 +67,7 @@ docker run \
     --volume $keytool_path/apidev.truststore:$keytool_path/apidev.truststore:ro \
     --volume $api_path:$api_path \
     --volume $config:$config:ro \
-    {{ docker_image }} \
+    {{ dropwizard_docker_image }} \
     /bin/bash -c "$java_command"
 
 if [[ ! $(docker ps -q -f name=$api) ]]; then

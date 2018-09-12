@@ -1,7 +1,7 @@
 #!/bin/sh
 
-keystore="{{ keytool_files_path }}/{{ key_alias }}.keystore"
-truststore="{{ keytool_files_path }}/{{ key_alias }}.truststore"
+keystore="{{ keytool_files_path }}/{{ keystore_file }}"
+truststore="{{ keytool_files_path }}/{{ truststore_file }}"
 
 GenerateKey () {
 	keytool \
@@ -26,12 +26,12 @@ ImportCert () {
 		-keystore "$1" \
 		-storepass {{ store_password | quote}} \
 		-keypass {{ key_password | quote }} \
-		-file /apis/{{ key_alias | quote }}.pem
+		-file {{ apis_home }}/{{ certificate_file | quote }}
 
 	keytool \
 		-importcert \
 		-alias {{ key_alias | quote }} \
-		-file /apis/{{ key_alias | quote }}.pem \
+		-file {{ apis_home }}/{{ certificate_file | quote }} \
 		-storepass {{ store_password | quote }} \
 		-keypass {{ key_password | quote }} \
 		-noprompt \
@@ -45,21 +45,21 @@ ExportPrivateKey () {
         -srcalias {{ key_alias | quote }} \
         -srcstorepass {{ store_password | quote }} \
         -srckeypass {{ key_password | quote }} \
-        -destkeystore "/apis/{{ key_alias | quote}}.p12" \
+        -destkeystore "{{ apis_home }}/{{ key_alias | quote}}.p12" \
         -deststoretype PKCS12 \
         -deststorepass temporary \
         -destkeypass temporary
 
     echo "Extracting private key from PKCS12 keystore"
     openssl pkcs12 \
-        -in "/apis/{{ key_alias | quote}}.p12" \
+        -in "{{ apis_home }}/{{ key_alias | quote}}.p12" \
         -nodes \
         -nocerts \
         -passin 'pass:temporary' \
-        -out "/apis/{{ key_alias | quote }}.key"
+        -out "{{ apis_home }}/{{ private_key_file | quote }}"
 
     echo "Removing PKCS12 keystore"
-    rm "/apis/{{ key_alias | quote}}.p12"
+    rm "{{ apis_home }}/{{ key_alias | quote}}.p12"
 }
 
 # Keystore
@@ -92,8 +92,8 @@ if [ -f $keystore ]; then
 
 else
 	echo "Keystore: "$keystore" does not exist! Generating "$keystore" ..."
-	GenerateKey "/apis/{{ key_alias | quote }}.keystore"
-    ExportPrivateKey "/apis/{{ key_alias | quote }}.keystore"
+	GenerateKey "{{ apis_home }}/{{ keystore_file | quote }}"
+    ExportPrivateKey "{{ apis_home }}/{{ keystore_file | quote }}"
 fi
 
 # Truststore
@@ -122,5 +122,5 @@ if [ -f "$truststore" ]; then
 
 else
 	echo "Truststore: "$truststore" does not exist! Generating "$truststore" ..."
-	ImportCert "/apis/{{ key_alias | quote }}.keystore" "/apis/{{ key_alias }}.truststore"
+	ImportCert "{{ apis_home }}/{{ keystore_file | quote }}" "{{ apis_home }}/{{ truststore_file }}"
 fi

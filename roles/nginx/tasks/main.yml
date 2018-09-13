@@ -1,0 +1,43 @@
+---
+  - name: install apt-transport-https
+    apt:
+      name: apt-transport-https
+      state: present
+      update_cache: true
+
+  - name: add nginx key
+    apt_key:
+      id: '573BFD6B3D8FBC641079A6ABABF5BD827BD9BF62'
+      url: https://nginx.org/keys/nginx_signing.key
+      state: present
+
+  - name: add nginx repository
+    apt_repository:
+      repo: "{{ item }}"
+    with_items:
+      - "deb {{ package_repository }}"
+      - "deb-src {{ package_repository }}"
+
+  - name: install nginx
+    apt:
+      name: "{{ package_name }}={{ version }}"
+      state: present
+      update_cache: yes
+
+  - name: Pin nginx version
+    copy:
+      dest: "/etc/apt/preferences.d/{{ package_name }}"
+      content: |
+        Package: {{ package_name }}
+        Pin: version {{ version }}
+        Pin-Priority: 1002
+
+  - name: remove default nginx configuration
+    file:
+      path: /etc/nginx/conf.d/default.conf
+      state: absent
+
+  - name: run nginx
+    service:
+      name: "{{ package_name }}"
+      state: started

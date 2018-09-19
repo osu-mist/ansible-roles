@@ -2,13 +2,11 @@
 # file path and name variables
 garbage_home: "/apis/docker_garbage_collection/"
 backup_images: "{{garbage_home}}backup_images/"
-backup_containers: "{{garbage_home}}backup_containers/"
-garbage_script: "garbage-collect.py"
-config_file: "config.yml"
+garbage_script: "garbage-collect-docker.sh"
 
 # user variables
 garbage_user: "root"
 garbage_group: "root"
 
 # garbage collection variables
-dangling_image_removal_minimum_age_hours: 336
+stopped_container_error_delimiter: "stopped container "

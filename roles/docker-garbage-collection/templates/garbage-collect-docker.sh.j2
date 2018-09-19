@@ -4,6 +4,11 @@
 # Backs up and removes dangling docker images. Removes stopped containers
 #   any image removal
 
+stopped_container_error_delimiter="{{stopped_container_error_delimiter}}"
+backup_images="{{backup_images}}"
+
+{% raw %}
+
 ###
 # remove_image()
 # Description: Attempts to remove an image. If a stopped container prevents
@@ -17,7 +22,7 @@ remove_image()
     removal_exit=$(echo $?)
 
     # check for stopped container preventing removal
-    container_id=$(echo $removal_output | sed -n -e 's/^.*stopped container //p')
+    container_id=$(echo $removal_output | sed -n -e 's/^.*$stopped_container_error_delimiter//p')
     if [ $removal_exit -eq 1 ] && [ ${#container_id} -gt 1 ]
     then
         docker rm $container_id
@@ -37,7 +42,7 @@ main()
     for id in "${dangling_ids[@]}"
     do
         # backup dangling image
-        $(docker save -o /Users/ecsstudent/Documents/$id.tar $id)
+        $(docker save -o $backup_image_path$id.tar $id)
 
         # remove dangling image
         remove_image $id
@@ -47,24 +52,4 @@ main()
 
 main
 
-# remove dangling images
-#for id in "${dangling_ids[@]}"
-#do
- #   removal_output=$(docker rmi $id 2>&1)
-  #  container_delimiter="stopped container "
-
-
-#done
-
-# select IDs older than 2 weeks
-#for id in "${dangling_ids[@]}"
-#do
-#    image_date=$(date -j -f "%Y-%m-%d\ %H:%M:%S" +%s $(docker inspect --format='{{.Created}}' $id))
-#    current_date=$(date +%s)
-#    date_difference="$((current_date - image_date))"
-
-     #echo $current_date
-#     echo $image_date
-     #echo $date_difference
-
-#done
+{% endraw %}

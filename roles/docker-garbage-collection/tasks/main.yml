@@ -1,9 +1,4 @@
 ---
-- name: "install dateutil library"
-  pip:
-    name: python-dateutil
-    state: latest
-
 - name: "create docker_garbage_collection directory"
   file:
     path: "{{garbage_home}}"
@@ -20,27 +15,12 @@
     group: "{{garbage_group}}"
     mode: "0754"
 
-- name: "create container backup directory"
-  file:
-    path: "{{backup_containers}}"
-    state: "directory"
-    owner: "{{garbage_user}}"
-    group: "{{garbage_group}}"
-    mode: "0754"
-
-- name: "generate configuration file"
+- name: "generate garbage collection script"
   template:
-    src: "{{config_file}}.j2"
-    dest: "{{garbage_home}}{{config_file}}"
-    owner: "{{garbage_user}}"
-    mode: "0754"
-
-- name: "copy garbage collection script"
-  copy:
-    src: "{{garbage_script}}"
+    src: "{{garbage_script}}.j2"
     dest: "{{garbage_home}}{{garbage_script}}"
     owner: "{{garbage_user}}"
-    mode: "0554"
+    mode: "0754"
 
 - name: "execute garbage collection script"
-  command: "python {{garbage_home}}{{garbage_script}} {{garbage_home}}{{config_file}}"
+  command: "{{garbage_home}}{{garbage_script}}"

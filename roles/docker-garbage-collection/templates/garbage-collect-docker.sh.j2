@@ -22,14 +22,13 @@ remove_image()
     removal_exit=$(echo $?)
 
     # check for stopped container preventing removal
-    container_id=$(echo $removal_output | sed -n -e 's/^.*$stopped_container_error_delimiter//p')
+    container_id=$(echo $removal_output | sed -n -e 's/^.*'$stopped_container_error_delimiter'//p')
     if [ $removal_exit -eq 1 ] && [ ${#container_id} -gt 1 ]
     then
         docker rm $container_id
         remove_image $id
     fi
 }
-
 
 ###
 # Main function of script
@@ -42,7 +41,7 @@ main()
     for id in "${dangling_ids[@]}"
     do
         # backup dangling image
-        $(docker save -o $backup_image_path$id.tar $id)
+        $(docker save -o $backup_images$id.tar $id)
 
         # remove dangling image
         remove_image $id

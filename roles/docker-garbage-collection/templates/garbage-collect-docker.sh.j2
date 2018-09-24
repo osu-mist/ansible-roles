@@ -2,9 +2,9 @@
 
 # garbage-collect-docker.sh
 # Backs up and removes dangling docker images. Removes stopped containers
-#   any image removal
+#   preventing any image removal
 
-stopped_container_error_delimiter="{{stopped_container_error_delimiter}}"
+stopped_container_sed_pattern="{{stopped_container_sed_pattern}}"
 backup_images="{{backup_images}}"
 
 {% raw %}
@@ -22,7 +22,7 @@ remove_image()
     removal_exit=$(echo $?)
 
     # check for stopped container preventing removal
-    container_id=$(echo $removal_output | sed -n -e 's/^.*'$stopped_container_error_delimiter'//p')
+    container_id=$(echo $removal_output | sed -n -e "$stopped_container_sed_pattern")
     if [ $removal_exit -eq 1 ] && [ ${#container_id} -gt 1 ]
     then
         docker rm $container_id

@@ -9,4 +9,4 @@ garbage_user: "root"
 garbage_group: "root"
 
 # garbage collection variables
-stopped_container_error_delimiter: "stopped container "
+stopped_container_sed_pattern: "s/^.*stopped container //p"

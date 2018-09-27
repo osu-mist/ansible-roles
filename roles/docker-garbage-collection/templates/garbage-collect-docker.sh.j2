@@ -17,6 +17,9 @@ backup_images="{{backup_images}}"
 ###
 remove_image()
 {
+    local id
+    local removal_output
+    local removal_exit
     id=$1
     removal_output=$(docker rmi $id 2>&1)
     removal_exit=$(echo $?)

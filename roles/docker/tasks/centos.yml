@@ -28,10 +28,22 @@
     yum:
       name: yum-versionlock
 
+  - name: Get Docker CE versions
+    yum:
+      list: docker-ce
+    register: docker_versions
+
+  - name: Get installed Docker CE versions
+    set_fact:
+      installed_docker_versions: "{{ docker_versions | json_query(query) }}"
+    vars:
+      query: "results[?yumstate=='installed'].version"
+
   - name: remove existing Docker CE versionlocks
     command: yum versionlock delete {{ docker_ce_pkg_name }}
     args:
       warn: false
+    when: centos_docker_ce_version not in installed_docker_versions
     register: versionlock_delete
     failed_when: "versionlock_delete.rc != 0 and 'no matches' not in versionlock_delete.stderr"
 
@@ -39,7 +51,10 @@
     command: yum versionlock add {{ docker_ce_pkg_name }}-{{ centos_docker_ce_version }}
     args:
       warn: false
+    when: centos_docker_ce_version not in installed_docker_versions
 
   - name: install Docker CE
     yum:
       name: "{{ docker_ce_pkg_name }}-{{ centos_docker_ce_version }}"
+      allow_downgrade: yes
+    when: centos_docker_ce_version not in installed_docker_versions

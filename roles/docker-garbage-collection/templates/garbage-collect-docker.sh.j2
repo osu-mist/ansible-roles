@@ -26,7 +26,7 @@ remove_image()
 
     # check for stopped container preventing removal
     container_id=$(echo $removal_output | sed -n -e "$stopped_container_sed_pattern")
-    if [ $removal_exit -eq 1 ] && [ ${#container_id} -gt 1 ]
+    if [ $removal_exit -eq 1 ] && [ -n "$container_id" ]
     then
         docker rm $container_id
         remove_image $id

@@ -5,7 +5,7 @@
 #   preventing any image removal
 
 stopped_container_sed_pattern="{{stopped_container_sed_pattern}}"
-backup_images="{{garbage_home}}/{{backup_images}}"
+backup_images_dir="{{garbage_home}}/{{backup_images_dir}}"
 
 {% raw %}
 
@@ -22,7 +22,7 @@ remove_image()
     local removal_exit
     id=$1
     removal_output=$(docker rmi $id 2>&1)
-    removal_exit=$(echo $?)
+    removal_exit=$?
 
     # check for stopped container preventing removal
     container_id=$(echo $removal_output | sed -n -e "$stopped_container_sed_pattern")
@@ -44,7 +44,7 @@ main()
     for id in "${dangling_ids[@]}"
     do
         # backup dangling image
-        $(docker save -o $backup_images/$id.tar $id)
+        $(docker save -o $backup_images_dir/$id.tar $id)
 
         # remove dangling image
         remove_image $id

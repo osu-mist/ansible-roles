@@ -1,7 +1,7 @@
 ---
 - name: "create docker garbage collection directories"
   file:
-    path: "{{garbage_home}}/{{backup_images}}"
+    path: "{{garbage_home}}/{{backup_images_dir}}"
     state: "directory"
     owner: "{{garbage_user}}"
     group: "{{garbage_group}}"

@@ -16,6 +16,31 @@ The role does the following things (in order):
  5. TODO: Removes all images/containers older than 4 weeks from the backup
  6. TODO: Log images and container removal
 
+## Example playbook running only this role:
+    ---
+        - hosts: api-servers
+
+          vars_files:
+          - ansible-private-roles/common_vars.yml
+          - ansible-private-roles/vault.yml
+          - ansible-roles/vault.yml
+
+          tasks:
+            - name: set up API environment
+              import_role:
+                name: docker-garbage-collection
+              become: yes
+
+### Example api-inv for API server
+    [api-servers]
+    192.168.33.2
+
+    [api-servers:vars]
+    ansible_ssh_user=vagrant
+
+### Example playbook execution:
+`ansible-playbook -i api-inv api.yml --ask-become-pass -v`
+
 ## Image Recovery
 Backed up images can be recovered by doing the following:
 
@@ -28,5 +53,5 @@ The decisions of what this role backs up and deletes were made by testing severa
 - When a image cannot be removed due to a stopped container, this means that the image failed during the build process, and the stopped container is an intermediate layer.
     - Exporting and reimporting this stopped container results in another dangling image that, when run, creates another broken stopped container.
     - These images fail to build, but are backed up for debugging. The container is not backed up as it only generates a similar image (described above)
-- When an image can be removed without error, it is likely an image that was successfully built, but has been replaced by a newer one. It can be reimported and made non-dangling as described in ## Image Recovery. To avoid the newer image becoming a dangling image, rename it as described in ## Image Recovery.
+- When an image can be removed without error, it is likely an image that was successfully built, but has been replaced by a newer one. It can be reimported and made non-dangling as described in [Image Recovery](## Image Recovery). To avoid the newer image becoming a dangling image, rename it as described in [Image Recovery](## Image Recovery).
 - It is plausible that stopped containers and unused networks could be reused in the docker environment. Docker prune removes these. This role does not remove any networks, and only removes dangling images and the "broken containers" described above.

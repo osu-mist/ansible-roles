@@ -1,4 +1,9 @@
 ---
+  - name: update pyOpenSSL
+    pip:
+      name: pyOpenSSL
+      state: latest
+
   - name: check if modify keytool passwords or not
     fail:
       msg: "Please enter new passwords for keystore and truststore!"

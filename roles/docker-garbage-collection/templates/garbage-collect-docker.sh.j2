@@ -5,7 +5,7 @@
 #   preventing any image removal
 
 stopped_container_sed_pattern="{{stopped_container_sed_pattern}}"
-backup_images="{{backup_images}}"
+backup_images="{{garbage_home}}/{{backup_images}}"
 
 {% raw %}
 
@@ -44,7 +44,7 @@ main()
     for id in "${dangling_ids[@]}"
     do
         # backup dangling image
-        $(docker save -o $backup_images$id.tar $id)
+        $(docker save -o $backup_images/$id.tar $id)
 
         # remove dangling image
         remove_image $id

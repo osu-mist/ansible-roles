@@ -1,15 +1,7 @@
 ---
-- name: "create docker_garbage_collection directory"
+- name: "create docker garbage collection directories"
   file:
-    path: "{{garbage_home}}"
-    state: "directory"
-    owner: "{{garbage_user}}"
-    group: "{{garbage_group}}"
-    mode: "0754"
-
-- name: "create image backup directory"
-  file:
-    path: "{{backup_images}}"
+    path: "{{garbage_home}}/{{backup_images}}"
     state: "directory"
     owner: "{{garbage_user}}"
     group: "{{garbage_group}}"
@@ -18,9 +10,9 @@
 - name: "generate garbage collection script"
   template:
     src: "{{garbage_script}}.j2"
-    dest: "{{garbage_home}}{{garbage_script}}"
+    dest: "{{garbage_home}}/{{garbage_script}}"
     owner: "{{garbage_user}}"
     mode: "0754"
 
 - name: "execute garbage collection script"
-  command: "{{garbage_home}}{{garbage_script}}"
+  command: "{{garbage_home}}/{{garbage_script}}"

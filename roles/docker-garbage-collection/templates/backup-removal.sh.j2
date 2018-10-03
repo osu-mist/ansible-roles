@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# garbage-collect-docker.sh
+# Backs up and removes dangling docker images. Removes stopped containers
+#   preventing any image removal
+
+backup_max_age={{backup_max_age}}
+backup_images_path="{{garbage_home}}/{{backup_images_dir}}"
+log_path="{{garbage_home}}/{{log_file}}"
+
+{% raw %}
+
+for backup_file in $backup_images_path/*; do
+    if [ $(stat -c %Y $backup_file) -lt $(date -d '-4 week' +%s) ]
+    then
+        rm $backup_file
+        if [ $? -eq 0 ]
+        then
+            echo $(date) "Removed $backup_file from backup" >> ${log_path}
+        else
+            echo $(date) "Failed removing $backup_file from backup" >> ${log_path}
+        fi
+    fi
+done
+
+{% endraw %}

@@ -67,6 +67,7 @@ main()
         docker save -o $backup_images_path/$id.tar $id
         if [ $? -eq 0 ]
         then
+            touch -a $backup_images_path/$id.tar
             log "Backed up image $id"
             # remove dangling image
             remove_image $id

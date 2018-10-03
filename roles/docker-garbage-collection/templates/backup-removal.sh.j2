@@ -1,8 +1,7 @@
 #!/bin/bash
 
-# garbage-collect-docker.sh
-# Backs up and removes dangling docker images. Removes stopped containers
-#   preventing any image removal
+# backup-removal.sh
+# Removes any backed up images older than the backup_max_age parameter
 
 backup_max_age={{backup_max_age}}
 backup_images_path="{{garbage_home}}/{{backup_images_dir}}"

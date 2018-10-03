@@ -9,12 +9,13 @@ To prune our Docker systems more conservatively, the purpose of this role is to 
 ## Overview
 The role does the following things (in order):
 
- 1. Collects the IDs of any dangling images
- 2. Backs up each dangling image to the backup directory specified in defaults
+ 1. Collects the IDs of any dangling images.
+ 2. Backs up each dangling image to the backup directory specified in defaults.
  3. Attempt to remove remaining dangling images.
  4. If any "stopped container" errors occur, this is an indication that the container is broken. Deletes this container, then attempts to remove the dangling image that caused the error again.
- 5. TODO: Removes all images/containers older than 4 weeks from the backup
- 6. TODO: Log images and container removal
+ 5. Removes all images/containers older than the backup_max_age parameter from the backup.
+
+ Any backup or removal of images or containers is logged at the log_file location parameter. Removal of old backups is logged as well.
 
 ## Example playbook running only this role:
     ---

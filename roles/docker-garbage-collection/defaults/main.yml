@@ -15,4 +15,4 @@ garbage_group: "apis"
 stopped_container_sed_pattern: "s/^.*stopped container //p"
 
 # old backup removal variables
-backup_max_age: 2419200
+backup_max_age: 2419200     # epoch time

@@ -7,6 +7,15 @@
     group: "{{garbage_group}}"
     mode: "0754"
 
+- name: "create empty log file if no log exists"
+  copy:
+    content: ""
+    dest: "{{garbage_home}}/{{log_file}}"
+    force: no
+    group: "{{garbage_user}}"
+    owner: "{{garbage_user}}"
+    mode: "0660"
+
 - name: "generate garbage collection script"
   template:
     src: "{{garbage_script}}.j2"

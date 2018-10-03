@@ -2,7 +2,7 @@
   - name: update pyOpenSSL
     pip:
       name: pyOpenSSL
-      state: latest
+      version: "{{ pyopenssl_version }}"
 
   - name: check if modify keytool passwords or not
     fail:

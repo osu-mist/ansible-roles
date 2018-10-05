@@ -18,7 +18,7 @@
 
 - name: "execute garbage collection script and backup removal script"
   command: "{{item}}"
-  become: true
+  become: yes
   ignore_errors: yes
   with_items:
     - "{{garbage_home}}/{{garbage_script}}"

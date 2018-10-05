@@ -7,10 +7,6 @@ backup_removal_script: "backup-removal.sh"
 backup_permission_script: "backup-removal-permission.sh"
 log_file: "docker_garbage_collection.log"
 
-# user variables
-garbage_user: "osu_apis"
-garbage_group: "apis"
-
 # garbage collection variables
 stopped_container_sed_pattern: "s/^.*stopped container //p"
 

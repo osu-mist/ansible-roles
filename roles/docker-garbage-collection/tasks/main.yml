@@ -3,7 +3,7 @@
   file:
     path: "{{garbage_home}}/{{backup_images_dir}}"
     state: "directory"
-    mode: "0664"
+    mode: "0665"
 
 - name: "generate all templated scripts"
   template:

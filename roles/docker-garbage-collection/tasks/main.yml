@@ -20,6 +20,8 @@
   command: "{{item}}"
   become: yes
   ignore_errors: yes
+  register: script_register
+  changed_when: script_register.stdout != ""
   with_items:
     - "{{garbage_home}}/{{garbage_script}}"
     - "{{garbage_home}}/{{backup_removal_script}}"

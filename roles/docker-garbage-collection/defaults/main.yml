@@ -1,6 +1,6 @@
 ---
 # file path and name variables
-garbage_home: "/docker/docker_garbage_collection"
+garbage_home: "/opt/docker/docker_garbage_collection"
 backup_images_dir: "backup_images"
 garbage_script: "garbage-collect-docker.sh"
 backup_removal_script: "backup-removal.sh"

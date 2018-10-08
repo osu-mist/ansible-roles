@@ -9,15 +9,26 @@ log_path="{{garbage_home}}/{{log_file}}"
 
 {% raw %}
 
+###
+# log()
+# Description: Appends the log file with a timestamp and message
+# Parameters: $1 is the message.
+###
+log()
+{
+    echo $(date) $1 >> ${log_path}
+    echo $1
+}
+
 for backup_file in $backup_images_path/*; do
     if [ $(stat -c %Y $backup_file) -lt $(date -d '-4 week' +%s) ]
     then
         rm $backup_file
         if [ $? -eq 0 ]
         then
-            echo $(date) "Removed $backup_file from backup" >> ${log_path}
+            log "Removed $backup_file from backup"
         else
-            echo $(date) "Failed removing $backup_file from backup" >> ${log_path}
+            log "Failed removing $backup_file from backup"
         fi
     fi
 done

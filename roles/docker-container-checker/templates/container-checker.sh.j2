@@ -1,0 +1,30 @@
+#!/bin/sh
+# container-checker.sh - shows the information of containers which are ran as root
+# Usually called remotely by Jenkins
+# Usage: container-checker.sh
+
+set -eu
+
+containers=$(docker ps -aq)
+root_containers=0
+exit_code=0
+
+echo -e "\n=============== [{{ inventory_hostname }}] ==============="
+
+{% raw %}
+for container in $containers
+do
+  if [[ $(docker inspect $container --format "{{.Config.User}}") == root* ]]
+  then
+    container_id=$(docker inspect $container --format "{{.ID}}")
+    container_name=$(docker inspect $container --format "{{.Name}}")
+    echo "ID: $container_id | Name: $container_name"
+    ((root_containers+=1))
+    exit_code=1
+  fi
+done
+{% endraw %}
+
+echo -e "Total containers ran as root: $root_containers"
+echo -e "==================================================================\n"
+exit $exit_code

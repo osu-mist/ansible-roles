@@ -1,0 +1,18 @@
+---
+# file path and name parameters
+chaos_home: "/chaos"
+jenkins_kill_script: "jenkins-kill.sh"
+container_kill_script: "kill-container.sh"
+
+# chaos elligibility parameters
+killable_container_pattern: "api"
+
+# user and permission parameters
+chaos_user: "osu_apis"
+chaos_group: "apis"
+disable_requiretty_for_chaos_user: "Defaults:{{ chaos_user }} !requiretty"
+
+# notification parameters
+hipchat_chaos_room: "3319271"
+hipchat_chaos_token: "xYE3W2wHkgmGrsHTEWUXzzTIdrxlKMv6oGT5i6xm"
+hipchat_url: "https://osu-mist.hipchat.com/v2/room/{{hipchat_chaos_room}}/notification?auth_token={{hipchat_chaos_token}}"

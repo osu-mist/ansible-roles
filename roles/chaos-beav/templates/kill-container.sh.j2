@@ -1,0 +1,62 @@
+#!/bin/sh
+# kill-container.sh - ungracefully stops a docker container
+# Usage: sh ./kill-container.sh
+# Returns corresponding image name of killed container
+
+hipchat_url={{hipchat_url}}
+killable_container_pattern={{killable_container_pattern}}
+
+{% raw %}
+
+IFS=$'
+'
+containers=($(docker container ls --format "{{.ID}}\t{{.Image}}"))
+unset IFS
+
+hipchat_notification()
+{
+    curl -d '{"color":"red", "notify":true, "message_format":"text", "message":"'"$1"'"}' -H 'Content-Type: application/json' $hipchat_url
+}
+
+killable_container_exists()
+{
+    for container_string in "${containers[@]}"
+    do
+        container=($container_string)
+        if [[ ${container[1]} =~ "$killable_container_pattern" ]];
+        then
+            return 0
+        fi
+    done
+    return 1
+}
+
+kill_random_container()
+{
+    local index=$(($RANDOM%${#containers[@]}))
+    local container=(${containers[$index]})
+    if [[ ${container[1]} =~ "$killable_container_pattern" ]];
+    then
+        kill_output=$(docker kill ${container[0]} 2>&1)
+        if [ $? -eq 0 ]
+        then
+            hipchat_notification "Chaos Beaver has killed ${container[1]}"
+            echo ${container[1]}
+            exit 0
+        else
+            hipchat_notification "Chaos Beaver failed at killing ${container[1]}. $kill_output"
+        fi
+    else
+        kill_random_container
+    fi
+}
+
+if killable_container_exists
+then
+    kill_random_container
+else
+    hipchat_notification "Chaos Beaver killed nothing. No killable containers found."
+    exit 1
+fi
+
+{% endraw %}

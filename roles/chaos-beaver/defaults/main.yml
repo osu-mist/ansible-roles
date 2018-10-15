@@ -4,9 +4,6 @@ chaos_home: "/opt/docker/chaos"
 jenkins_kill_script: "jenkins-kill.sh"
 container_kill_script: "kill-container.sh"
 
-# chaos elligibility parameters
-killable_container_pattern: "api"
-
 # user and permission parameters
 chaos_user: "osu_apis"
 chaos_group: "apis"

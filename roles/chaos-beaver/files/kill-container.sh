@@ -3,10 +3,7 @@
 # Usage: sh ./kill-container.sh
 # Returns corresponding image name of killed container
 
-
-killable_container_pattern={{killable_container_pattern}}
-
-{% raw %}
+killable_container_pattern="api"
 
 IFS=$'
 '
@@ -32,7 +29,7 @@ kill_random_container()
     local container=(${containers[$index]})
     if [[ ${container[1]} =~ "$killable_container_pattern" ]];
     then
-        kill_output=$(docker kill ${container[0]} 2>&1)
+        (docker kill ${container[0]} 2>&1)
         if [ $? -eq 0 ]
         then
             echo ${container[1]}
@@ -51,5 +48,3 @@ then
 else
     exit 0
 fi
-
-{% endraw %}

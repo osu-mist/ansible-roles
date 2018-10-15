@@ -1,6 +1,6 @@
 ---
 # file path and name parameters
-chaos_home: "/chaos"
+chaos_home: "/opt/docker/chaos"
 jenkins_kill_script: "jenkins-kill.sh"
 container_kill_script: "kill-container.sh"
 

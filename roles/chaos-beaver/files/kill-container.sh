@@ -29,7 +29,7 @@ kill_random_container()
     local container=(${containers[$index]})
     if [[ ${container[1]} =~ "$killable_container_pattern" ]];
     then
-        (docker kill ${container[0]} 2>&1)
+        docker kill ${container[0]} 2>&1 > /dev/null
         if [ $? -eq 0 ]
         then
             echo ${container[1]}

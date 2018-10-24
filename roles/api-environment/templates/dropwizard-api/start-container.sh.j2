@@ -74,3 +74,18 @@ if [[ ! $(docker ps -q -f name=$api) ]]; then
     echo "ERROR: Container not running"
     exit 1
 fi
+
+timeout={{ container_timeout_seconds }}
+counter=$timeout
+{% raw %}
+while [ $(docker inspect --format='{{json .State.Health.Status}}' $api) != "\"healthy\"" ] && [ $timeout != 0 ]; do
+{% endraw %}
+  sleep 1
+  timeout=$((timeout - 1))
+done
+if [ $timeout == 0 ]; then
+  echo "ERROR: Container health timeout expired after $timeout seconds"
+  exit 1
+else
+  echo "Container healthy after $((timeout - counter)) seconds"
+fi

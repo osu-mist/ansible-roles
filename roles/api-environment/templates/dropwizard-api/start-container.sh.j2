@@ -6,44 +6,44 @@
 
 set -eu
 
-api=${1:-}
-if [ -z "$api" ]; then
+api_name=${1:-}
+if [ -z "$api_name" ]; then
     echo 2>&1 "usage: jenkins-run.sh API-NAME"
     exit 1
 fi
-if [ "$(echo $api | tr -d "A-Za-z0-9-_")" ]; then
-    echo 2>&1 "invalid api name: $api"
+if [ "$(echo $api_name | tr -d "A-Za-z0-9-_")" ]; then
+    echo 2>&1 "invalid api name: $api_name"
     exit 1
 fi
-if [ ! -d /apis/apis/"$api" ]; then
-    echo 2>&1 "api does not exist: $api"
+if [ ! -d /apis/apis/"$api_name" ]; then
+    echo 2>&1 "api does not exist: $api_name"
     exit 1
 fi
 
-api_path=/apis/apis/$api
+api_path=/apis/apis/$api_name
 cd $api_path &&
 
-archive=$(ls "$api"-*-all.jar | sort | tail -1)
-config=/apis/config/$api.yaml
-env=/apis/env/$api.env
+archive=$(ls "$api_name"-*-all.jar | sort | tail -1)
+config=/apis/config/$api_name.yaml
+env=/apis/env/$api_name.env
 keytool_path=/apis/keytool_files
 
 if [ ! -e "$config" ]; then
-    config=/apis/apis/$api/configuration.yaml
+    config=/apis/apis/$api_name/configuration.yaml
 fi
 
 uid="$(id -u {{ api_user }})"
 gid="$(id -g {{ api_user }})"
 
 # Stop and destroy container if it's already running
-if [[ "$(docker ps -aq -f name=$api)" ]]; then
+if [[ "$(docker ps -aq -f name=$api_name)" ]]; then
     echo "Stop existing container"
-    docker stop "$api"
-    docker rm "$api"
+    docker stop "$api_name"
+    docker rm "$api_name"
 
     # Sometimes docker will still think a container exists after doing "docker rm"
     # Pause the script for a few seconds before creating the container again
-    until [[ ! "$(docker ps -aq -f name=$api)" ]]; do
+    until [[ ! "$(docker ps -aq -f name=$api_name)" ]]; do
         sleep 1
     done
 fi
@@ -54,7 +54,7 @@ java_command="java -jar $archive server $config"
 
 docker run \
     -d \
-    --name "$api" \
+    --name "$api_name" \
     --label jar=$archive \
     --restart on-failure:3 \
     --user="$uid:$gid" \
@@ -70,22 +70,9 @@ docker run \
     {{ dropwizard_docker_image }} \
     /bin/bash -c "$java_command"
 
-if [[ ! $(docker ps -q -f name=$api) ]]; then
+if [[ ! $(docker ps -q -f name=$api_name) ]]; then
     echo "ERROR: Container not running"
     exit 1
 fi
 
-timeout={{ container_timeout_seconds }}
-counter=$timeout
-{% raw %}
-while [ $(docker inspect --format='{{json .State.Health.Status}}' $api) != "\"healthy\"" ] && [ $timeout != 0 ]; do
-{% endraw %}
-  sleep 1
-  timeout=$((timeout - 1))
-done
-if [ $timeout == 0 ]; then
-  echo "ERROR: Container health timeout expired after $timeout seconds"
-  exit 1
-else
-  echo "Container healthy after $((timeout - counter)) seconds"
-fi
+{% include 'timeout-delay.sh.j2' %}

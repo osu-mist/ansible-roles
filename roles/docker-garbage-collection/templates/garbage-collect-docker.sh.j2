@@ -1,0 +1,80 @@
+#!/bin/bash
+
+# garbage-collect-docker.sh
+# Backs up and removes dangling docker images. Removes stopped containers
+#   preventing any image removal
+
+stopped_container_sed_pattern="{{stopped_container_sed_pattern}}"
+backup_images_path="{{garbage_home}}/{{backup_images_dir}}"
+log_path="{{garbage_home}}/{{log_file}}"
+
+{% raw %}
+
+###
+# log()
+# Description: Appends the log file with a timestamp and message
+# Parameters: $1 is the message.
+###
+log()
+{
+    echo $(date) $1 >> ${log_path}
+    echo $1
+}
+
+###
+# remove_image()
+# Description: Attempts to remove an image. If a stopped container prevents
+#   this, it removes the container and tries again.
+# Parameters: $1 is image ID
+###
+remove_image()
+{
+    local id
+    local removal_output
+    local removal_exit
+    id=$1
+    removal_output=$(docker rmi $id 2>&1)
+    removal_exit=$?
+
+    # check for stopped container preventing removal
+    container_id=$(echo $removal_output | sed -n -e "$stopped_container_sed_pattern")
+    if [ $removal_exit -eq 1 ] && [ -n "$container_id" ]
+    then
+        log "Stopped container $container_id prevented removal of image $id"
+        docker rm $container_id
+        if [ $? -eq 1 ]
+        then
+            log "Failed removing container $container_id"
+        else
+            log "Removed container $container_id"
+            remove_image $id
+        fi
+    else
+        log "Removed image $id"
+    fi
+}
+
+main()
+{
+    # collect IDs of dangling images
+    dangling_ids=($(docker images --filter "dangling=true" --format "{{.ID}}"))
+
+    for id in "${dangling_ids[@]}"
+    do
+        # backup dangling image
+        docker save -o $backup_images_path/$id.tar $id
+        if [ $? -eq 0 ]
+        then
+            touch -a $backup_images_path/$id.tar
+            log "Backed up image $id"
+            # remove dangling image
+            remove_image $id
+        else
+            log "Backup of image $id failed"
+        fi
+    done
+}
+
+main
+
+{% endraw %}

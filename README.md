@@ -52,3 +52,7 @@ and add `--vault-id /path/to/vault/password-file` to specify vault password file
 * [elasticsearch](roles/elasticsearch)
 
 	* Description: Install [Elasticsearch](https://www.elastic.co/downloads/elasticsearch) and ensure the service is running.
+
+* [docker-garbage-collection](roles/docker-garbage-collection)
+
+    * Description: Removes dangling images and broken containers from the Docker environment. Backs up dangling images before removal.

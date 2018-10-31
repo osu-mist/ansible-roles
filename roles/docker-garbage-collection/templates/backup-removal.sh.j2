@@ -1,0 +1,36 @@
+#!/bin/bash
+
+# backup-removal.sh
+# Removes any backed up images older than the backup_max_age parameter
+
+backup_max_age={{backup_max_age}}
+backup_images_path="{{garbage_home}}/{{backup_images_dir}}"
+log_path="{{garbage_home}}/{{log_file}}"
+
+{% raw %}
+
+###
+# log()
+# Description: Appends the log file with a timestamp and message
+# Parameters: $1 is the message.
+###
+log()
+{
+    echo $(date) $1 >> ${log_path}
+    echo $1
+}
+
+for backup_file in $backup_images_path/*; do
+    if [ $(stat -c %Y $backup_file) -lt $(date -d '-4 week' +%s) ]
+    then
+        rm $backup_file
+        if [ $? -eq 0 ]
+        then
+            log "Removed $backup_file from backup"
+        else
+            log "Failed removing $backup_file from backup"
+        fi
+    fi
+done
+
+{% endraw %}

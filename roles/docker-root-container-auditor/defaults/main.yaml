@@ -1,0 +1,12 @@
+---
+docker_home: "/opt/docker"
+container_checker_dir: "{{ docker_home }}/root_container_auditor"
+
+api_user: "osu_apis"
+api_group: "apis"
+
+disable_requiretty_for_api_user: "Defaults:{{ api_user }} !requiretty"
+
+jenkins_check_container_script: "jenkins-audit-root-container.sh"
+container_checker_script: "root-container-auditor.sh"
+container_checker_path: "{{ container_checker_dir }}/{{ container_checker_script }}"

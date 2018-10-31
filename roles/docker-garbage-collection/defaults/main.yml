@@ -1,0 +1,14 @@
+---
+# file path and name variables
+garbage_home: "/opt/docker/docker_garbage_collection"
+backup_images_dir: "backup_images"
+garbage_script: "garbage-collect-docker.sh"
+backup_removal_script: "backup-removal.sh"
+backup_permission_script: "backup-removal-permission.sh"
+log_file: "docker_garbage_collection.log"
+
+# garbage collection variables
+stopped_container_sed_pattern: "s/^.*stopped container //p"
+
+# old backup removal variables
+backup_max_age: 2419200     # epoch time

@@ -4,6 +4,7 @@ Keytools
 This role is to create certificates with Java keytool and OpenSSL.
 
 This role will create 4 files:
+
 - server.keystore - Contains the certificate and private key for use by JVM
   applications.
 - server.truststore - Contains the certificate used in server.keystore.
@@ -18,3 +19,7 @@ with keystores.
 in `defaults/main.yml` or the playbook. Instead, define your passwords in `vault.yml`.
 See this [readme](../../README.md#usage) for more information about using
 ansible-vault.
+
+Note: This role makes use of the `openssl_certificate` Ansible module which
+requires pyOpenSSL >= 0.15. Installing pyOpenSSL 0.15 or 0.15.1 may break some
+versions of pip so 16.2.0 or later is preferred.

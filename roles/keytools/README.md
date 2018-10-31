@@ -1,9 +1,20 @@
 Keytools
 ===
 
-This role is to create certificates with Java keytool or OpenSSL.
+This role is to create certificates with Java keytool and OpenSSL.
 
-## Usage
+This role will create 4 files:
+- server.keystore - Contains the certificate and private key for use by JVM
+  applications.
+- server.truststore - Contains the certificate used in server.keystore.
+- server.pem - X509 certificate, which is also located in server.keystore and
+  server.truststore.
+- server.key - Private key for certificate, also located in server.keystore.
 
-1. By enabling `by_keytool: true` to create certificates by using Java keytool, or using `by_openssl: true` by using OpenSSL.
-2. **DO NOT** put certificated password like `store_password` and `key_password` in `defaults/main.yml`, instead, define your passwords at the playbook level.
+server.pem and server.key are kept separate for applications that don't interact
+with keystores.
+
+**DO NOT** put keystore passwords like `store_password` and `key_password`
+in `defaults/main.yml` or the playbook. Instead, define your passwords in `vault.yml`.
+See this [readme](../../README.md#usage) for more information about using
+ansible-vault.

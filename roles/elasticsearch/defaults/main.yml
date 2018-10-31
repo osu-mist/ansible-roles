@@ -1,2 +1,8 @@
 ---
 es_version: "6.2.4"
+
+# Variables for POSTing locations-api ES templates
+locations_api_raw_url: "https://raw.githubusercontent.com/osu-mist/locations-api/"
+locations_api_branch: "develop"
+locations_template_filename: "ES-locations-index-template.json"
+services_template_filename: "ES-services-index-template.json"

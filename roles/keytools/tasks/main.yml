@@ -1,4 +1,9 @@
 ---
+  - name: update pyOpenSSL
+    pip:
+      name: pyOpenSSL
+      version: "{{ pyopenssl_version }}"
+
   - name: check if modify keytool passwords or not
     fail:
       msg: "Please enter new passwords for keystore and truststore!"
@@ -60,15 +65,8 @@
     when: "{{ item.stat.exists }}"
     with_items: "{{ new_certs_stat.results }}"
 
-  - name: get hash of cert
-    shell: "openssl x509 -noout -modulus -in {{ keytool_files_path }}/{{ certificate_file }} | openssl md5"
-    register: cert_hash
-
-  - name: get hash of key
-    shell: "openssl rsa -noout -modulus -in {{ keytool_files_path }}/{{ private_key_file }} | openssl md5"
-    register: key_hash
-
-  - name: fail if cert and key hashes don't match
-    fail:
-      msg: "{{ certificate_file }} and {{ private_key_file }} do not pair as a public and private key."
-    when: cert_hash.stdout != key_hash.stdout
+  - name: verify cert and key match
+    openssl_certificate:
+      path: "{{ keytool_files_path }}/{{ certificate_file }}"
+      privatekey_path: "{{ keytool_files_path }}/{{ private_key_file }}"
+      provider: assertonly

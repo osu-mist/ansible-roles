@@ -9,7 +9,7 @@ api_name=$1
 artifact_tag=$2
 api_path=/apis/apis/$api_name
 env=/apis/env/$api_name.env
-config=/apis/config/$api_name.yaml
+config=/apis/config/$api_name
 
 cd $api_path
 
@@ -63,7 +63,7 @@ docker run -d \
            --env-file $env \
            --volume /apis/keytool_files:/usr/src/$api_name/keytool_files \
            --volume $api_path/logs:/usr/src/$api_name/logs \
-           --volume $config:/usr/src/$api_name/config/default.yaml:ro \
+           --volume $config:/usr/src/$api_name/config:ro \
            --network host \
            --health-cmd 'curl -k -fsS --user $USER:$PASSWD https://localhost:$ADMIN_PORT/api/v1' \
            --health-interval 1m \

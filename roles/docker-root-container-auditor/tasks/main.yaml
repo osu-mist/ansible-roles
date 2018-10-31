@@ -1,0 +1,37 @@
+---
+  - name: "create project directory"
+    file:
+      path: "{{ container_checker_dir }}"
+      state: directory
+
+  - name: "create shell scripts from templates to script directory"
+    template:
+      src: "{{ item.src }}.j2"
+      dest: "{{ item.dest }}"
+      group: "{{ api_group }}"
+      owner: "{{ api_user }}"
+      mode: "{{ item.mode }}"
+      force: yes
+    with_items:
+      - { src: "{{ jenkins_check_container_script }}", dest: "{{ container_checker_dir }}/{{ jenkins_check_container_script }}", mode: "0754" }
+      - { src: "{{ container_checker_script }}", dest: "{{ container_checker_path }}", mode: "0554" }
+
+  - name: "check if lines present in sudoers file"
+    lineinfile:
+      path: /etc/sudoers
+      line: "{{ item }}"
+    register: content_has_lines
+    check_mode: yes
+    with_items:
+      - "{{ disable_requiretty_for_api_user }}"
+      - "{{ api_user }} ALL=(ALL) NOPASSWD: {{ container_checker_path }}"
+
+  - name: "add new lines to sudoers file"
+    lineinfile:
+      path: /etc/sudoers
+      insertafter: "## Allow root to run any commands anywhere"
+      line: "{{ item.line }}"
+    when: item.status is changed
+    with_items:
+      - { status: "{{ content_has_lines.results[0] }}", line: "{{ disable_requiretty_for_api_user }}"}
+      - { status: "{{ content_has_lines.results[1] }}", line: "{{ api_user }} ALL=(ALL) NOPASSWD: {{ container_checker_path }}"}

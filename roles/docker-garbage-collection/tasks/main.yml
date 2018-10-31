@@ -1,0 +1,35 @@
+---
+- name: "create docker garbage collection directories"
+  file:
+    path: "{{garbage_home}}/{{backup_images_dir}}"
+    state: "directory"
+    mode: "0665"
+
+- name: "generate all templated scripts"
+  template:
+    src: "{{item.src}}.j2"
+    dest: "{{garbage_home}}/{{item.dest}}"
+    mode: "{{item.mode}}"
+    force: yes
+  ignore_errors: yes
+  with_items:
+    - { src: "{{garbage_script}}", dest: "{{garbage_script}}", mode: "0554"}
+    - { src: "{{backup_removal_script}}", dest: "{{backup_removal_script}}", mode: "0554"}
+
+- name: "execute garbage collection script and backup removal script"
+  command: "{{item}}"
+  become: yes
+  ignore_errors: yes
+  register: script_register
+  changed_when: script_register.stdout != ""
+  with_items:
+    - "{{garbage_home}}/{{garbage_script}}"
+    - "{{garbage_home}}/{{backup_removal_script}}"
+
+- name: "remove all generated scripts"
+  file:
+    state: "absent"
+    path: "{{item}}"
+  with_items:
+    - "{{garbage_home}}/{{garbage_script}}"
+    - "{{garbage_home}}/{{backup_removal_script}}"

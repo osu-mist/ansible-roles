@@ -1,5 +1,6 @@
 ---
 python_3_version: "3.6.7"
+python_3_version_output: "Python {{ python_3_version }}"
 
 # TODO: determine these strings using python_3_version
 python_3_executable: "python3.6"

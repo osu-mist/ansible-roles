@@ -1,52 +1,12 @@
 ---
-    # TODO: Only install when current python 3 version differs from specified
     # TODO: Add support for CentOS
 
-    # Not having all of these packages installed may cause issues with the
-    # installation process
-  - name: install required packages
-    apt:
-      name: "{{ item }}"
-    with_items:
-      - "make"
-      - "build-essential"
-      - "libssl-dev"
-      - "zlib1g-dev"
-      - "libbz2-dev"
-      - "libreadline-dev"
-      - "libsqlite3-dev"
-      - "wget"
-      - "curl"
-      - "llvm"
-      - "libncurses5-dev"
-      - "libncursesw5-dev"
-      - "xz-utils"
-      - "tk-dev"
-      - "libffi-dev"
-      - "liblzma-dev"
+  - name: check Python 3 version
+    command: "python3 --version"
+    register: python_3_installed_version
+    failed_when: False
+    changed_when: False
 
-  - name: download Python 3 archive
-    get_url:
-      url: "{{ python_3_url }}"
-      dest: "/tmp/{{ python_3_filename }}"
-
-  - name: unpack Python 3 archive
-    unarchive:
-      src: "/tmp/{{ python_3_filename }}"
-      dest: "/tmp"
-      remote_src: yes
-
-  - name: configure and install Python 3 with pip 3
-    shell: "./configure --with-ensurepip=install && make -j8 && make altinstall"
-    args:
-      chdir: "/tmp/{{ python_3_dir }}"
-
-  - name: set python3 and pip3 symbolic links
-    file:
-      dest: "{{ item.link }}"
-      src: "{{ item.target }}"
-      state: link
-      force: yes
-    with_items:
-      - { target: "/usr/local/bin/{{ python_3_executable }}", link: "/usr/local/bin/python3" }
-      - { target: "/usr/local/bin/{{ pip_3_executable }}", link: "/usr/local/bin/pip3" }
+  - name: install Python 3
+    include_tasks: install.yml
+    when: python_3_installed_version.rc != 0 or python_3_installed_version.stdout != python_3_version_output

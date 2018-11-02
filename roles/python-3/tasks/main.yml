@@ -1,6 +1,4 @@
 ---
-    # TODO: Add support for CentOS
-
   - name: check Python 3 version
     command: "python3 --version"
     register: python_3_installed_version

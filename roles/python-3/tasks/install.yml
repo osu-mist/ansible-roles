@@ -1,7 +1,7 @@
 ---
   # Not having all of these packages installed may cause issues with the
   # installation process
-  - name: install required packages
+  - name: install required packages (Debian)
     apt:
       name: "{{ item }}"
     with_items:
@@ -21,6 +21,16 @@
       - "tk-dev"
       - "libffi-dev"
       - "liblzma-dev"
+    when: ansible_distribution == "Debian"
+
+    # TODO: Fix CentOS installation
+  - name: install required packages (CentOS)
+    yum:
+      name: "{{ item }}"
+    when: ansible_distribution == "CentOS"
+    with_items:
+      - "@Development Tools"
+      - "zlib-devel"
 
   - name: download Python 3 archive
     get_url:

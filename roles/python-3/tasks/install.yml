@@ -23,14 +23,13 @@
       - "liblzma-dev"
     when: ansible_distribution == "Debian"
 
-    # TODO: Fix CentOS installation
   - name: install required packages (CentOS)
     yum:
       name: "{{ item }}"
-    when: ansible_distribution == "CentOS"
     with_items:
       - "@Development Tools"
       - "zlib-devel"
+    when: ansible_distribution == "CentOS"
 
   - name: download Python 3 archive
     get_url:
@@ -48,7 +47,7 @@
     args:
       chdir: "/tmp/{{ python_3_dir }}"
 
-  - name: set python3 and pip3 symbolic links
+  - name: set python3 and pip3 symbolic links (Debian)
     file:
       dest: "{{ item.link }}"
       src: "{{ item.target }}"
@@ -57,5 +56,15 @@
     with_items:
       - { target: "/usr/local/bin/{{ python_3_executable }}", link: "/usr/local/bin/python3" }
       - { target: "/usr/local/bin/{{ pip_3_executable }}", link: "/usr/local/bin/pip3" }
+    when: ansible_distribution == "Debian"
 
-  # TODO: Update pip 3 to a specified version?
+  - name: set python3 and pip3 symbolic links (CentOS)
+    file:
+      dest: "{{ item.link }}"
+      src: "{{ item.target }}"
+      state: link
+      force: yes
+    with_items:
+      - { target: "/usr/local/bin/{{ python_3_executable }}", link: "/usr/bin/python3" }
+      - { target: "/usr/local/bin/{{ pip_3_executable }}", link: "/usr/bin/pip3" }
+    when: ansible_distribution == "CentOS"

@@ -6,3 +6,4 @@ if [ $(docker inspect --format='{{json .State.Health.Status}}' $api_name) != "\"
   exit 1
 else
   echo "Container healthy after {{ container_health_interval_seconds }} seconds"
+fi

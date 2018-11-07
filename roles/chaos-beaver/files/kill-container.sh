@@ -32,7 +32,7 @@ kill_random_container()
         docker kill ${container[0]} 2>&1 > /dev/null
         if [ $? -eq 0 ]
         then
-            echo ${container[1]}
+            echo "Chaos Beaver has killed ${container[1]}"
             exit 0
         else
             exit 1
@@ -46,5 +46,6 @@ if killable_container_exists
 then
     kill_random_container
 else
+    echo "Chaos Beaver has killed nothing. No killable container found."
     exit 0
 fi

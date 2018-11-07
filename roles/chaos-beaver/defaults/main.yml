@@ -3,6 +3,7 @@
 chaos_home: "/opt/docker/chaos"
 jenkins_kill_script: "jenkins-kill.sh"
 container_kill_script: "kill-container.sh"
+kill_container_path: "{{chaos_home}}/{{container_kill_script}}"
 
 # user and permission parameters
 chaos_user: "osu_apis"

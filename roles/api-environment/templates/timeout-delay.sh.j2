@@ -1,9 +1,9 @@
-sleep {{ container_health_interval_seconds }}
+sleep {{ timeout_delay }}
 {% raw %}
 if [ $(docker inspect --format='{{json .State.Health.Status}}' $api_name) != "\"healthy\"" ]; then
 {% endraw %}
-  echo "ERROR: Container not healthy after {{ container_health_interval_seconds }} seconds"
+  echo "ERROR: Container not healthy after {{ timeout_delay }} seconds"
   exit 1
 else
-  echo "Container healthy after {{ container_health_interval_seconds }} seconds"
+  echo "Container healthy after {{ timeout_delay }} seconds"
 fi

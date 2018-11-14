@@ -67,6 +67,7 @@ docker run -d \
            --network host \
            --health-cmd 'curl -k -fsS --user $USER:$PASSWD https://localhost:$ADMIN_PORT/api/v1' \
            --health-interval {{ container_health_interval_seconds }}s \
+           --health-timeout {{ container_health_timeout_seconds }}s \
            --name $api_name \
            --restart on-failure:3 \
            $api_name

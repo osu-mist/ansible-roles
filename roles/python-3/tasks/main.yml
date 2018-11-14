@@ -1,0 +1,10 @@
+---
+  - name: check Python 3 version
+    command: "python3 --version"
+    register: python_3_installed_version
+    failed_when: False
+    changed_when: False
+
+  - name: install Python 3
+    include_tasks: install.yml
+    when: python_3_installed_version.rc != 0 or python_3_installed_version.stdout != python_3_version_output

@@ -1,0 +1,11 @@
+---
+python_3_version: "3.6.7"
+python_3_version_output: "Python {{ python_3_version }}"
+
+python_3_executable: "python{{ python_3_version.split('.')[0:2] | join('.') }}"
+pip_3_executable: "pip{{ python_3_version.split('.')[0:2] | join('.') }}"
+
+python_3_dir: "Python-{{ python_3_version }}"
+python_3_filename: "{{ python_3_dir }}.tgz"
+
+python_3_url: "https://www.python.org/ftp/python/{{ python_3_version }}/{{ python_3_filename }}"

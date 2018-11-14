@@ -1,0 +1,70 @@
+---
+  # Not having all of these packages installed may cause issues with the
+  # installation process
+  - name: install required packages (Debian)
+    apt:
+      name: "{{ item }}"
+    with_items:
+      - "make"
+      - "build-essential"
+      - "libssl-dev"
+      - "zlib1g-dev"
+      - "libbz2-dev"
+      - "libreadline-dev"
+      - "libsqlite3-dev"
+      - "wget"
+      - "curl"
+      - "llvm"
+      - "libncurses5-dev"
+      - "libncursesw5-dev"
+      - "xz-utils"
+      - "tk-dev"
+      - "libffi-dev"
+      - "liblzma-dev"
+    when: ansible_distribution == "Debian"
+
+  - name: install required packages (CentOS)
+    yum:
+      name: "{{ item }}"
+    with_items:
+      - "@Development Tools"
+      - "zlib-devel"
+    when: ansible_distribution == "CentOS"
+
+  - name: download Python 3 archive
+    get_url:
+      url: "{{ python_3_url }}"
+      dest: "/tmp/{{ python_3_filename }}"
+
+  - name: unpack Python 3 archive
+    unarchive:
+      src: "/tmp/{{ python_3_filename }}"
+      dest: "/tmp"
+      remote_src: yes
+
+  - name: configure and install Python 3 with pip 3
+    shell: "./configure --with-ensurepip=install && make -j8 && make altinstall"
+    args:
+      chdir: "/tmp/{{ python_3_dir }}"
+
+  - name: set python3 and pip3 symbolic links (Debian)
+    file:
+      dest: "{{ item.link }}"
+      src: "{{ item.target }}"
+      state: link
+      force: yes
+    with_items:
+      - { target: "/usr/local/bin/{{ python_3_executable }}", link: "/usr/local/bin/python3" }
+      - { target: "/usr/local/bin/{{ pip_3_executable }}", link: "/usr/local/bin/pip3" }
+    when: ansible_distribution == "Debian"
+
+  - name: set python3 and pip3 symbolic links (CentOS)
+    file:
+      dest: "{{ item.link }}"
+      src: "{{ item.target }}"
+      state: link
+      force: yes
+    with_items:
+      - { target: "/usr/local/bin/{{ python_3_executable }}", link: "/usr/bin/python3" }
+      - { target: "/usr/local/bin/{{ pip_3_executable }}", link: "/usr/bin/pip3" }
+    when: ansible_distribution == "CentOS"

@@ -50,7 +50,7 @@ fi
 
 echo "Start container"
 
-java_command="java -jar $archive server $config"
+java_command="java -Xmx100m -jar $archive server $config"
 
 docker run \
     -d \

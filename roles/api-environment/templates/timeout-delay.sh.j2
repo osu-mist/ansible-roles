@@ -1,3 +1,4 @@
+echo "Waiting {{ timeout_delay }} seconds for container to be healthy..."
 sleep {{ timeout_delay }}
 {% raw %}
 if [ $(docker inspect --format='{{json .State.Health.Status}}' $api_name) != "\"healthy\"" ]; then

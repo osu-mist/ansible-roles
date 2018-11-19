@@ -50,7 +50,7 @@ fi
 
 echo "Start container"
 
-java_command="java -jar $archive server $config"
+java_command="java -Xmx100m -jar $archive server $config"
 
 docker run \
     -d \
@@ -61,7 +61,7 @@ docker run \
     --workdir="$api_path" \
     --env-file "$env" \
     --network host \
-    --health-cmd='curl -k -fsS --user $USER:$PASSWD https://localhost:$PORT/api/v1' \
+    --health-cmd='curl -k -fsS https://localhost:$ADMIN_PORT/healthcheck' \
     --health-interval={{ container_health_interval_seconds }}s \
     --health-timeout {{ container_health_timeout_seconds }}s \
     --volume $keytool_path/server.keystore:$keytool_path/server.keystore:ro \

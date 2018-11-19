@@ -1,0 +1,38 @@
+---
+    - name: "create chaos directory"
+      file:
+        path: "{{chaos_home}}"
+        state: "directory"
+        owner: "{{chaos_user}}"
+        group: "{{chaos_group}}"
+        mode: "0775"
+
+    - name: "copy container kill script"
+      copy:
+        src: "{{container_kill_script}}"
+        dest: "{{chaos_home}}/{{container_kill_script}}"
+        owner: "{{chaos_user}}"
+        group: "{{chaos_group}}"
+        mode: "0554"
+
+    - name: "check if line present in sudoers file"
+      lineinfile:
+        path: "/etc/sudoers"
+        line: "{{ item }}"
+      register: "content_has_lines"
+      check_mode: yes
+      with_items:
+        - "{{ disable_requiretty_for_chaos_user }}"
+        - "{{ chaos_user }} ALL=(ALL) NOPASSWD: {{kill_container_path}}"
+
+    # Add lines to sudoers file so jenkins can run the scripts
+    # This also prevents adding apis user to the docker group
+    - name: "add new lines to sudoers file"
+      lineinfile:
+        path: "/etc/sudoers"
+        insertafter: '## Allow root to run any commands anywhere'
+        line: "{{ item.line }}"
+      when: content_has_lines is changed
+      with_items:
+        - { status: "{{ content_has_lines.results[0] }}", line: "{{ disable_requiretty_for_chaos_user }}"}
+        - { status: "{{ content_has_lines.results[1] }}", line: "{{ chaos_user }} ALL=(ALL) NOPASSWD: {{ kill_container_path }}"}

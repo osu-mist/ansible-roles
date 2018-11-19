@@ -8,6 +8,20 @@
   include: debian.yml
   when: 'ansible_distribution == "Debian"'
 
+- name: copy logging driver configuration
+  copy:
+    src: files/daemon.json
+    dest: /etc/docker/daemon.json
+    mode: 0644
+  register: log_conf
+
+# log configuration takes effect after docker restarts
+- name: restart docker if log file changed
+  service:
+    name: docker
+    state: restarted
+  when: log_conf.changed
+
 - name: enable docker service
   service:
     name: docker

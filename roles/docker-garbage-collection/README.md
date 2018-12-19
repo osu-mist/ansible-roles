@@ -1,19 +1,21 @@
 # Docker Garbage Collection
-This role is for removing unnecessary Docker images and containers from an API server environment.
+This role is for installing scripts to remove unnecessary Docker images and containers from a container server environment.
 
 ## Background
 Docker's tools for system pruning removes more than wanted. It removes any container that is stopped, so that it is free to remove all dangling images.
 
-To prune our Docker systems more conservatively, the purpose of this role is to only remove the containers that are broken (the ones preventing dangling images from being removed). It also is responsible for backing up any images that are removed.
+To prune our Docker systems more conservatively, only containers that are broken are removed (the containers preventing dangling images from being removed). Any images that are removed are backed up.
 
 ## Overview
-The role does the following things (in order):
+The garbage-collection script does the following (in order):
 
  1. Collects the IDs of any dangling images.
  2. Backs up each dangling image to the backup directory specified in defaults.
  3. Attempt to remove remaining dangling images.
  4. If any "stopped container" errors occur, this is an indication that the container is broken. Deletes this container, then attempts to remove the dangling image that caused the error again.
- 5. Removes all images/containers older than the backup_max_age parameter from the backup.
+
+The backup-removal script does the following:
+1. Removes all images/containers older than the backup_max_age parameter from the backup.
 
  Any backup or removal of images or containers is logged at the log_file location parameter. Removal of old backups is logged as well.
 
@@ -27,7 +29,7 @@ The role does the following things (in order):
           - ansible-roles/vault.yml
 
           tasks:
-            - name: set up API environment
+            - name: prune docker system
               import_role:
                 name: docker-garbage-collection
               become: yes

@@ -17,7 +17,7 @@ log_path="{{garbage_home}}/{{log_file}}"
 log()
 {
     echo $(date) $1 >> ${log_path}
-    echo $1
+    echo $(date) $1
 }
 
 for backup_file in $backup_images_path/*; do

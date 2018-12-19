@@ -10,6 +10,8 @@ log_path="{{garbage_home}}/{{log_file}}"
 
 {% raw %}
 
+garbage_collection_exit_code = 0
+
 ###
 # log()
 # Description: Appends the log file with a timestamp and message
@@ -45,10 +47,15 @@ remove_image()
         if [ $? -eq 1 ]
         then
             log "Failed removing container $container_id"
+            garbage_collection_exit_code = 1
         else
             log "Removed container $container_id"
             remove_image $id
         fi
+    elif [ $removal_exit -eq 1]
+    then
+        log "Failed removing image $id"
+        garbage_collection_exit_code = 1
     else
         log "Removed image $id"
     fi
@@ -71,8 +78,11 @@ main()
             remove_image $id
         else
             log "Backup of image $id failed"
+            garbage_collection_exit_code = 1
         fi
     done
+
+    exit garbage_collection_exit_code
 }
 
 main

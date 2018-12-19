@@ -9,6 +9,8 @@ log_path="{{garbage_home}}/{{log_file}}"
 
 {% raw %}
 
+backup_removal_exit_code = 0
+
 ###
 # log()
 # Description: Appends the log file with a timestamp and message
@@ -29,8 +31,11 @@ for backup_file in $backup_images_path/*; do
             log "Removed $backup_file from backup"
         else
             log "Failed removing $backup_file from backup"
+            backup_removal_exit_code = 1
         fi
     fi
 done
+
+exit backup_removal_exit_code
 
 {% endraw %}

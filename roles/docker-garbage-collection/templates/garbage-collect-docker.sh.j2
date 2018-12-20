@@ -52,7 +52,7 @@ remove_image()
             log "Removed container $container_id"
             remove_image $id
         fi
-    elif [ $removal_exit -eq 1]
+    elif [ $removal_exit -eq 1 ]
     then
         log "Failed removing image $id"
         garbage_collection_exit_code=1

@@ -1,17 +1,41 @@
 ---
-- name: "create docker garbage collection directories"
-  file:
-    path: "{{garbage_home}}/{{backup_images_dir}}"
-    state: "directory"
-    mode: "0665"
+    - name: "create docker garbage collection directory"
+      file:
+        path: "{{garbage_home}}/{{backup_images_dir}}"
+        state: "directory"
+        mode: "0775"
 
-- name: "generate all templated scripts"
-  template:
-    src: "{{item.src}}.j2"
-    dest: "{{garbage_home}}/{{item.dest}}"
-    mode: "{{item.mode}}"
-    force: yes
-  ignore_errors: yes
-  with_items:
-    - { src: "{{garbage_script}}", dest: "{{garbage_script}}", mode: "0554"}
-    - { src: "{{backup_removal_script}}", dest: "{{backup_removal_script}}", mode: "0554"}
+    - name: "generate all templated scripts"
+      template:
+        src: "{{item.src}}.j2"
+        dest: "{{garbage_home}}/{{item.dest}}"
+        mode: "0554"
+        force: yes
+      ignore_errors: yes
+      with_items:
+        - { src: "{{garbage_script}}", dest: "{{garbage_script}}"}
+        - { src: "{{backup_removal_script}}", dest: "{{backup_removal_script}}"}
+
+    - name: "check if line present in sudoers file"
+      lineinfile:
+        path: "/etc/sudoers"
+        line: "{{ item }}"
+      register: "content_has_lines"
+      check_mode: yes
+      with_items:
+        - "{{ disable_requiretty_for_garbage_user }}"
+        - "{{ garbage_user }} ALL=(ALL) NOPASSWD: {{garbage_home}}/{{garbage_script}}"
+        - "{{ garbage_user }} ALL=(ALL) NOPASSWD: {{garbage_home}}/{{backup_removal_script}}"
+
+    # Add lines to sudoers file so jenkins can run the scripts
+    # This also prevents adding apis user to the docker group
+    - name: "add new lines to sudoers file"
+      lineinfile:
+        path: "/etc/sudoers"
+        insertafter: "## Allow root to run any commands anywhere"
+        line: "{{ item.line }}"
+      when: content_has_lines is changed
+      with_items:
+        - { status: "{{ content_has_lines.results[0] }}", line: "{{ disable_requiretty_for_garbage_user }}"}
+        - { status: "{{ content_has_lines.results[1] }}", line: "{{ garbage_user }} ALL=(ALL) NOPASSWD: {{garbage_home}}/{{garbage_script}}"}
+        - { status: "{{ content_has_lines.results[1] }}", line: "{{ garbage_user }} ALL=(ALL) NOPASSWD: {{garbage_home}}/{{backup_removal_script}}"}

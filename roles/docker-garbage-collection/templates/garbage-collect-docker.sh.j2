@@ -10,7 +10,7 @@ log_path="{{garbage_home}}/{{log_file}}"
 
 {% raw %}
 
-garbage_collection_exit_code = 0
+garbage_collection_exit_code=0
 
 ###
 # log()
@@ -55,7 +55,7 @@ remove_image()
     elif [ $removal_exit -eq 1]
     then
         log "Failed removing image $id"
-        garbage_collection_exit_code = 1
+        garbage_collection_exit_code=1
     else
         log "Removed image $id"
     fi
@@ -78,11 +78,11 @@ main()
             remove_image $id
         else
             log "Backup of image $id failed"
-            garbage_collection_exit_code = 1
+            garbage_collection_exit_code=1
         fi
     done
 
-    exit garbage_collection_exit_code
+    exit $garbage_collection_exit_code
 }
 
 main

@@ -23,6 +23,7 @@ log()
 }
 
 for backup_file in $backup_images_path/*; do
+    [ -e "$backup_file" ] || continue
     if [ $(stat -c %Y $backup_file) -lt $(date -d '-4 week' +%s) ]
     then
         rm $backup_file

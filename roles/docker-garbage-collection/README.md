@@ -8,8 +8,8 @@ Docker's tools for system pruning removes more than wanted. It removes any conta
 
 To prune our Docker systems more conservatively, only containers that are broken are removed (the containers preventing dangling images from being removed). Any images that are removed are backed up.
 
-## Installation
-This role should be run against every machine that Jenkins will execute garbage collection on, as well as the Jenkins machine itself. In defaults, `garbage_user` and `garbage_group` need to be set to the user that Jenkins executes commands as. For the Jenkins machine, this is `garbage_user = jenkins` For API environments, `garbage_user = osu_apis`.
+## Deployment
+This role should be run against every machine that Jenkins will execute garbage collection on, as well as the Jenkins machine itself. In defaults, `garbage_user` and `garbage_group` need to be set to the user that Jenkins executes commands as. For the Jenkins machine, this is `garbage_user = jenkins` `garbage_group" = jenkins`  For API environments, `garbage_user = osu_apis` `garbage_group = apis`.
 
 ## Overview
 The garbage-collection script does the following (in order):
@@ -34,7 +34,7 @@ The backup-removal script does the following:
           - ansible-roles/vault.yml
 
           tasks:
-            - name: prune docker system
+            - name: install garbage collection scrits
               import_role:
                 name: docker-garbage-collection
               become: yes

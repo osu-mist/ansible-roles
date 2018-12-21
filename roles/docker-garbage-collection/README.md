@@ -1,10 +1,15 @@
 # Docker Garbage Collection
 This role is for installing scripts to remove unnecessary Docker images and containers from a container server environment.
 
+The private role component of docker garbage collection creates two scheduled Jenkins jobs for executing each of these scripts.
+
 ## Background
 Docker's tools for system pruning removes more than wanted. It removes any container that is stopped, so that it is free to remove all dangling images.
 
 To prune our Docker systems more conservatively, only containers that are broken are removed (the containers preventing dangling images from being removed). Any images that are removed are backed up.
+
+## Installation
+This role should be run against every machine that Jenkins will execute garbage collection on, as well as the Jenkins machine itself. In defaults, `garbage_user` and `garbage_group` need to be set to the user that Jenkins executes commands as. For the Jenkins machine, this is `garbage_user = jenkins` For API environments, `garbage_user = osu_apis`.
 
 ## Overview
 The garbage-collection script does the following (in order):

@@ -41,7 +41,7 @@ The backup-removal script does the following:
 
 ### Example api-inv for API server
     [api-servers]
-    192.168.33.2
+    192.168.33.13
 
     [api-servers:vars]
     ansible_ssh_user=vagrant

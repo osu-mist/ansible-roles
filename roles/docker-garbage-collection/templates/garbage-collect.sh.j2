@@ -19,8 +19,7 @@ garbage_collection_exit_code=0
 ###
 log()
 {
-    echo $(date) $1 >> ${log_path}
-    echo $(date) $1
+    echo $(date) $1 | tee -a ${log_path}
 }
 
 ###

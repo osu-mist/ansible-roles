@@ -1,6 +1,5 @@
 ---
-  # Not having all of these packages installed may cause issues with the
-  # installation process
+  # Not having all of these packages installed may cause issues with the installation process
   - name: install required packages (Debian)
     apt:
       name: "{{ item }}"
@@ -68,3 +67,9 @@
       - { target: "/usr/local/bin/{{ python_3_executable }}", link: "/usr/bin/python3" }
       - { target: "/usr/local/bin/{{ pip_3_executable }}", link: "/usr/bin/pip3" }
     when: ansible_distribution == "CentOS"
+
+  - name: upgrade pip3 to specified version
+    pip:
+      executable: pip3
+      name: pip
+      version: "{{ pip_3_version }}"

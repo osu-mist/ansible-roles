@@ -1,2 +1,4 @@
 ---
   java8_home: /usr/lib/jvm/java-1.8.0-openjdk-amd64
+
+  jessie_backports_repo: 'deb http://archive.debian.org/debian jessie-backports main'

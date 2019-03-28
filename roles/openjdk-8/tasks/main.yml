@@ -4,9 +4,17 @@
       name: java-1.8.0-openjdk-devel
     when: ansible_distribution == 'CentOS'
 
+  - name: configure apt to allow expired repos (Debian Jessie)
+    lineinfile:
+      path: /etc/apt/apt.conf
+      regexp: '^Acquire::Check-Valid-Until'
+      line: 'Acquire::Check-Valid-Until "0";'
+      create: yes
+    when: ansible_distribution == 'Debian' and ansible_distribution_release == 'jessie'
+
   - name: add backports repo (Debian Jessie)
     apt_repository:
-      repo: 'deb http://ftp.debian.org/debian jessie-backports main'
+      repo: "{{ jessie_backports_repo }}"
       state: present
     when: ansible_distribution == 'Debian' and ansible_distribution_release == 'jessie'
 
@@ -25,3 +33,22 @@
       name: openjdk-8-jdk
       update_cache: yes
     when: ansible_distribution == 'Debian'
+
+  # The repo's release file is expired which will cause errors when updating apt cache
+  - name: remove backports repo (Debian Jessie)
+    apt_repository:
+      repo: "{{ jessie_backports_repo }}"
+      state: absent
+    when: ansible_distribution == 'Debian' and ansible_distribution_release == 'jessie'
+
+  - name: reconfigure apt to not allow expired repos (Debian Jessie)
+    lineinfile:
+      path: /etc/apt/apt.conf
+      regexp: '^Acquire::Check-Valid-Until'
+      state: absent
+    when: ansible_distribution == 'Debian' and ansible_distribution_release == 'jessie'
+
+  - name: set default java version
+    alternatives:
+      name: java
+      path: "{{ java8_home }}/bin/java"

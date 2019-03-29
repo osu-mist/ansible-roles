@@ -2,8 +2,8 @@
   - name: check Python 3 version
     command: "python3 --version"
     register: python_3_installed_version
-    failed_when: False
-    changed_when: False
+    failed_when: false
+    changed_when: false
 
   - name: install Python 3
     include_tasks: install.yml

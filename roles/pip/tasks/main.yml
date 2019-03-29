@@ -21,3 +21,8 @@
     pip:
       name: pip
       version: "{{ pip_version }}"
+
+  - name: update pyOpenSSL
+    pip:
+      name: pyOpenSSL
+      version: "{{ pyopenssl_version }}"

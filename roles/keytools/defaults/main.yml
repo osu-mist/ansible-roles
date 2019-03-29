@@ -21,5 +21,3 @@ keystore_file: "{{ key_alias }}.keystore"
 truststore_file: "{{ key_alias }}.truststore"
 certificate_file: "{{ key_alias }}.pem"
 private_key_file: "{{ key_alias }}.key"
-
-pyopenssl_version: "16.2.0"

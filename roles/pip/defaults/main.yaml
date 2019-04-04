@@ -1,3 +1,5 @@
 ---
 # Version of pip to be installed
 pip_version: "18.0"
+
+pyopenssl_version: "16.2.0"

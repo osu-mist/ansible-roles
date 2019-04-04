@@ -4,10 +4,20 @@
       name: java-1.8.0-openjdk-devel
     when: ansible_distribution == 'CentOS'
 
-  - name: add backports repo (Debian Jessie)
+  - name: temporarily allow expired release files (Debian Jessie)
+    lineinfile:
+      path: /etc/apt/apt.conf
+      regexp: '^{{ check_valid_option }}'
+      line: '{{ check_valid_option }} "0";'
+      create: yes
+    changed_when: false
+    when: ansible_distribution == 'Debian' and ansible_distribution_release == 'jessie'
+
+  - name: temporarily add backports repo (Debian Jessie)
     apt_repository:
-      repo: 'deb http://ftp.debian.org/debian jessie-backports main'
+      repo: "{{ jessie_backports_repo }}"
       state: present
+    changed_when: false
     when: ansible_distribution == 'Debian' and ansible_distribution_release == 'jessie'
 
   - name: update ca-certificates-java (Debian Jessie)
@@ -25,3 +35,19 @@
       name: openjdk-8-jdk
       update_cache: yes
     when: ansible_distribution == 'Debian'
+
+  # The repo's release file is expired which will cause errors when updating apt cache
+  - name: remove backports repo (Debian Jessie)
+    apt_repository:
+      repo: "{{ jessie_backports_repo }}"
+      state: absent
+    changed_when: false
+    when: ansible_distribution == 'Debian' and ansible_distribution_release == 'jessie'
+
+  - name: disallow expired release files (Debian Jessie)
+    lineinfile:
+      path: /etc/apt/apt.conf
+      regexp: '^{{ check_valid_option }}'
+      state: absent
+    changed_when: false
+    when: ansible_distribution == 'Debian' and ansible_distribution_release == 'jessie'

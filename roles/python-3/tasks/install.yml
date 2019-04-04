@@ -45,6 +45,7 @@
     shell: "./configure --with-ensurepip=install && make -j8 && make altinstall"
     args:
       chdir: "/tmp/{{ python_3_dir }}"
+    changed_when: true
 
   - name: set python3 and pip3 symbolic links (Debian)
     file:

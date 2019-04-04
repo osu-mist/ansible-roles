@@ -9,7 +9,7 @@
   - name: check if modify user password or not
     fail:
       msg: "Please enter a new password for {{ user }}!"
-    when: user_password == ""
+    when: not user_password
 
   - name: create user "{{ user }}"
     user:

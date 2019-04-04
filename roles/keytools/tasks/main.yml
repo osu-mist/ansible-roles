@@ -1,9 +1,4 @@
 ---
-  - name: update pyOpenSSL
-    pip:
-      name: pyOpenSSL
-      version: "{{ pyopenssl_version }}"
-
   - name: check if modify keytool passwords or not
     fail:
       msg: "Please enter new passwords for keystore and truststore!"
@@ -53,7 +48,7 @@
 
   - name: backup certs to keytool_files/backup
     command: mv {{ keytool_files_path }}/{{ item.old_cert.item }} {{ backup_path }}/{{ item.new_cert.item }}-{{ ansible_date_time.iso8601 }}
-    when: "{{ item.old_cert.stat.exists }} and {{ item.new_cert.stat.exists }}"
+    when: item.old_cert.stat.exists and item.new_cert.stat.exists
     with_items:
       - { old_cert: "{{ old_certs_stat.results[0] }}", new_cert: "{{ new_certs_stat.results[0] }}" }
       - { old_cert: "{{ old_certs_stat.results[1] }}", new_cert: "{{ new_certs_stat.results[1] }}" }
@@ -62,7 +57,7 @@
 
   - name: move certs to keytool_files
     command: mv {{ apis_home }}/{{ item.item }} {{ keytool_files_path }}/{{ item.item }}
-    when: "{{ item.stat.exists }}"
+    when: item.stat.exists
     with_items: "{{ new_certs_stat.results }}"
 
   - name: verify cert and key match

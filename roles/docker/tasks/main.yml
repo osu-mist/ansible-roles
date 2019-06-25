@@ -8,6 +8,12 @@
   include: debian.yml
   when: 'ansible_distribution == "Debian"'
 
+- name: create /etc/docker directory
+  file:
+    path: /etc/docker
+    state: directory
+    mode: 0644
+
 - name: copy logging driver configuration
   copy:
     src: files/daemon.json

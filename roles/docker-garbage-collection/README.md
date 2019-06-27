@@ -19,7 +19,7 @@ The role does the following things (in order):
 
 ## Example playbook running only this role:
     ---
-        - hosts: api-servers
+        - hosts: api_servers_local
 
           vars_files:
           - ansible-private-roles/common_vars.yml
@@ -33,10 +33,10 @@ The role does the following things (in order):
               become: yes
 
 ### Example api-inv for API server
-    [api-servers]
+    [api_servers_local]
     192.168.33.2
 
-    [api-servers:vars]
+    [api_servers_local:vars]
     ansible_ssh_user=vagrant
 
 ### Example playbook execution:

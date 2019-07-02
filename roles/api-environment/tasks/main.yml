@@ -67,8 +67,8 @@
 
   - name: "setup environment for dropwizard api"
     import_tasks: dropwizard-api.yml
-    when: dropwizard_api|bool
+    when: dropwizard_api
 
   - name: "setup environment for express api"
     import_tasks: express-api.yml
-    when: express_api|bool
+    when: express_api

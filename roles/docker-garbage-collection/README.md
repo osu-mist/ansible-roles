@@ -22,7 +22,6 @@ The role does the following things (in order):
         - hosts: api_servers_local
 
           vars_files:
-          - ansible-private-roles/common_vars.yml
           - ansible-private-roles/vault.yml
           - ansible-roles/vault.yml
 

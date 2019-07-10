@@ -19,11 +19,11 @@ Collect Ansible roles for automatic deployment.
 
 	**Playbook Example:**
 	```yaml
-  ---
-  - hosts: servers
-    roles:
-      - { role: dropwizard-api, become: yes }
-    	- { role: hubot, become: yes }
+      ---
+      - hosts: servers
+        roles:
+          - { role: dropwizard-api, become: yes }
+        	- { role: hubot, become: yes }
 	```
 
 2. Copy vault-example.yml to vault.yml, modify values as necessary, and encrypt vault.yml:

@@ -1,4 +1,4 @@
-# Ansible Roles ![Ansible](https://img.shields.io/badge/Ansible-2.5.6-blue.svg)
+# Ansible Roles ![Ansible](https://img.shields.io/badge/Ansible-2.8.1-blue.svg)
 Collect Ansible roles for automatic deployment.
 
 ### Requirements

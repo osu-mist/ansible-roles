@@ -1,3 +1,4 @@
 ---
   dependencies:
     - { role: pip, become: yes }
+    - { role: openjdk-8, become: yes }

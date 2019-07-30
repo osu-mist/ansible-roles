@@ -7,10 +7,16 @@ set -eu
 
 api_name=$1
 
-if [[ $(docker inspect -f {{.State.Running}} $api_name) ]]; then
+{% raw %}
+if $(docker inspect -f {{.State.Running}} $api_name); then
   echo "$api_name is running. Restarting container."
   docker restart $api_name
 else
+{% endraw %}
   echo "$api_name is not running. Starting container."
-  docker start $api_name
+{% if express_api %}
+  {{ start_express_container_path }} $api_name
+{% else %}
+  docker start express-api-run $api_name
+{% endif %}
 fi

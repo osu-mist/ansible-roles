@@ -23,9 +23,9 @@ RUN  curl --silent --location https://dl.yarnpkg.com/rpm/yarn.repo | tee /etc/yu
 RUN npm install --global gulp-cli@$gulp_cli_version
 
 # Clean yum cache
-#RUN  rm -rf /var/cache/yum
-#ENV PATH=$PATH:/usr/lib/oracle/${release}.${update}/client64/bin
-#CMD ["sqlplus", "-v"]
+RUN  rm -rf /var/cache/yum
+ENV PATH=$PATH:/usr/lib/oracle/${release}.${update}/client64/bin
+CMD ["sqlplus", "-v"]
 
 # Run API
 CMD cd /usr/src/$API_NAME && \

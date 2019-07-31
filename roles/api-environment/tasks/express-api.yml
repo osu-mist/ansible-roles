@@ -40,3 +40,13 @@
       insertafter: "{{ disable_requiretty_for_api_user }}"
       line: "{{ api_user }} ALL=(ALL) NOPASSWD: {{ start_express_container_path }}"
     when: content_has_line is changed
+
+  - name: "build docker run image"
+    docker_image:
+      source: build
+      name: express-api-run
+      build:
+        path: /opt/docker/express-api/run
+        args:
+          gulp_cli_version: ^2.2.0
+        pull: false

@@ -27,7 +27,5 @@ express_api: false
 jenkins_run_express_script: "jenkins-run-express.sh"
 start_express_container_script: "start-express-container.sh"
 start_express_container_path: "{{ api_home }}/{{ start_express_container_script }}"
-express_api_docker_script_path: "/opt/docker/express-api"
-express_api_run_script: "express-api-build.sh" # TODO
-express_api_build_script_path: "{{ express_api_docker_script_path }}" # TODO
+express_api_docker_path: "/opt/docker/express-api"
 gulp_cli_version: "^2.2.0"

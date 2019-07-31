@@ -1,7 +1,7 @@
 ---
   - name: "create docker script directory"
     file:
-      path: "{{ express_api_docker_script_path }}"
+      path: "{{ express_api_docker_path }}"
       state: directory
       owner: root
       group: root
@@ -9,7 +9,7 @@
   - name: copy express-api run dockerfile to docker script directory
     copy:
       src: "./express-api/"
-      dest: "{{ express_api_docker_script_path }}"
+      dest: "{{ express_api_docker_path }}"
       owner: root
       group: root
       mode: 0744
@@ -45,8 +45,9 @@
     docker_image:
       source: build
       name: express-api-run
+      force: yes
       build:
-        path: /opt/docker/express-api/run
+        path: "{{ express_api_docker_path }}/run"
         args:
-          gulp_cli_version: ^2.2.0
-        pull: false
+          gulp_cli_version: "{{ gulp_cli_version }}"
+        pull: no

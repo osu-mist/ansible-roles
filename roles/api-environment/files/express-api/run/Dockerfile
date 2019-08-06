@@ -28,4 +28,4 @@ ENV PATH=$PATH:/usr/lib/oracle/${release}.${update}/client64/bin
 
 # Run API
 CMD cd /usr/src/$API_NAME && \
-    gulp start --gulpfile gulpfile-prod.js
+    yarn start

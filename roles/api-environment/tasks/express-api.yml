@@ -45,7 +45,7 @@
     docker_image:
       source: build
       name: express-api-run
-      force: yes
+      force_source: yes
       build:
         path: "{{ express_api_docker_path }}/run"
         args:

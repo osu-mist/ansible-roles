@@ -17,6 +17,6 @@ else
 {% if express_api %}
   {{ start_express_container_path }} $api_name
 {% else %}
-  docker start express-api-run $api_name
+  docker start $api_name
 {% endif %}
 fi

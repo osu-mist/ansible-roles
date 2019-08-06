@@ -20,12 +20,11 @@ RUN  yum -y install oracle-nodejs-release-el7 && \
 RUN  curl --silent --location https://dl.yarnpkg.com/rpm/yarn.repo | tee /etc/yum.repos.d/yarn.repo && \
      yum -y install yarn
 # Install gulp-cli
-RUN npm install --global gulp-cli@$gulp_cli_version
+RUN yarn global add gulp-cli@$gulp_cli_version
 
 # Clean yum cache
 RUN  rm -rf /var/cache/yum
 ENV PATH=$PATH:/usr/lib/oracle/${release}.${update}/client64/bin
-CMD ["sqlplus", "-v"]
 
 # Run API
 CMD cd /usr/src/$API_NAME && \

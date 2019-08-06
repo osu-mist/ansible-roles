@@ -32,7 +32,7 @@ chown -R {{ api_user }}:{{ api_group }} $api_path/logs
 # Run API in a container
 uid="$(id -u {{ api_user }})"
 gid="$(id -g {{ api_user }})"
-docker run -d \
+docker run \
            --user "$uid:$gid" \
            --workdir /usr/src/$api_name \
            --env API_NAME=$api_name \

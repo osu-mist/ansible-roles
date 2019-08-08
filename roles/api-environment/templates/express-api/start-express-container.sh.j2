@@ -32,11 +32,12 @@ chown -R {{ api_user }}:{{ api_group }} $api_path/logs
 # Run API in a container
 uid="$(id -u {{ api_user }})"
 gid="$(id -g {{ api_user }})"
-docker run \
+docker run -d \
            --user "$uid:$gid" \
            --workdir /usr/src/$api_name \
            --env API_NAME=$api_name \
            --env FOREVER_ROOT=/usr/src/$api_name/.forever \
+           --env HOME=/usr/src/$api_name \
            --env-file $env \
            --volume /apis/keytool_files:/usr/src/$api_name/keytool_files \
            --volume $api_path/logs:/usr/src/$api_name/logs \

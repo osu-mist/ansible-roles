@@ -19,8 +19,8 @@ RUN  yum -y install oracle-nodejs-release-el7 && \
 # Install yarn
 RUN  curl --silent --location https://dl.yarnpkg.com/rpm/yarn.repo | tee /etc/yum.repos.d/yarn.repo && \
      yum -y install yarn
-# Install gulp-cli
-RUN yarn global add gulp-cli@$gulp_cli_version
+# Install git
+RUN yum -y install git
 
 # Clean yum cache
 RUN  rm -rf /var/cache/yum

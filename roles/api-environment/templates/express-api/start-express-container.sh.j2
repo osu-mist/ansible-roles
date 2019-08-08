@@ -36,6 +36,7 @@ docker run \
            --user "$uid:$gid" \
            --workdir /usr/src/$api_name \
            --env API_NAME=$api_name \
+           --env FOREVER_ROOT=/usr/src/$api_name/.forever \
            --env-file $env \
            --volume /apis/keytool_files:/usr/src/$api_name/keytool_files \
            --volume $api_path/logs:/usr/src/$api_name/logs \

@@ -39,8 +39,7 @@ docker run -d \
            --env FOREVER_ROOT=/usr/src/$api_name/.forever \
            --env HOME=/usr/src/$api_name \
            --env-file $env \
-           --volume /apis/keytool_files:/usr/src/$api_name/keytool_files \
-           --volume $api_path/logs:/usr/src/$api_name/logs \
+           --volume /apis/keytool_files:/usr/src/$api_name/keytool_files:ro \
            --volume $config:/usr/src/$api_name/config:ro \
            --volume $api_path:/usr/src/$api_name \
            --network host \

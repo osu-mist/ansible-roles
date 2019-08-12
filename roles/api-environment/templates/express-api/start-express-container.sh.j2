@@ -66,7 +66,8 @@ docker run -d \
            --volume $config:/usr/src/$api_name/config:ro \
            --network host \
            --health-cmd 'curl -k -fsS --user $USER:$PASSWD https://localhost:$ADMIN_PORT/api/v1' \
-           --health-interval 1m \
+           --health-interval {{ container_health_interval_seconds }}s \
+           --health-timeout {{ container_health_timeout_seconds }}s \
            --name $api_name \
            --restart on-failure:3 \
            $api_name
@@ -75,3 +76,5 @@ if [[ ! $(docker ps -q -f name=$api_name) ]]; then
    echo "ERROR: Container not running"
    exit 1
 fi
+
+{% include 'timeout-delay.sh.j2' %}

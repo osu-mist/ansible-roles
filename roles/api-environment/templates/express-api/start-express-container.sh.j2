@@ -38,7 +38,7 @@ docker run -d \
            --workdir $workdir \
            --env API_NAME=$api_name \
            --env FOREVER_ROOT=/usr/src/$api_name/.forever \
-           --env HOME=$workdir \
+           --env YARN_CACHE_FOLDER=$workdir \
            --env-file $env \
            --volume /apis/keytool_files:$workdir/keytool_files:ro \
            --volume $config:$workdir/config:ro \

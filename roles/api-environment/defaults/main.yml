@@ -16,6 +16,9 @@ jenkins_restart_script: "jenkins-restart.sh"
 jenkins_restart_path: "{{ api_home }}/{{ jenkins_restart_script }}"
 restart_container_script: "restart-container.sh"
 restart_container_path: "{{ api_home }}/{{ restart_container_script }}"
+container_health_interval_seconds: 60
+container_health_timeout_seconds: 30
+timeout_delay: "{{ container_health_interval_seconds + container_health_timeout_seconds }}"
 
 # variables for dropwizard api
 dropwizard_api: false

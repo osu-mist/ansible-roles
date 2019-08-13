@@ -31,6 +31,7 @@ mkdir -p $api_path/logs
 chown -R {{ api_user }}:{{ api_group }} $api_path/logs
 
 # Run API in a container
+#   setting HOME sets yarn cache and global install dir to writable volume
 uid="$(id -u {{ api_user }})"
 gid="$(id -g {{ api_user }})"
 docker run -d \
@@ -38,7 +39,7 @@ docker run -d \
            --workdir $workdir \
            --env API_NAME=$api_name \
            --env FOREVER_ROOT=/usr/src/$api_name/.forever \
-           --env YARN_CACHE_FOLDER=$workdir \
+           --env HOME=$workdir \
            --env-file $env \
            --volume /apis/keytool_files:$workdir/keytool_files:ro \
            --volume $config:$workdir/config:ro \

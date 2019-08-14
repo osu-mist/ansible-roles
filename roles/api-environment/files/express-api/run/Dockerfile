@@ -17,9 +17,6 @@ ENV PATH=$PATH:/usr/lib/oracle/${release}.${update}/client64/bin
 # Install Node.JS 10
 RUN yum -y install oracle-nodejs-release-el7 && \
     yum -y install nodejs-10*
-# Install yarn
-RUN curl --silent --location https://dl.yarnpkg.com/rpm/yarn.repo | tee /etc/yum.repos.d/yarn.repo && \
-    yum -y install yarn
 # Install git
 RUN yum -y install git
 
@@ -28,4 +25,4 @@ RUN rm -rf /var/cache/yum
 
 # Run API
 CMD cd /usr/src/$API_NAME && \
-    yarn start
+    npm start

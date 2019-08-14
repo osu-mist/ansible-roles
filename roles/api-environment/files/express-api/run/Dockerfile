@@ -24,5 +24,8 @@ RUN yum -y install git
 RUN rm -rf /var/cache/yum
 
 # Run API
+#   Sets npm prefix to writable volume
+#   npm update notifier is disabled as it does not respect prefix
 CMD cd /usr/src/$API_NAME && \
+    npm config set prefix /usr/src/$API_NAME --no-update-notifier && \
     npm start

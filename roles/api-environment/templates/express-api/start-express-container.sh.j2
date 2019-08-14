@@ -31,6 +31,7 @@ mkdir -p $api_path/logs
 chown -R {{ api_user }}:{{ api_group }} $api_path/logs
 
 # Run API in a container
+#   Sets forever root directory and npm configuration file to writeable paths
 uid="$(id -u {{ api_user }})"
 gid="$(id -g {{ api_user }})"
 docker run -d \
@@ -38,6 +39,7 @@ docker run -d \
            --workdir $workdir \
            --env API_NAME=$api_name \
            --env FOREVER_ROOT=$workdir/.forever \
+           --env NPM_CONFIG_USERCONFIG=$workdir/.npmrc \
            --env-file $env \
            --volume /apis/keytool_files:$workdir/keytool_files:ro \
            --volume $config:$workdir/config:ro \

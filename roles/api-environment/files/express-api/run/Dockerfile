@@ -9,23 +9,23 @@ ARG release
 ARG update
 ARG gulp_cli_version
 # Install Oracle Instant Client
-RUN yum -y install oracle-release-el7 && yum-config-manager --enable ol7_oracle_instantclient && \
+RUN yum -y install oracle-release-el7 && \
+    yum-config-manager --enable ol7_oracle_instantclient && \
     yum -y install oracle-instantclient${release}.${update}-basic oracle-instantclient${release}.${update}-devel oracle-instantclient${release}.${update}-sqlplus && \
     echo /usr/lib/oracle/${release}.${update}/client64/lib > /etc/ld.so.conf.d/oracle-instantclient${release}.${update}.conf && \
     ldconfig
 ENV PATH=$PATH:/usr/lib/oracle/${release}.${update}/client64/bin
-# Install Node.JS 10
+# Install Node.JS 10 and git
 RUN yum -y install oracle-nodejs-release-el7 && \
-    yum -y install nodejs-10*
-# Install git
-RUN yum -y install git
+    yum -y install nodejs-10* && \
+    yum -y install git
 
 # Clean yum cache
 RUN rm -rf /var/cache/yum
 
 # Run API
-#   Sets npm prefix to writable volume
-#   npm update notifier is disabled as it does not respect prefix
+# Sets npm prefix to writable volume
+# npm update notifier is disabled as it does not respect prefix
 CMD cd /usr/src/$API_NAME && \
     npm config set prefix /usr/src/$API_NAME --no-update-notifier && \
     npm start

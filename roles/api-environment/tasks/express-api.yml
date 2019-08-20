@@ -1,18 +1,11 @@
 ---
-  - name: "create docker script directory"
-    file:
-      path: "{{ express_api_docker_path }}"
-      state: directory
-      owner: root
-      group: root
-
-  - name: copy express-api run dockerfile to docker script directory
+  - name: "copy express-api run dockerfile to docker script directory"
     copy:
       src: "./express-api/"
       dest: "{{ express_api_docker_path }}"
       owner: root
       group: root
-      mode: 0744
+      mode: "0744"
       force: yes
 
   - name: "create shell scripts to script directory"

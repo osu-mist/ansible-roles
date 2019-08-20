@@ -32,3 +32,5 @@ start_express_container_script: "start-express-container.sh"
 start_express_container_path: "{{ api_home }}/{{ start_express_container_script }}"
 express_api_docker_path: "/opt/docker/express-api"
 gulp_cli_version: "^2.2.0"
+oracle_release: 18
+oracle_update: 5

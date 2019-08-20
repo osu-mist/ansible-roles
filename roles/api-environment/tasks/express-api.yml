@@ -50,4 +50,6 @@
         path: "{{ express_api_docker_path }}/run"
         args:
           gulp_cli_version: "{{ gulp_cli_version }}"
+          oracle_release: "{{ oracle_release }}"
+          oracle_update: "{{ oracle_update }}"
         pull: no

@@ -5,8 +5,8 @@
 # ORACLE DOCKERFILES PROJECT
 
 FROM oraclelinux:7-slim
-ARG release=18
-ARG update=5
+ARG release
+ARG update
 ARG gulp_cli_version
 # Install Oracle Instant Client
 RUN yum -y install oracle-release-el7 && yum-config-manager --enable ol7_oracle_instantclient && \

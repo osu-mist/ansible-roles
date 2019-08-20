@@ -21,7 +21,7 @@ RUN yum -y install oracle-nodejs-release-el7 && \
     yum -y install git
 
 # Clean yum cache
-RUN rm -rf /var/cache/yum
+RUN yum clean all
 
 # Run API
 # Sets npm prefix to writable volume

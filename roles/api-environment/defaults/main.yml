@@ -13,6 +13,7 @@ disable_requiretty_for_api_user: "Defaults:{{ api_user }} !requiretty"
 
 # variables shared by all apis
 jenkins_restart_script: "jenkins-restart.sh"
+jenkins_restart_path: "{{ api_home }}/{{ jenkins_restart_script }}"
 restart_container_script: "restart-container.sh"
 restart_container_path: "{{ api_home }}/{{ restart_container_script }}"
 container_health_interval_seconds: 60
@@ -29,3 +30,7 @@ express_api: false
 jenkins_run_express_script: "jenkins-run-express.sh"
 start_express_container_script: "start-express-container.sh"
 start_express_container_path: "{{ api_home }}/{{ start_express_container_script }}"
+express_api_docker_path: "/opt/docker/express-api"
+gulp_cli_version: "^2.2.0"
+oracle_release: 18
+oracle_update: 5

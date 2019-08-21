@@ -10,6 +10,7 @@
 
   - name: "build docker image"
     docker_image:
+      source: build
       path: /tmp
       name: "{{ dropwizard_docker_image }}"
 

@@ -1,4 +1,13 @@
 ---
+  - name: "copy express-api run dockerfile to docker script directory"
+    copy:
+      src: "./express-api/"
+      dest: "{{ express_api_docker_path }}"
+      owner: root
+      group: root
+      mode: "0744"
+      force: yes
+
   - name: "create shell scripts to script directory"
     template:
       src: "express-api/{{ item.script }}.j2"
@@ -24,3 +33,16 @@
       insertafter: "{{ disable_requiretty_for_api_user }}"
       line: "{{ api_user }} ALL=(ALL) NOPASSWD: {{ start_express_container_path }}"
     when: content_has_line is changed
+
+  - name: "build docker run image"
+    docker_image:
+      source: build
+      name: express-api-run
+      force_source: yes
+      build:
+        path: "{{ express_api_docker_path }}/run"
+        args:
+          gulp_cli_version: "{{ gulp_cli_version }}"
+          oracle_release: "{{ oracle_release }}"
+          oracle_update: "{{ oracle_update }}"
+        pull: no

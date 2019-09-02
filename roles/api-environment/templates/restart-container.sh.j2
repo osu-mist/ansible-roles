@@ -1,22 +1,25 @@
 #!/bin/sh
 # restart-container.sh - restarts/starts container
 # Usually called remotely by jenkins
-# Usage: restart-container.sh API-NAME
+# Usage: restart-container.sh API-NAME API-TYPE
 
 set -eu
 
 api_name=$1
+api_type=$2
 
 {% raw %}
 if $(docker inspect -f {{.State.Running}} $api_name); then
   echo "$api_name is running. Restarting container."
   docker restart $api_name
 else
-{% endraw %}
   echo "$api_name is not running. Starting container."
-{% if express_api %}
+
+if $api_type == "express-api"; then
   {{ start_express_container_path }} $api_name
-{% else %}
-  docker start $api_name
-{% endif %}
+else
+  {{ start_dropwizard_container_path }} $api_name
 fi
+
+fi
+{% endraw %}

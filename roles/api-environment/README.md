@@ -11,8 +11,8 @@ In this stage, an api user will be created if not exists yet. Please note that *
 
 By enabling `dropwizard_api: true`, this role will start the process of setting up environment for Dropwizard based APIs. The general process of deploying a Dropwizard API is:
 
-  1. Copy the shadow jar to `/apis/apis/<api_name>/<api_name>-whatever-all.jar`
-  2. Ensure that either `/apis/apis/<api_name>/configuration.yaml` or `/apis/config/<api_name>.yaml` is present. Can either be installed ahead of time or copied along with the jar
+  1. Copy the shadow jar to `/apis/apis/<api_name>/<api_version>/<api_environment>/<api_name>-whatever-all.jar`
+  2. Ensure that either `/apis/apis/<api_name>/<api_version>/<api_environment>/configuration.yaml` or `/apis/config/<api_name>.yaml` is present. Can either be installed ahead of time or copied along with the jar
   3. Write environment variables to `/apis/env/<api_name>.env`, in the form:
 
       ```
@@ -24,12 +24,12 @@ By enabling `dropwizard_api: true`, this role will start the process of setting 
 
     etc. No quoting is necessary. Variables must start with an uppercase letter, and setting PATH is not allowed.
 
-  4. Run `/apis/jenkins-run.sh <api_name>`
+  4. Run `/apis/jenkins-run.sh <api_name> <api_version> <api_environment>`
 
 ## Express API
 
 By enabling `express_api: true`, this role will start the process of setting up environment for Express based APIs. The general process of deploying an Express API is:
 
-  1. Copy the archived container to `/apis/apis/<api_name>/<api_name>-whatever.tar`
+  1. Copy the archived container to `/apis/apis/<api_name>/<api_version>/<api_environment>/<api_name>-whatever.tar`
   2. Import the tar file as a new image, and mount the env file into the container
-  3. Run `/apis/jenkins-express-run.sh <api_name>` to start the API container
+  3. Run `/apis/jenkins-run-express.sh <api_name> <api_version> <api_environment>` to start the API container

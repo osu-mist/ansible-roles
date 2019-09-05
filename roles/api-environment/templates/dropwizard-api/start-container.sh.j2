@@ -6,21 +6,26 @@
 
 set -eu
 
-api_name=${1:-}
-if [ -z "$api_name" ]; then
-    echo 2>&1 "usage: jenkins-run.sh API-NAME"
+api_name=$1
+api_version=$2
+api_environment=$3
+
+if [ -z "$api_name" ] || [ -z "$api_version" ] || [ -z "$api_environment" ] ; then
+    echo 2>&1 "usage: jenkins-run.sh API-NAME API-VERSION API-ENVIRONMENT"
     exit 1
 fi
 if [ "$(echo $api_name | tr -d "A-Za-z0-9-_")" ]; then
     echo 2>&1 "invalid api name: $api_name"
     exit 1
 fi
-if [ ! -d /apis/apis/"$api_name" ]; then
-    echo 2>&1 "api does not exist: $api_name"
+
+api_path=/apis/apis/$api_name/$api_version/$api_environment
+
+if [ ! -d "$api_path" ]; then
+    echo 2>&1 "api path does not exist: $api_path"
     exit 1
 fi
 
-api_path=/apis/apis/$api_name
 cd $api_path &&
 
 archive=$(ls "$api_name"-*-all.jar | sort | tail -1)
@@ -29,7 +34,7 @@ env=/apis/env/$api_name.env
 keytool_path=/apis/keytool_files
 
 if [ ! -e "$config" ]; then
-    config=/apis/apis/$api_name/configuration.yaml
+    config=$api_path/configuration.yaml
 fi
 
 uid="$(id -u {{ api_user }})"
@@ -55,7 +60,7 @@ health_command='curl -k -fsS https://localhost:$ADMIN_PORT/ping'
 
 docker run \
     -d \
-    --name "$api_name" \
+    --name "$api_name.$api_version.$api_environment" \
     --label jar=$archive \
     --restart on-failure:3 \
     --user="$uid:$gid" \

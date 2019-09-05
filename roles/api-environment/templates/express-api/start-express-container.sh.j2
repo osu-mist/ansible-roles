@@ -10,6 +10,7 @@ api_version=$2
 api_environment=$3
 
 api_path=/apis/apis/$api_name/$api_version/$api_environment
+container_name="$api_name.$api_version.$api_environment"
 env=/apis/env/$api_name.env
 config=/apis/config/$api_name
 workdir=/usr/src/$api_name
@@ -24,13 +25,13 @@ if [ $total_artifacts -gt 3 ]; then
 fi
 
 # Stop and destroy container if it's already running
-if [[ "$(docker ps -aq -f name=$api_name)" ]]; then
-    echo "Stop existing container $(docker stop $api_name)"
-    echo "Remove existing container $(docker rm "$api_name")"
+if [[ "$(docker ps -aq -f name=$container_name)" ]]; then
+    echo "Stop existing container $(docker stop $container_name)"
+    echo "Remove existing container $(docker rm "$container_name")"
 
     # Sometimes docker will still think a container exists after doing "docker rm"
     # Pause the script for a few seconds before creating the container again
-    until [[ ! "$(docker ps -aq -f name=$api_name)" ]]; do
+    until [[ ! "$(docker ps -aq -f name=$container_name)" ]]; do
         sleep 1
     done
 fi
@@ -58,7 +59,7 @@ docker run -d \
            --health-cmd="$health_command" \
            --health-interval {{ container_health_interval_seconds }}s \
            --health-timeout {{ container_health_timeout_seconds }}s \
-           --name "$api_name.$api_version.$api_environment" \
+           --name $container_name \
            --restart on-failure:3 \
            express-api-run
 

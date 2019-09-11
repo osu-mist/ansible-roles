@@ -1,19 +1,18 @@
 #!/bin/sh
 # start-express-container.sh - starts an express api with docker
 # Usually called remotely by jenkins
-# Usage: start-express-container.sh API-NAME API-VERSION API-ENVIRONMENT
+# Usage: start-express-container.sh API-NAME API-VERSION
 
 set -eu
 
 api_name=$1
 api_version=$2
-api_environment=$3
 
-api_dir=/apis/apis/$api_name/$api_version/$api_environment
-env_path=/apis/env/$api_name-$api_version-$api_environment.env
-config_dir=/apis/config/$api_name-$api_version-$api_environment
+api_dir=/apis/apis/$api_name/$api_version
+env_path=/apis/env/$api_name-$api_version.env
+config_dir=/apis/config/$api_name-$api_version
 
-container_name=$api_name.$api_version.$api_environment
+container_name=$api_name.$api_version
 workdir=/usr/src/$api_name
 
 cd $api_dir

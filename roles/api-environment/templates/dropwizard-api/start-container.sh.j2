@@ -19,23 +19,23 @@ if [ "$(echo $api_name | tr -d "A-Za-z0-9-_")" ]; then
     exit 1
 fi
 
-api_path=/apis/apis/$api_name/$api_version/$api_environment
+api_dir=/apis/apis/$api_name/$api_version/$api_environment
 container_name="$api_name.$api_version.$api_environment"
 
-if [ ! -d "$api_path" ]; then
-    echo 2>&1 "api path does not exist: $api_path"
+if [ ! -d "$api_dir" ]; then
+    echo 2>&1 "api dir does not exist: $api_dir"
     exit 1
 fi
 
-cd $api_path &&
+cd $api_dir
 
 archive=$(ls "$api_name"-*-all.jar | sort | tail -1)
-config=/apis/config/$api_name.yaml
-env=/apis/env/$api_name.env
+config=/apis/config/$api_name-$api_version-$api_environment.yaml
+env=/apis/env/$api_name-$api_version-$api_environment.env
 keytool_path=/apis/keytool_files
 
 if [ ! -e "$config" ]; then
-    config=$api_path/configuration.yaml
+    config=$api_dir/configuration.yaml
 fi
 
 uid="$(id -u {{ api_user }})"
@@ -65,7 +65,7 @@ docker run \
     --label jar=$archive \
     --restart on-failure:3 \
     --user="$uid:$gid" \
-    --workdir="$api_path" \
+    --workdir="$api_dir" \
     --env-file "$env" \
     --network host \
     --health-cmd="$health_command" \
@@ -73,7 +73,7 @@ docker run \
     --health-timeout {{ container_health_timeout_seconds }}s \
     --volume $keytool_path/server.keystore:$keytool_path/server.keystore:ro \
     --volume $keytool_path/server.truststore:$keytool_path/server.truststore:ro \
-    --volume $api_path:$api_path \
+    --volume $api_dir:$api_dir \
     --volume $config:$config:ro \
     {{ dropwizard_docker_image }} \
     /bin/bash -c "$java_command"

@@ -1,16 +1,15 @@
 #!/bin/sh
 # restart-container.sh - restarts/starts container
 # Usually called remotely by jenkins
-# Usage: restart-container.sh API-NAME API-VERSION API-ENVIRONMENT API-TYPE
+# Usage: restart-container.sh API-NAME API-VERSION API-TYPE
 
 set -eu
 
 api_name=$1
 api_version=$2
-api_environment=$3
-api_type=$4
+api_type=$3
 
-container_name="$api_name.$api_version.$api_environment"
+container_name="$api_name.$api_version"
 
 {% raw %}
 if $(docker inspect -f {{.State.Running}} $container_name); then
@@ -20,8 +19,8 @@ if $(docker inspect -f {{.State.Running}} $container_name); then
 else
   echo "$container_name is not running. Starting container."
   if $api_type == "express-api"; then
-    {{ start_express_container_path }} $api_name $api_version $api_environment
+    {{ start_express_container_path }} $api_name $api_version
   else
-    {{ start_dropwizard_container_path }} $api_name $api_version $api_environment
+    {{ start_dropwizard_container_path }} $api_name $api_version
   fi
 fi

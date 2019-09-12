@@ -21,6 +21,7 @@
     pip:
       name: "{{ item.name }}"
       version: "{{ item.version }}"
+      extra_args: --ignore-installed
     with_items:
       - { name: pip, version: "{{ pip_version }}"}
       - { name: requests, version: "{{ requests_version }}"}

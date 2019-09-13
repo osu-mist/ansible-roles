@@ -1,10 +1,14 @@
-echo "Waiting {{ timeout_delay }} seconds for container to be healthy..."
-sleep {{ timeout_delay }}
-{% raw %}
-if [ $(docker inspect --format='{{json .State.Health.Status}}' $api_name) != "\"healthy\"" ]; then
-{% endraw %}
-  echo "ERROR: Container not healthy after {{ timeout_delay }} seconds"
-  exit 1
-else
-  echo "Container healthy after {{ timeout_delay }} seconds"
-fi
+docker exec -i $container_name /bin/bash <<EOF
+timer=0
+timeout={{ container_timeout_seconds }}
+echo "waiting for container to be healthy..."
+until $health_command > /dev/null 2>&1; do
+    if [ \$timer -ge \$timeout ]; then
+        echo "container not healthy after \$timeout seconds"
+        exit 1
+    fi
+    sleep 1
+    timer=\$((\$timer + 1))
+done
+echo "container healthy after \$timer seconds"
+EOF

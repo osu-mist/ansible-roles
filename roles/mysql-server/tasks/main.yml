@@ -4,6 +4,7 @@
       name: mysql-db
       image: "mysql:5.7"
       restart_policy: always
+      command: "--lower_case_table_names=1"
       env:
         MYSQL_ROOT_PASSWORD: "{{ mysql_root_password }}"
       volumes:

@@ -51,6 +51,7 @@ fi
 echo "Start container"
 
 java_command="java -Xmx100m -jar $archive server $config"
+health_command='curl -k -fsS https://localhost:$ADMIN_PORT/ping'
 
 docker run \
     -d \
@@ -61,7 +62,7 @@ docker run \
     --workdir="$api_path" \
     --env-file "$env" \
     --network host \
-    --health-cmd='curl -k -fsS https://localhost:$ADMIN_PORT/healthcheck' \
+    --health-cmd="$health_command" \
     --health-interval={{ container_health_interval_seconds }}s \
     --health-timeout {{ container_health_timeout_seconds }}s \
     --volume $keytool_path/server.keystore:$keytool_path/server.keystore:ro \
@@ -76,4 +77,4 @@ if [[ ! $(docker ps -q -f name=$api_name) ]]; then
     exit 1
 fi
 
-{% include 'timeout-delay.sh.j2' %}
+{% include 'wait-for-container.sh.j2' %}

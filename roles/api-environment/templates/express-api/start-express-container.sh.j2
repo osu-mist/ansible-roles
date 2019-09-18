@@ -41,6 +41,7 @@ chown -R {{ api_user }}:{{ api_group }} $api_path/logs
 #   Sets forever root directory and npm configuration file to writeable paths
 uid="$(id -u {{ api_user }})"
 gid="$(id -g {{ api_user }})"
+health_command='curl -k -fsS --user $USER:$PASSWD https://localhost:$ADMIN_PORT/api/v1'
 docker run -d \
            --user "$uid:$gid" \
            --workdir $workdir \
@@ -52,7 +53,7 @@ docker run -d \
            --volume $config:$workdir/config:ro \
            --volume $api_path:$workdir \
            --network host \
-           --health-cmd 'curl -k -fsS --user $USER:$PASSWD https://localhost:$ADMIN_PORT/api/v1' \
+           --health-cmd="$health_command" \
            --health-interval {{ container_health_interval_seconds }}s \
            --health-timeout {{ container_health_timeout_seconds }}s \
            --name $api_name \
@@ -64,4 +65,4 @@ if [[ ! $(docker ps -q -f name=$api_name) ]]; then
    exit 1
 fi
 
-{% include 'timeout-delay.sh.j2' %}
+{% include 'wait-for-container.sh.j2' %}

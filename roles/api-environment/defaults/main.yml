@@ -18,7 +18,7 @@ restart_container_script: "restart-container.sh"
 restart_container_path: "{{ api_home }}/{{ restart_container_script }}"
 container_health_interval_seconds: 60
 container_health_timeout_seconds: 30
-timeout_delay: "{{ container_health_interval_seconds + container_health_timeout_seconds }}"
+container_timeout_seconds: 60
 
 # variables for dropwizard api
 dropwizard_api: false

@@ -10,6 +10,7 @@ api_type=$2
 
 {% raw %}
 if $(docker inspect -f {{.State.Running}} $api_name); then
+{% endraw %}
   echo "$api_name is running. Restarting container."
   docker restart $api_name
 else
@@ -22,4 +23,3 @@ else
 fi
 
 fi
-{% endraw %}

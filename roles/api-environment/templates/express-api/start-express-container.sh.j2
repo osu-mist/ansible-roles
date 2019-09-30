@@ -44,7 +44,7 @@ chown -R {{ api_user }}:{{ api_group }} $api_dir/logs
 #   Sets forever root directory and npm configuration file to writeable paths
 uid="$(id -u {{ api_user }})"
 gid="$(id -g {{ api_user }})"
-health_command='curl -k -fsS --user $USER:$PASSWD https://localhost:$ADMIN_PORT/api/v1'
+health_command='curl -k -fsS --user $USER:$PASSWD https://localhost:$ADMIN_PORT/api/'$api_version
 docker run -d \
            --user "$uid:$gid" \
            --workdir $workdir \

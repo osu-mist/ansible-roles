@@ -1,4 +1,4 @@
-docker exec -i $api_name /bin/bash <<EOF
+docker exec -i $container_name /bin/bash <<EOF
 timer=0
 timeout={{ container_timeout_seconds }}
 echo "waiting for container to be healthy..."

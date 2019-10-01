@@ -6,7 +6,7 @@ unhealthy_containers=$(docker container ls --format "{{.ID}} {{.Names}}" --filte
 if [ -n "$unhealthy_containers" ]; then
   echo -e "Found unhealthy containers:\n
 ID           NAME
-$unhealthy_containers"
+$unhealthy_containers\n"
   exit 1
 else
   echo "No unhealthy containers found"

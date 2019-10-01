@@ -1,14 +1,14 @@
-docker exec -i $api_name /bin/bash <<EOF
+docker exec -i $container_name /bin/bash <<EOF
 timer=0
 timeout={{ container_timeout_seconds }}
-echo "waiting for container to be healthy..."
+echo "waiting for container health check..."
 until $health_command > /dev/null 2>&1; do
     if [ \$timer -ge \$timeout ]; then
-        echo "container not healthy after \$timeout seconds"
+        echo "container health check did not pass after \$timeout seconds"
         exit 1
     fi
     sleep 1
     timer=\$((\$timer + 1))
 done
-echo "container healthy after \$timer seconds"
+echo "container health check passed after \$timer seconds"
 EOF

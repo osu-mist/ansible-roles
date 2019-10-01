@@ -1,18 +1,21 @@
 #!/bin/sh
 # start-express-container.sh - starts an express api with docker
 # Usually called remotely by jenkins
-# Usage: start-express-container.sh API-NAME
+# Usage: start-express-container.sh API-NAME API-VERSION
 
 set -eu
 
 api_name=$1
+api_version=$2
 
-api_path=/apis/apis/$api_name
-env=/apis/env/$api_name.env
-config=/apis/config/$api_name
+api_dir=/apis/apis/$api_name/$api_version
+env_path=/apis/env/$api_name-$api_version.env
+config_dir=/apis/config/$api_name-$api_version
+
+container_name=$api_name.$api_version
 workdir=/usr/src/$api_name
 
-cd $api_path
+cd $api_dir
 
 # Clean old artifacts from workspace (retain 3 newest)
 total_artifacts=$(find -type f -name "$api_name-*.tar" | wc -l)
@@ -22,45 +25,45 @@ if [ $total_artifacts -gt 3 ]; then
 fi
 
 # Stop and destroy container if it's already running
-if [[ "$(docker ps -aq -f name=$api_name)" ]]; then
-    echo "Stop existing container $(docker stop $api_name)"
-    echo "Remove existing container $(docker rm "$api_name")"
+if [[ "$(docker ps -aq -f name=$container_name)" ]]; then
+    echo "Stop existing container $(docker stop $container_name)"
+    echo "Remove existing container $(docker rm "$container_name")"
 
     # Sometimes docker will still think a container exists after doing "docker rm"
     # Pause the script for a few seconds before creating the container again
-    until [[ ! "$(docker ps -aq -f name=$api_name)" ]]; do
+    until [[ ! "$(docker ps -aq -f name=$container_name)" ]]; do
         sleep 1
     done
 fi
 
 # Create logs folder and make sure the API have access to wrtie logs into it
-mkdir -p $api_path/logs
-chown -R {{ api_user }}:{{ api_group }} $api_path/logs
+mkdir -p $api_dir/logs
+chown -R {{ api_user }}:{{ api_group }} $api_dir/logs
 
 # Run API in a container
 #   Sets forever root directory and npm configuration file to writeable paths
 uid="$(id -u {{ api_user }})"
 gid="$(id -g {{ api_user }})"
-health_command='curl -k -fsS --user $USER:$PASSWD https://localhost:$ADMIN_PORT/api/v1'
+health_command='curl -k -fsS --user $USER:$PASSWD https://localhost:$ADMIN_PORT/api/'$api_version
 docker run -d \
            --user "$uid:$gid" \
            --workdir $workdir \
            --env API_NAME=$api_name \
            --env FOREVER_ROOT=$workdir/.forever \
            --env NPM_CONFIG_USERCONFIG=$workdir/.npmrc \
-           --env-file $env \
+           --env-file $env_path \
            --volume /apis/keytool_files:$workdir/keytool_files:ro \
-           --volume $config:$workdir/config:ro \
-           --volume $api_path:$workdir \
+           --volume $config_dir:$workdir/config:ro \
+           --volume $api_dir:$workdir \
            --network host \
            --health-cmd="$health_command" \
            --health-interval {{ container_health_interval_seconds }}s \
            --health-timeout {{ container_health_timeout_seconds }}s \
-           --name $api_name \
+           --name $container_name \
            --restart on-failure:3 \
            express-api-run
 
-if [[ ! $(docker ps -q -f name=$api_name) ]]; then
+if [[ ! $(docker ps -q -f name=$container_name) ]]; then
    echo "ERROR: Container not running"
    exit 1
 fi

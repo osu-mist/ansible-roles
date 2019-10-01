@@ -1,0 +1,7 @@
+---
+script_directory: /opt/docker/docker-health-monitor/
+script_name: check-health.sh
+script_path: "{{ script_directory }}{{ script_name }}"
+
+api_user: osu_apis
+api_group: apis

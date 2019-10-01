@@ -1,0 +1,21 @@
+---
+  - name: create script directory
+    file:
+      path: "{{ script_directory }}"
+      state: directory
+      owner: "{{ api_user }}"
+      group: "{{ api_group }}"
+      mode: '0775'
+
+  - name: copy script
+    copy:
+      src: "{{ script_name }}"
+      dest: "{{ script_path }}"
+      owner: "{{ api_user }}"
+      group: "{{ api_group }}"
+      mode: '0554'
+
+  - name: ensure line in sudoers file
+    lineinfile:
+      dest: /etc/sudoers
+      line: "{{ api_user }} ALL=(ALL) NOPASSWD: {{ script_path }}"

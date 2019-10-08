@@ -1,5 +1,5 @@
 ---
-  - name: "copy express-api run dockerfile to docker script directory"
+  - name: "copy express-api run folder to docker script directory"
     copy:
       src: "./express-api/"
       dest: "{{ express_api_docker_path }}"

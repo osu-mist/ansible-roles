@@ -1,16 +1,8 @@
 ---
-  - name: create script directory
-    file:
-      path: "{{ script_directory }}"
-      state: directory
-      owner: "{{ api_user }}"
-      group: "{{ api_group }}"
-      mode: '0775'
-
   - name: copy script
     copy:
       src: "{{ script_name }}"
-      dest: "{{ script_path }}"
+      dest: "{{ script_directory }}"
       owner: "{{ api_user }}"
       group: "{{ api_group }}"
       mode: '0554'

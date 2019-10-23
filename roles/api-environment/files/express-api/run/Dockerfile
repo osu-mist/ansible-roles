@@ -11,8 +11,8 @@ ARG gulp_cli_version
 # Install Oracle Instant Client
 RUN yum -y install oracle-release-el7 && \
     yum-config-manager --enable ol7_oracle_instantclient && \
-    yum -y install oracle-instantclient${oracle_release}.${oracle_update}-basic oracle-instantclient${release}.${update}-devel oracle-instantclient${release}.${update}-sqlplus && \
-    echo /usr/lib/oracle/${oracle_release}.${oracle_update}/client64/lib > /etc/ld.so.conf.d/oracle-instantclient${release}.${update}.conf && \
+    yum -y install oracle-instantclient${oracle_release}.${oracle_update}-basic oracle-instantclient${oracle_release}.${oracle_update}-devel oracle-instantclient${oracle_release}.${oracle_update}-sqlplus && \
+    echo /usr/lib/oracle/${oracle_release}.${oracle_update}/client64/lib > /etc/ld.so.conf.d/oracle-instantclient${oracle_release}.${oracle_update}.conf && \
     ldconfig
 COPY ./sqlnet.ora /usr/lib/oracle/${oracle_release}.${oracle_update}/client64/lib/network/admin/
 ENV PATH=$PATH:/usr/lib/oracle/${oracle_release}.${oracle_update}/client64/bin

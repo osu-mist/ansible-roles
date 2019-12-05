@@ -18,7 +18,7 @@ COPY ./sqlnet.ora /usr/lib/oracle/${oracle_release}.${oracle_update}/client64/li
 ENV PATH=$PATH:/usr/lib/oracle/${oracle_release}.${oracle_update}/client64/bin
 # Install Node.JS 10 and git
 RUN yum -y install oracle-nodejs-release-el7 && \
-    yum -y install nodejs-10* && \
+    yum -y install nodejs-${node_version}* && \
     yum -y install git
 
 # Run API

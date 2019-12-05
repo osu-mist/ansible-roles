@@ -8,6 +8,7 @@ FROM oraclelinux:7-slim
 ARG oracle_release
 ARG oracle_update
 ARG gulp_cli_version
+ARG node_version
 # Install Oracle Instant Client
 RUN yum -y install oracle-release-el7 && \
     yum-config-manager --enable ol7_oracle_instantclient && \

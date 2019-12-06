@@ -1,0 +1,9 @@
+apps:
+  - script: './dist/app.js'
+    # Options reference: https://pm2.io/doc/en/runtime/reference/ecosystem-file/
+    exec_mode: 'fork'
+    autorestart: true
+    watch: false
+    exp_backoff_restart_delay: 100
+    # Change from NODE_APP_INSTANCE to avoid config warning
+    instance_var: 'INSTANCE_ID'

@@ -41,7 +41,7 @@ mkdir -p $api_dir/logs
 chown -R {{ api_user }}:{{ api_group }} $api_dir/logs
 
 # Run API in a container
-#   Sets forever root directory and npm configuration file to writeable paths
+#   Sets pm2 home directory and npm configuration file to writeable paths
 uid="$(id -u {{ api_user }})"
 gid="$(id -g {{ api_user }})"
 health_command='curl -k -fsS --user $USER:$PASSWD https://localhost:$ADMIN_PORT/api/'$api_version
@@ -49,12 +49,13 @@ docker run -d \
            --user "$uid:$gid" \
            --workdir $workdir \
            --env API_NAME=$api_name \
-           --env FOREVER_ROOT=$workdir/.forever \
+           --env PM2_HOME=$workdir/.pm2 \
            --env NPM_CONFIG_USERCONFIG=$workdir/.npmrc \
            --env-file $env_path \
            --volume /apis/keytool_files:$workdir/keytool_files:ro \
            --volume $config_dir:$workdir/config:ro \
            --volume $api_dir:$workdir \
+           --volume {{ pm2_config_path }}:$workdir/{{ pm2_config }}:ro \
            --network host \
            --health-cmd="$health_command" \
            --health-interval {{ container_health_interval_seconds }}s \

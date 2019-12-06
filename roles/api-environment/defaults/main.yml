@@ -31,6 +31,8 @@ jenkins_run_express_script: "jenkins-run-express.sh"
 start_express_container_script: "start-express-container.sh"
 start_express_container_path: "{{ api_home }}/{{ start_express_container_script }}"
 express_api_docker_path: "/opt/docker/express-api"
+pm2_config: "pm2.yaml"
+pm2_config_path: "{{ api_home }}/{{ pm2_config }}"
 gulp_cli_version: "^2.2.0"
 oracle_release: 19
 oracle_update: 5

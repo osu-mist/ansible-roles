@@ -1,10 +1,19 @@
 ---
   - name: "copy express-api run folder to docker script directory"
     copy:
-      src: "./express-api/"
-      dest: "{{ express_api_docker_path }}"
+      src: "./express-api/run/"
+      dest: "{{ express_api_docker_path }}/run"
       owner: root
       group: root
+      mode: "0744"
+      force: yes
+
+  - name: "copy pm2 config file"
+    copy:
+      src: "./express-api/{{ pm2_config }}"
+      dest: "{{ pm2_config_path }}"
+      group: "{{ api_group }}"
+      owner: "{{ api_user }}"
       mode: "0744"
       force: yes
 

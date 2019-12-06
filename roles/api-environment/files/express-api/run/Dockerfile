@@ -27,4 +27,4 @@ RUN yum -y install oracle-nodejs-release-el7 && \
 # npm update notifier is disabled as it does not respect prefix
 CMD cd /usr/src/$API_NAME && \
     npm config set prefix /usr/src/$API_NAME --no-update-notifier && \
-    npm start
+    npx pm2-runtime pm2.yaml --no-auto-exit

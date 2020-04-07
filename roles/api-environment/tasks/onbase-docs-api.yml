@@ -1,0 +1,58 @@
+---
+  - name: "fail if either dropwizard_api or express_api is true"
+    fail:
+      msg: "dropwizard_api and express_api cannot be true"
+    when: dropwizard_api or express_api
+
+  - name: "Set api_type to onbase-docs-api"
+    set_fact:
+      api_type: onbase-docs-api
+
+  - name: "copy onbase-docs-api run folder to docker script directory"
+    copy:
+      src: "./onbase-docs-api/run/"
+      dest: "{{ onbase_docs_api_docker_path }}/run"
+      owner: root
+      group: root
+      mode: "0744"
+      force: yes
+
+  - name: "create shell scripts to script directory"
+    template:
+      src: "onbase-docs-api/{{ item.script }}.j2"
+      dest: "{{ api_home }}/{{ item.script }}"
+      group: "{{ api_group }}"
+      owner: "{{ api_user }}"
+      mode: "{{ item.mode }}"
+      force: yes
+    with_items:
+      - { script: "{{ jenkins_run_onbase_docs_api_script }}", mode: "0754" }
+      - { script: "{{ start_onbase_docs_api_container_script }}", mode: "0554" }
+
+  - name: "check if line present in sudoers file"
+    lineinfile:
+      path: /etc/sudoers
+      line: "{{ api_user }} ALL=(ALL) NOPASSWD: {{ start_onbase_docs_api_container_path }}"
+    register: content_has_line
+    check_mode: yes
+
+  - name: "add new lines to sudoers file"
+    lineinfile:
+      path: /etc/sudoers
+      insertafter: "{{ disable_requiretty_for_api_user }}"
+      line: "{{ api_user }} ALL=(ALL) NOPASSWD: {{ start_onbase_docs_api_container_path }}"
+    when: content_has_line is changed
+
+  - name: "build docker run image"
+    docker_image:
+      source: build
+      name: onbase-docs-api-run
+      force_source: yes
+      build:
+        path: "{{ onbase_docs_api_docker_path }}/run"
+        args:
+          gulp_cli_version: "{{ gulp_cli_version }}"
+          oracle_release: "{{ oracle_release }}"
+          oracle_update: "{{ oracle_update }}"
+          node_version: "{{ node_version }}"
+        pull: no

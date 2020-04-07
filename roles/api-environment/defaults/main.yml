@@ -37,3 +37,10 @@ gulp_cli_version: "^2.2.0"
 oracle_release: 19
 oracle_update: 5
 node_version: "10.17"
+
+# variables for onbase-docs api
+onbase_docs_api: false
+jenkins_run_onbase_docs_api_script: "jenkins-run-onbase-docs-api.sh"
+start_onbase_docs_api_container_script: "start-onbase-docs-api-container.sh"
+start_onbase_docs_api_container_path: "{{ api_home }}/{{ start_onbase_docs_api_container_script }}"
+onbase_docs_api_docker_path: "/opt/docker/onbase-docs-api"

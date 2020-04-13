@@ -28,6 +28,7 @@
     with_items:
       - { script: "{{ jenkins_run_onbase_docs_api_script }}", mode: "0754" }
       - { script: "{{ start_onbase_docs_api_container_script }}", mode: "0554" }
+      - { script: "{{ docker_run_onbase_docs_api_script }}", mode: "0754" }
 
   - name: "check if line present in sudoers file"
     lineinfile:

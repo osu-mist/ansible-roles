@@ -42,5 +42,10 @@ node_version: "10.17"
 onbase_docs_api: false
 jenkins_run_onbase_docs_api_script: "jenkins-run-onbase-docs-api.sh"
 start_onbase_docs_api_container_script: "start-onbase-docs-api-container.sh"
+docker_run_onbase_docs_api_script: "docker-run-onbase-docs-api.sh"
 start_onbase_docs_api_container_path: "{{ api_home }}/{{ start_onbase_docs_api_container_script }}"
 onbase_docs_api_docker_path: "/opt/docker/onbase-docs-api"
+docker_keytool_dir: /usr/src/onbase-docs-api/keytool_files
+cert_path: "{{ docker_keytool_dir }}/server.crt"
+pvk_path: "{{ docker_keytool_dir }}/key.pvk"
+# pvk_passphrase: DEFINE_IN_VAULT_FILE

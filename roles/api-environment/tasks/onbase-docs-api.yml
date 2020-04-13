@@ -33,7 +33,7 @@
   - name: "check if line present in sudoers file"
     lineinfile:
       path: /etc/sudoers
-      line: "{{ api_user }} ALL=(ALL) NOPASSWD: {{ start_onbase_docs_api_container_path }}"
+      line: "{{ start_onbase_docs_api_container_sudo_line }}"
     register: content_has_line
     check_mode: yes
 
@@ -41,7 +41,7 @@
     lineinfile:
       path: /etc/sudoers
       insertafter: "{{ disable_requiretty_for_api_user }}"
-      line: "{{ api_user }} ALL=(ALL) NOPASSWD: {{ start_onbase_docs_api_container_path }}"
+      line: "{{ start_onbase_docs_api_container_sudo_line }}"
     when: content_has_line is changed
 
   - name: "build docker run image"

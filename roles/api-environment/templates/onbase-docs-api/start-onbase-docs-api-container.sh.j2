@@ -1,0 +1,74 @@
+#!/bin/sh
+# start-onbase-docs-api-container.sh - starts onbase-docs api with docker
+# Usually called remotely by jenkins
+# Usage: start-onbase-docs-api-container.sh API-VERSION
+
+set -eu
+
+api_name="onbase-docs-api"
+api_version=$1
+
+api_dir=/apis/apis/$api_name/$api_version
+env_path=/apis/env/$api_name-$api_version.env
+config_dir=/apis/config/$api_name-$api_version
+
+container_name=$api_name.$api_version
+workdir=/usr/src/$api_name
+
+port=$(grep '^PORT' $env_path | cut -d '=' -f2)
+admin_port=$(grep '^ADMIN_PORT' $env_path | cut -d '=' -f2)
+
+cd $api_dir
+
+# Clean old artifacts from workspace (retain 3 newest)
+total_artifacts=$(find -type f -name "$api_name-*.tar" | wc -l)
+if [ $total_artifacts -gt 3 ]; then
+  echo "Removing old artifacts from workspace."
+  rm $(find $api_name-*.tar -printf "%T@ %p\n" | sort -n | head -$((total_artifacts - 3)) | cut -f2- -d" ")
+fi
+
+# Stop and destroy container if it's already running
+if [[ "$(docker ps -aq -f name=$container_name)" ]]; then
+    echo "Stop existing container $(docker stop $container_name)"
+    echo "Remove existing container $(docker rm "$container_name")"
+
+    # Sometimes docker will still think a container exists after doing "docker rm"
+    # Pause the script for a few seconds before creating the container again
+    until [[ ! "$(docker ps -aq -f name=$container_name)" ]]; do
+        sleep 1
+    done
+fi
+
+# Create logs folder and make sure the API have access to wrtie logs into it
+mkdir -p $api_dir/logs
+chown -R {{ api_user }}:{{ api_group }} $api_dir/logs
+
+# Run API in a container
+uid="$(id -u {{ api_user }})"
+gid="$(id -g {{ api_user }})"
+health_command='curl -k -fsS --user $USER:$PASSWD https://localhost:$ADMIN_PORT/api/'$api_version
+docker run -d \
+           --user "$uid:$gid" \
+           --workdir $workdir \
+           --env API_NAME=$api_name \
+           --env PORT=$port \
+           --env ADMIN_PORT=$admin_port \
+           --env-file $env_path \
+           --volume {{ api_home }}/{{ docker_run_onbase_docs_api_script }}:$workdir/{{ docker_run_onbase_docs_api_script }}:ro \
+           --volume /apis/keytool_files/onbase-docs-api:$workdir/keytool_files:ro \
+           --volume $config_dir/api-config.yaml:$workdir/OnBaseDocsApi/api-config.yaml:ro \
+           --volume $api_dir:$workdir \
+           --network host \
+           --health-cmd="$health_command" \
+           --health-interval {{ container_health_interval_seconds }}s \
+           --health-timeout {{ container_health_timeout_seconds }}s \
+           --name $container_name \
+           --restart on-failure:3 \
+           onbase-docs-api-run
+
+if [[ ! $(docker ps -q -f name=$container_name) ]]; then
+   echo "ERROR: Container not running"
+   exit 1
+fi
+
+{% include 'wait-for-container.sh.j2' %}

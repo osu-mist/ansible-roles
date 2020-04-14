@@ -23,6 +23,7 @@ container_timeout_seconds: 60
 # variables for dropwizard api
 dropwizard_api: false
 start_dropwizard_container_path: "{{ api_home }}/start-container.sh"
+start_dropwizard_container_sudo_line: "{{ api_user }} ALL=(ALL) NOPASSWD: {{ start_dropwizard_container_path }}"
 dropwizard_docker_image: "openjdk8-america-los-angeles"
 
 # variables for express api
@@ -30,6 +31,7 @@ express_api: false
 jenkins_run_express_script: "jenkins-run-express.sh"
 start_express_container_script: "start-express-container.sh"
 start_express_container_path: "{{ api_home }}/{{ start_express_container_script }}"
+start_express_container_sudo_line: "{{ api_user }} ALL=(ALL) NOPASSWD: {{ start_express_container_path }}"
 express_api_docker_path: "/opt/docker/express-api"
 pm2_config: "pm2.yaml"
 pm2_config_path: "{{ api_home }}/{{ pm2_config }}"
@@ -37,3 +39,16 @@ gulp_cli_version: "^2.2.0"
 oracle_release: 19
 oracle_update: 5
 node_version: "10.17"
+
+# variables for onbase-docs api
+onbase_docs_api: false
+jenkins_run_onbase_docs_api_script: "jenkins-run-onbase-docs-api.sh"
+docker_run_onbase_docs_api_script: "docker-run-onbase-docs-api.sh"
+start_onbase_docs_api_container_script: "start-onbase-docs-api-container.sh"
+start_onbase_docs_api_container_path: "{{ api_home }}/{{ start_onbase_docs_api_container_script }}"
+start_onbase_docs_api_container_sudo_line: "{{ api_user }} ALL=(ALL) NOPASSWD: {{ start_onbase_docs_api_container_path }}"
+onbase_docs_api_docker_path: "/opt/docker/onbase-docs-api"
+docker_keytool_dir: /usr/src/onbase-docs-api/keytool_files
+cert_path: "{{ docker_keytool_dir }}/server.crt"
+pvk_path: "{{ docker_keytool_dir }}/key.pvk"
+# pvk_passphrase: DEFINE_IN_VAULT_FILE

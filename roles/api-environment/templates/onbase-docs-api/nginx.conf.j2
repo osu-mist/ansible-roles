@@ -1,0 +1,28 @@
+
+worker_processes  1;
+
+events {
+    worker_connections  1024;
+}
+
+http {
+    default_type       application/octet-stream;
+    sendfile           on;
+    keepalive_timeout  65;
+
+    server {
+        listen              {{ nginx_port }} ssl;
+        server_name         localhost;
+        root                /usr/src/onbase-docs-api/OnBaseDocsApi;
+        ssl_certificate     {{ nginx_cert }};
+        ssl_certificate_key {{ nginx_cert_key }};
+
+        location / {
+            fastcgi_index Index.aspx;
+            fastcgi_pass  127.0.0.1:8000;
+            include       /usr/src/onbase-docs-api/conf/fastcgi_params;
+        }
+    }
+
+    include servers/*;
+}

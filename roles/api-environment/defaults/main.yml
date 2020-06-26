@@ -52,3 +52,8 @@ docker_keytool_dir: /usr/src/onbase-docs-api/keytool_files
 cert_path: "{{ docker_keytool_dir }}/server.crt"
 pvk_path: "{{ docker_keytool_dir }}/key.pvk"
 # pvk_passphrase: DEFINE_IN_VAULT_FILE
+
+nginx_directory: "{{ docker_keytool_dir }}/nginx"
+nginx_cert: "{{ nginx_directory }}/server.crt"
+nginx_cert_key: "{{ nginx_directory }}/server.key"
+nginx_port: 8124

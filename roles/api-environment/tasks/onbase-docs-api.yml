@@ -30,6 +30,15 @@
       - { script: "{{ start_onbase_docs_api_container_script }}", mode: "0554" }
       - { script: "{{ docker_run_onbase_docs_api_script }}", mode: "0754" }
 
+  - name: "copy nginx.conf"
+    template:
+      src: "onbase-docs-api/nginx.conf.j2"
+      dest: "{{ api_home }}/conf/nginx.conf"
+      group: "{{ api_group }}"
+      owner: "{{ api_user }}"
+      mode: "777"
+      force: yes
+
   - name: "check if line present in sudoers file"
     lineinfile:
       path: /etc/sudoers

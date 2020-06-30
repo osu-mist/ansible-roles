@@ -36,7 +36,7 @@
       dest: "{{ api_home }}/conf/nginx.conf"
       group: "{{ api_group }}"
       owner: "{{ api_user }}"
-      mode: "777"
+      mode: "744"
       force: yes
 
   - name: "check if line present in sudoers file"

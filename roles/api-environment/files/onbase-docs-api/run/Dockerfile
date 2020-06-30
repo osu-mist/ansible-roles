@@ -18,4 +18,3 @@ COPY . .
 CMD cd OnBaseDocsApi && \
     nginx -c /usr/src/onbase-docs-api/conf/nginx.conf && \
     fastcgi-mono-server4 /applications=/:/usr/src/onbase-docs-api/OnBaseDocsApi /socket=tcp:127.0.0.1:8000
-    

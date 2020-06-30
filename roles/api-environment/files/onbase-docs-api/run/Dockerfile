@@ -1,13 +1,16 @@
 FROM mono:latest
 
-RUN apt-get update
-RUN apt-get install -y mono-fastcgi-server4
-RUN apt-get install -y nginx
-
-RUN chmod -R 777 /var/lib/nginx
-RUN chmod -R 777 /var/log/nginx
-RUN touch /run/nginx.pid
-RUN chmod 777 /run/nginx.pid
+RUN apt-get update && \
+    apt-get install -y mono-fastcgi-server4 && \
+    apt-get install -y nginx && \
+    touch /run/nginx.pid && \
+    groupadd nginx && \
+    chgrp -R nginx /var/lib/nginx && \
+    chgrp -R nginx /var/log/nginx && \
+    chgrp nginx /run/nginx.pid && \
+    chmod -R 474 /var/lib/nginx && \
+    chmod -R 474 /var/log/nginx && \
+    chmod 474 /run/nginx.pid
 
 WORKDIR /usr/src/onbase-docs-api/
 COPY . .

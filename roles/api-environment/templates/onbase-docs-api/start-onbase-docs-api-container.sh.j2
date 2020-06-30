@@ -58,12 +58,14 @@ docker run -d \
            --volume /apis/keytool_files/onbase-docs-api:$workdir/keytool_files:ro \
            --volume $config_dir/api-config.yaml:$workdir/OnBaseDocsApi/api-config.yaml:ro \
            --volume $api_dir:$workdir \
-           --network host \
+           --volume {{ nginx_conf_dest }}:$workdir/conf/nginx.conf \
+           -p $port:{{ nginx_port }} \
            --health-cmd="$health_command" \
            --health-interval {{ container_health_interval_seconds }}s \
            --health-timeout {{ container_health_timeout_seconds }}s \
            --name $container_name \
            --restart on-failure:3 \
+           --group-add nginx \
            onbase-docs-api-run
 
 if [[ ! $(docker ps -q -f name=$container_name) ]]; then

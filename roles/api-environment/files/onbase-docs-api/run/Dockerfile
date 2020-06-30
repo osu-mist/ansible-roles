@@ -1,7 +1,15 @@
-FROM mono:6.6
+FROM mono:latest
 
-WORKDIR /usr/src/$API_NAME
+RUN apt-get update && \
+    apt-get install -y mono-fastcgi-server4 nginx && \
+    touch /run/nginx.pid && \
+    groupadd nginx && \
+    chgrp -R nginx /var/lib/nginx /var/log/nginx /run/nginx.pid && \
+    chmod -R 474 /var/lib/nginx /var/log/nginx /run/nginx.pid
 
-RUN apt-get -y update && apt-get -y install mono-xsp4
+WORKDIR /usr/src/onbase-docs-api/
+COPY . .
 
-CMD /usr/src/onbase-docs-api/docker-run-onbase-docs-api.sh
+CMD cd OnBaseDocsApi && \
+    nginx -c /usr/src/onbase-docs-api/conf/nginx.conf && \
+    fastcgi-mono-server4 /applications=/:/usr/src/onbase-docs-api/OnBaseDocsApi /socket=tcp:127.0.0.1:8000

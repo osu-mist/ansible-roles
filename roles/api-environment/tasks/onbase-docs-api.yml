@@ -30,10 +30,16 @@
       - { script: "{{ start_onbase_docs_api_container_script }}", mode: "0554" }
       - { script: "{{ docker_run_onbase_docs_api_script }}", mode: "0754" }
 
+  - name: "Ensure nginx conf path exists"
+    file:
+      path: "{{ nginx_conf_path }}"
+      recurse: yes
+      state: directory
+
   - name: "copy nginx.conf"
     template:
       src: "onbase-docs-api/nginx.conf.j2"
-      dest: "{{ api_home }}/conf/nginx.conf"
+      dest: "{{ nginx_conf_dest }}"
       group: "{{ api_group }}"
       owner: "{{ api_user }}"
       mode: "744"

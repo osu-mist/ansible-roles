@@ -16,6 +16,7 @@ http {
         root                /usr/src/onbase-docs-api/OnBaseDocsApi;
         ssl_certificate     {{ nginx_cert }};
         ssl_certificate_key {{ nginx_cert_key }};
+        client_max_body_size 25M;
 
         location / {
             fastcgi_index Index.aspx;

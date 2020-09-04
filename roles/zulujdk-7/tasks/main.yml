@@ -1,0 +1,11 @@
+---
+  - name: register {{ sdkman_dir }}candidates/java/{{ java_version_7 }}
+    stat:
+      path: "{{ sdkman_dir }}candidates/java/{{ java_version_7 }}"
+    register: reg_java_7
+
+  - name: install java {{ java_version_7 }}
+    #command: bash -lc "source $HOME/.sdkman/bin/sdkman-init.sh && sdk install java {{ java_version_7 }}"
+    command: bash -lc "sdk install java {{ java_version_7 }}"
+    when: reg_java_7.stat.exists == False
+    become_user: jenkins

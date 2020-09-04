@@ -1,0 +1,1 @@
+sdkman_dir: "{{ jenkins_home }}.sdkman/"

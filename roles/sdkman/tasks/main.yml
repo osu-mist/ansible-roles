@@ -1,0 +1,39 @@
+---
+  - name: install zip
+    apt:
+      name: zip
+
+  - name: install unzip
+    apt:
+      name: unzip
+
+  - name: register {{ sdkman_dir }}
+    stat:
+      path: "{{ sdkman_dir }}"
+    register: reg_sdkman_dir
+
+  - name: download sdkman installation script
+    get_url:
+      url: http://get.sdkman.io
+      dest: "{{ jenkins_home }}sdk_install.sh"
+      mode: 0775
+      owner: jenkins
+      group: jenkins
+    when: reg_sdkman_dir.stat.exists == False
+
+  - name: run sdkman script
+    command: "{{ jenkins_home }}sdk_install.sh"
+    when: reg_sdkman_dir.stat.exists == False
+    become_user: jenkins
+
+  #- name: run sdkman script
+    #command: bash -lc "source ~/.sdkman/bin/sdkman-init.sh"
+    #when: reg_sdkman_dir.stat.exists == False
+    #become_user: jenkins
+
+  - name: clean up sdkman installation script
+    file:
+      path: "{{ jenkins_home }}sdk_install.sh"
+      state: absent
+    when: reg_sdkman_dir.stat.exists == False
+    become_user: jenkins

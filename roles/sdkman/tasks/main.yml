@@ -26,10 +26,15 @@
     when: reg_sdkman_dir.stat.exists == False
     become_user: jenkins
 
-  #- name: run sdkman script
-    #command: bash -lc "source ~/.sdkman/bin/sdkman-init.sh"
-    #when: reg_sdkman_dir.stat.exists == False
-    #become_user: jenkins
+  - name: Create jenkins .bash_profile
+    blockinfile:
+      path: "{{ jenkins_home }}.bash_profile"
+      block: |
+        if [ -f ~/.bashrc ]; then
+          . ~/.bashrc
+        fi
+      create: yes
+    become_user: jenkins
 
   - name: clean up sdkman installation script
     file:

@@ -1,2 +1,0 @@
-java_version_7: 7.0.262-zulu 
-java_7_home: "{{ jenkins_home }}.sdkman/candidates/java/7.0.262-zulu"

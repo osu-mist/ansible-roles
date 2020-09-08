@@ -1,0 +1,10 @@
+---
+  - name: install zip
+    yum:
+      name: zip
+    when: ansible_distribution == 'CentOS'
+
+  - name: install zip
+    apt:
+      name: zip
+    when: ansible_distribution == 'Debian'

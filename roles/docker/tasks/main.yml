@@ -28,7 +28,7 @@
     state: started
 
 # Install docker-compose which also installs the docker python library required by some ansible docker modules
-- name: install docker-compose
+- name: install docker-py
   pip:
     name: "docker-py"
     state: present

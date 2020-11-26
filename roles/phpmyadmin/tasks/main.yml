@@ -1,0 +1,46 @@
+---
+  - name: "copy dockerfiles to docker script directory"
+    copy:
+      src: "build/"
+      dest: "{{ build_path }}"
+      owner: root
+      group: root
+      mode: "0744"
+      force: yes
+
+  - name: "copy template files for docker build"
+    template:
+      src: "{{ item }}"
+      dest: '{{ build_path }}/{{ item | basename | regex_replace("\.j2$", "") }}'
+      owner: root
+      group: root
+      mode: "0744"
+      force: yes
+    with_fileglob:
+      - ../templates/build/*.j2
+
+  - name: "build phpmyadmin image"
+    docker_image:
+      source: build
+      force_source: yes
+      name: phpmyadmin
+      build:
+        network: host
+        path: "{{ build_path }}"
+        pull: no
+
+  - name: start phpmyadmin container
+    docker_container:
+      name: phpmyadmin
+      image: "phpmyadmin"
+      restart_policy: always
+      env:
+        MYSQL_ROOT_PASSWORD: "{{ mysql_root_password }}"
+        UPLOAD_LIMIT: "32M"
+        PMA_HOST: "127.0.0.1"
+      network_mode: host
+      volumes:
+        - "{{ cert_path }}:{{ container_cert_path }}"
+        - "{{ key_path }}:{{ container_key_path }}"
+      #ports:
+        #- "8080:80"

@@ -1,0 +1,13 @@
+build_path: /opt/phpmyadmin
+myadmin_port: 80
+myadmin_ssl_port: 443
+myadmin_url: "44.237.52.61"
+
+ssl_path: "/etc/ssl"
+cert_name: apache.crt
+cert_path: "{{ ssl_path }}/certs/{{ cert_name }}"
+key_name: apache.key
+key_path: "{{ ssl_path }}/private/{{ key_name }}"
+container_ssl_path: "/etc/ssl"
+container_cert_path: "{{ container_ssl_path }}/certs/{{ cert_name }}"
+container_key_path: "{{ container_ssl_path }}/private/{{ key_name }}"

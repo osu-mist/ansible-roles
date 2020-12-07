@@ -1,13 +1,4 @@
 ---
-  - name: "copy dockerfiles to docker script directory"
-    copy:
-      src: "build/"
-      dest: "{{ build_path }}"
-      owner: root
-      group: root
-      mode: "0744"
-      force: yes
-
   - name: "copy template files for docker build"
     template:
       src: "{{ item }}"
@@ -18,6 +9,18 @@
       force: yes
     with_fileglob:
       - ../templates/build/*.j2
+
+  - name: "copy ssl template files for docker build"
+    template:
+      src: "{{ item }}"
+      dest: '{{ build_path }}/{{ item | basename | regex_replace("\.j2$", "") }}'
+      owner: root
+      group: root
+      mode: "0744"
+      force: yes
+    with_fileglob:
+      - ../templates/build/ssl/*.j2
+    when: myadmin_url is defined
 
   - name: "build phpmyadmin image"
     docker_image:
@@ -39,8 +42,4 @@
         UPLOAD_LIMIT: "32M"
         PMA_HOST: "127.0.0.1"
       network_mode: host
-      volumes:
-        - "{{ cert_path }}:{{ container_cert_path }}"
-        - "{{ key_path }}:{{ container_key_path }}"
-      #ports:
-        #- "8080:80"
+      volumes: "{{ cert_volumes if cert_path is defined and key_path is defined | default(false) else omit }}"

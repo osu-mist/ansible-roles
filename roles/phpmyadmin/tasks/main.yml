@@ -39,7 +39,7 @@
       restart_policy: always
       env:
         MYSQL_ROOT_PASSWORD: "{{ mysql_root_password }}"
-        UPLOAD_LIMIT: "32M"
-        PMA_HOST: "127.0.0.1"
+        UPLOAD_LIMIT: "{{ upload_limit }}"
+        PMA_HOST: "{{ pma_host }}"
       network_mode: host
       volumes: "{{ cert_volumes if cert_path is defined and key_path is defined | default(false) else omit }}"

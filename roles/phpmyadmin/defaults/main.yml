@@ -4,7 +4,7 @@ myadmin_ssl_port: 443
 pma_host: 127.0.0.1
 upload_limit: 32M
 
-container_ssl_path: "/etc/ssl"
+container_ssl_path: /etc/ssl
 container_cert_path: "{{ container_ssl_path }}/certs/apache.crt"
 container_key_path: "{{ container_ssl_path }}/private/apache.key"
 cert_volumes:

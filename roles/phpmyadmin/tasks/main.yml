@@ -1,5 +1,10 @@
 ---
-  - name: "copy template files for docker build"
+  - name: create build path directory
+    file:
+      path: "{{ build_path }}"
+      state: directory
+
+  - name: copy template files for docker build
     template:
       src: "{{ item }}"
       dest: '{{ build_path }}/{{ item | basename | regex_replace("\.j2$", "") }}'
@@ -10,7 +15,7 @@
     with_fileglob:
       - ../templates/build/*.j2
 
-  - name: "copy ssl template files for docker build"
+  - name: copy optional ssl template files for docker build
     template:
       src: "{{ item }}"
       dest: '{{ build_path }}/{{ item | basename | regex_replace("\.j2$", "") }}'
@@ -22,7 +27,7 @@
       - ../templates/build/ssl/*.j2
     when: myadmin_url is defined
 
-  - name: "build phpmyadmin image"
+  - name: build phpmyadmin image
     docker_image:
       source: build
       force_source: yes
@@ -35,7 +40,7 @@
   - name: start phpmyadmin container
     docker_container:
       name: phpmyadmin
-      image: "phpmyadmin"
+      image: phpmyadmin
       restart_policy: always
       env:
         MYSQL_ROOT_PASSWORD: "{{ mysql_root_password }}"

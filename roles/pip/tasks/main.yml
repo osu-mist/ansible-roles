@@ -17,6 +17,12 @@
       update_cache: yes
     when: ansible_distribution == 'Debian'
 
+  - name: install pip (Ubuntu)
+    apt:
+      name: python3-pip
+      update_cache: yes
+    when: ansible_distribution == 'Ubuntu'
+
   - name: update pip and pip packages
     pip:
       name: "{{ item.name }}"

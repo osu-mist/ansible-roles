@@ -1,4 +1,16 @@
 ---
+- name: set variables for debian
+  set_fact:
+    apt_repo: "{{ debian_apt_repo }}"
+    docker_ce_version: "{{ debian_docker_ce_version }}"
+  when: 'ansible_distribution == "Debian"'
+
+- name: set variables for ubuntu
+  set_fact:
+    apt_repo: "{{ ubuntu_apt_repo }}"
+    docker_ce_version: "{{ ubuntu_docker_ce_version }}"
+  when: 'ansible_distribution == "Ubuntu"'
+
 - name: ensure old versions of Docker are not present
   package:
     name: '{{ item }}'
@@ -21,14 +33,14 @@
 
 - name: add docker repo
   apt_repository:
-    repo: 'deb [arch=amd64] {{ debian_apt_repo }} {{ ansible_distribution_release }} stable'
+    repo: 'deb [arch=amd64] {{ apt_repo }} {{ ansible_distribution_release }} stable'
     filename: docker
     state: present
     update_cache: true
 
 - name: install docker
   apt:
-    name: '{{ docker_ce_pkg_name }}={{ debian_docker_ce_version }}'
+    name: '{{ docker_ce_pkg_name }}={{ docker_ce_version }}'
     state: present
     update_cache: true
 
@@ -37,5 +49,5 @@
     dest: /etc/apt/preferences.d/{{ docker_ce_pkg_name }}
     content: |
       Package: {{ docker_ce_pkg_name }}
-      Pin: version {{ debian_docker_ce_version }}
+      Pin: version {{ docker_ce_version }}
       Pin-Priority: 1002

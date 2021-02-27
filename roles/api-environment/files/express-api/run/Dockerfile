@@ -26,6 +26,6 @@ RUN yum -y install oracle-nodejs-release-el7 && \
 # Sets npm prefix to writable volume
 # npm update notifier is disabled as it does not respect prefix
 CMD cd /usr/src/$API_NAME && \
-    export UV_THREADPOOL_SIZE=20 \
+    export UV_THREADPOOL_SIZE=20 && \
     npm config set prefix /usr/src/$API_NAME --no-update-notifier && \
     npx pm2-runtime pm2.yaml --no-auto-exit

@@ -7,5 +7,3 @@ apps:
     exp_backoff_restart_delay: 100
     # Change from NODE_APP_INSTANCE to avoid config warning
     instance_var: 'INSTANCE_ID'
-    env:
-      UV_THREADPOOL_SIZE: 20

@@ -39,6 +39,7 @@ gulp_cli_version: "^2.2.0"
 oracle_release: 19
 oracle_update: 5
 node_version: "10.17"
+uv_threadpool_size: 20
 
 # variables for onbase-docs api
 onbase_docs_api: false

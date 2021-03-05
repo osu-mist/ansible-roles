@@ -51,7 +51,6 @@ docker run -d \
            --env API_NAME=$api_name \
            --env PM2_HOME=$workdir/.pm2 \
            --env NPM_CONFIG_USERCONFIG=$workdir/.npmrc \
-           --env UV_THREADPOOL_SIZE=20 \
            --env-file $env_path \
            --volume /apis/keytool_files:$workdir/keytool_files:ro \
            --volume $config_dir:$workdir/config:ro \

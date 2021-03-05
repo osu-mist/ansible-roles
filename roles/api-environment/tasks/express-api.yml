@@ -55,4 +55,5 @@
           oracle_release: "{{ oracle_release }}"
           oracle_update: "{{ oracle_update }}"
           node_version: "{{ node_version }}"
+          uv_threadpool_size: "{{ uv_threadpool_size }}"
         pull: no

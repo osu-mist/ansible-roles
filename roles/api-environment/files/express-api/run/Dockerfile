@@ -21,7 +21,8 @@ ENV PATH=$PATH:/usr/lib/oracle/${oracle_release}.${oracle_update}/client64/bin
 ENV UV_THREADPOOL_SIZE=${uv_threadpool_size}
 # Install Node.JS 10 and git
 RUN yum -y install oracle-nodejs-release-el7 && \
-    yum -y install nodejs-${node_version}* && \
+    yum-config-manager --enable ol7_developer_nodejs${node_version} && \
+    yum -y install node-oracledb-node${node_version} && \
     yum -y install git
 
 # Run API

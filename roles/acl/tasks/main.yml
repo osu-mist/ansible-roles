@@ -1,0 +1,10 @@
+---
+  - name: install acl (CentOS)
+    yum:
+      name: acl
+    when: ansible_distribution == 'CentOS'
+
+  - name: install acl (Debian)
+    apt:
+      name: acl
+    when: ansible_distribution == 'Debian'

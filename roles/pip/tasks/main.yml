@@ -6,7 +6,9 @@
 
   - name: install pip (CentOS)
     yum:
-      name: python-pip
+      name: 
+        - python-pip
+        - python-typing
       state: installed
       update_cache: yes
     when: ansible_distribution == 'CentOS'
@@ -26,6 +28,11 @@
       - { name: pip, version: "{{ pip_version }}"}
       - { name: requests, version: "{{ requests_version }}"}
       - { name: pyOpenSSL, version: "{{ pyopenssl_version }}"}
+
+  - name: upgrade pip to fix broken pip2 on debian flex
+    shell:
+      cmd: python -m pip install --upgrade pip
+    when: ansible_distribution_release == 'Flex'
 
   - name: upgrade specific pip on ubuntu to fix docker-compose issue
     shell:

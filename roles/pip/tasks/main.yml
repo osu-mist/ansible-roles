@@ -11,17 +11,11 @@
       update_cache: yes
     when: ansible_distribution == 'CentOS'
 
-  - name: install pip (Debian)
-    apt:
-      name: python-pip
-      update_cache: yes
-    when: ansible_distribution == 'Debian'
-
-  - name: install pip (Ubuntu)
+  - name: install pip (apt)
     apt:
       name: python3-pip
       update_cache: yes
-    when: ansible_distribution == 'Ubuntu'
+    when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
 
   - name: update pip and pip packages
     pip:
@@ -32,3 +26,8 @@
       - { name: pip, version: "{{ pip_version }}"}
       - { name: requests, version: "{{ requests_version }}"}
       - { name: pyOpenSSL, version: "{{ pyopenssl_version }}"}
+
+  - name: upgrade specific pip on ubuntu to fix docker-compose issue
+    shell:
+      cmd: /usr/bin/python3.6 -m pip install --upgrade pip
+    when: ansible_distribution == 'Ubuntu'

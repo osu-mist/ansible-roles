@@ -1,26 +1,27 @@
 ---
   # Not having all of these packages installed may cause issues with the installation process
-  - name: install required packages (Debian)
+  - name: install required packages (apt)
     apt:
-      name: "{{ item }}"
-    with_items:
-      - "make"
-      - "build-essential"
-      - "libssl-dev"
-      - "zlib1g-dev"
-      - "libbz2-dev"
-      - "libreadline-dev"
-      - "libsqlite3-dev"
-      - "wget"
-      - "curl"
-      - "llvm"
-      - "libncurses5-dev"
-      - "libncursesw5-dev"
-      - "xz-utils"
-      - "tk-dev"
-      - "libffi-dev"
-      - "liblzma-dev"
-    when: ansible_distribution == "Debian"
+      name:
+        - "python-apt"
+        - "make"
+        - "build-essential"
+        - "libssl-dev"
+        - "zlib1g-dev"
+        - "libbz2-dev"
+        - "libreadline-dev"
+        - "libsqlite3-dev"
+        - "wget"
+        - "curl"
+        - "llvm"
+        - "libncurses5-dev"
+        - "libncursesw5-dev"
+        - "xz-utils"
+        - "tk-dev"
+        - "libffi-dev"
+        - "liblzma-dev"
+        - "python3-apt"
+    when: ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"
 
   - name: install required packages (CentOS)
     yum:
@@ -56,7 +57,7 @@
     with_items:
       - { target: "/usr/local/bin/{{ python_3_executable }}", link: "/usr/local/bin/python3" }
       - { target: "/usr/local/bin/{{ pip_3_executable }}", link: "/usr/local/bin/pip3" }
-    when: ansible_distribution == "Debian"
+    when: ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"
 
   - name: set python3 and pip3 symbolic links (CentOS)
     file:
@@ -68,9 +69,3 @@
       - { target: "/usr/local/bin/{{ python_3_executable }}", link: "/usr/bin/python3" }
       - { target: "/usr/local/bin/{{ pip_3_executable }}", link: "/usr/bin/pip3" }
     when: ansible_distribution == "CentOS"
-
-  - name: upgrade pip3 to specified version
-    pip:
-      executable: pip3
-      name: pip
-      version: "{{ pip_3_version }}"

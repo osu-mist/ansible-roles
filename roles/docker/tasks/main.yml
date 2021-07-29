@@ -34,3 +34,23 @@
     name: docker-compose
     state: present
   when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+
+# Ansible docker modules sometimes forcibly uses python2, install docker-py for that case
+- name: install docker with pip2 (Debian)
+  pip:
+    executable: pip2
+    name:
+      - docker
+    state: present
+  when: ansible_distribution == 'Debian'
+
+# Ubuntu pip2 path doesnt set correctly
+- name: install docker with pip2 (Ubuntu)
+  shell:
+    cmd: /usr/bin/python3.6 -m pip install docker-compose
+  when: ansible_distribution == 'Ubuntu'
+
+- name: install docker with pip (CentOS)
+  pip:
+    name: docker
+  when: ansible_distribution == 'CentOS'

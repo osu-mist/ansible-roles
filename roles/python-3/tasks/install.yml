@@ -4,6 +4,7 @@
     apt:
       name:
         - "python-apt"
+        - "python3-apt"
         - "make"
         - "build-essential"
         - "libssl-dev"
@@ -20,7 +21,6 @@
         - "tk-dev"
         - "libffi-dev"
         - "liblzma-dev"
-        - "python3-apt"
     when: ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"
 
   - name: install required packages (CentOS)

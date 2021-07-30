@@ -1,7 +1,7 @@
 ---
-pip_version_default: "21.1.3"
+pip_version_debian: "21.1.3"
+pip_version_ubuntu: "21.1.3"
 pip_version_centos: "20.0.1"
-pip_version: "{{ (ansible_distribution == 'CentOS') | ternary(pip_version_centos, pip_version_default) }}"
 
 pyopenssl_version: "16.2.0"
 

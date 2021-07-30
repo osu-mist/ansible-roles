@@ -19,6 +19,21 @@
       update_cache: yes
     when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
 
+  - name: set pip version (CentOS)
+    set_fact:
+      pip_version: "{{ pip_version_centos }}"
+    when: ansible_distribution == 'CentOS'
+
+  - name: set pip version (Debian)
+    set_fact:
+      pip_version: "{{ pip_version_debian }}"
+    when: ansible_distribution == 'Debian'
+
+  - name: set pip version (Ubuntu)
+    set_fact:
+      pip_version: "{{ pip_version_ubuntu }}"
+    when: ansible_distribution == 'Ubuntu'
+
   - name: update pip and pip packages
     pip:
       name: "{{ item.name }}"

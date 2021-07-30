@@ -1,5 +1,7 @@
 ---
-pip_version: "18.0"
+pip_version_debian: "21.1.3"
+pip_version_ubuntu: "21.1.3"
+pip_version_centos: "20.0.1"
 
 pyopenssl_version: "16.2.0"
 

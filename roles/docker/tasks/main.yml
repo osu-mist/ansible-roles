@@ -30,5 +30,28 @@
 # Install docker-compose which also installs the docker python library required by some ansible docker modules
 - name: install docker-compose
   pip:
+    executable: pip3
     name: docker-compose
     state: present
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+
+# Ansible docker modules sometimes forcibly uses python2, install docker-py for that case
+- name: install docker with pip2 (Debian)
+  pip:
+    executable: pip2
+    name:
+      - docker
+    state: present
+  when: ansible_distribution == 'Debian'
+
+# Ansible docker modules are forcibly using python3.6 so install docker-compose for that
+- name: install docker-compose with python3 used by ansible_docker (Ubuntu)
+  shell:
+    cmd: /usr/bin/python3.6 -m pip install docker-compose
+  when: ansible_distribution == 'Ubuntu'
+
+# CentOS is using python2 and must use docker instead of docker-compose
+- name: install docker with pip (CentOS)
+  pip:
+    name: docker
+  when: ansible_distribution == 'CentOS'

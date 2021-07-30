@@ -44,12 +44,13 @@
     state: present
   when: ansible_distribution == 'Debian'
 
-# Ubuntu pip2 path doesnt set correctly
-- name: install docker with pip2 (Ubuntu)
+# Ansible docker modules are forcibly using python3.6 so install docker-compose for that
+- name: install docker-compose with python3 used by ansible_docker (Ubuntu)
   shell:
     cmd: /usr/bin/python3.6 -m pip install docker-compose
   when: ansible_distribution == 'Ubuntu'
 
+# CentOS is using python2 and must use docker instead of docker-compose
 - name: install docker with pip (CentOS)
   pip:
     name: docker

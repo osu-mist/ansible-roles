@@ -32,7 +32,7 @@
   - name: upgrade pip to fix broken pip2 on debian flex
     shell:
       cmd: python -m pip install --upgrade pip
-    when: ansible_distribution_release == 'Flex'
+    when: ansible_distribution == 'Debian' and ansible_distribution_release == 'Flex'
 
   - name: upgrade specific pip on ubuntu to fix docker-compose issue
     shell:

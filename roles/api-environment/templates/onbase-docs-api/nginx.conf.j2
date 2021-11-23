@@ -11,8 +11,12 @@ http {
     keepalive_timeout  65;
 
     server {
+        # ipv4
         listen              {{ nginx_port }} ssl;
-        server_name         localhost;
+        # ipv6
+        listen              [::]:{{ nginx_port }} ssl;
+
+        server_name         localhost *.oregonstate.edu;
         root                /usr/src/onbase-docs-api/OnBaseDocsApi;
         ssl_certificate     {{ nginx_cert }};
         ssl_certificate_key {{ nginx_cert_key }};

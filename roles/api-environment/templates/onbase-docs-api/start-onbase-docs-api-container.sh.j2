@@ -59,7 +59,7 @@ docker run -d \
            --volume $config_dir/api-config.yaml:$workdir/OnBaseDocsApi/api-config.yaml:ro \
            --volume $api_dir:$workdir \
            --volume {{ nginx_conf_dest }}:$workdir/conf/nginx.conf \
-           -p $port:{{ nginx_port }} \
+           --network host \
            --health-cmd="$health_command" \
            --health-interval {{ container_health_interval_seconds }}s \
            --health-timeout {{ container_health_timeout_seconds }}s \

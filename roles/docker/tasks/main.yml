@@ -8,6 +8,10 @@
   include: apt.yml
   when: 'ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"'
 
+- name: OracleLinux
+  include: oraclelinux.yml
+  when: 'ansible_distribution == "OracleLinux"'
+
 - name: create /etc/docker directory
   file:
     path: /etc/docker
@@ -32,3 +36,4 @@
   pip:
     name: docker-compose
     state: present
+  when: ansible_distribution != 'OracleLinux'

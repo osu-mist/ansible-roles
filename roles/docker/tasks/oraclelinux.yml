@@ -1,0 +1,30 @@
+---
+  - name: Install required packages
+    dnf:
+      name:
+        - dnf-utils
+        - zip
+        - unzip
+      state: latest
+
+  - name: Uninstall runc
+    dnf:
+      name: runc
+      state: absent
+
+  - name: Add docker repository
+    yum_repository:
+      name: docker-ce-stable
+      description: docker CE repository
+      baseurl: https://download.docker.com/linux/centos/$releasever/$basearch/stable
+
+  - name: Install docker
+    dnf:
+      name:
+        - docker-ce
+      state: latest
+
+  - name: install docker for python
+    pip:
+      name: docker
+      state: present

@@ -23,6 +23,12 @@
       update_cache: yes
     when: ansible_distribution == 'Ubuntu'
 
+  - name: Install pip (OracleLinux)
+    yum:
+      name: python3-pip
+      state: latest
+    when: ansible_distribution == 'OracleLinux'
+
   - name: update pip and pip packages
     pip:
       name: "{{ item.name }}"
@@ -32,3 +38,4 @@
       - { name: pip, version: "{{ pip_version }}"}
       - { name: requests, version: "{{ requests_version }}"}
       - { name: pyOpenSSL, version: "{{ pyopenssl_version }}"}
+    when: ansible_distribution != 'OracleLinux'

@@ -20,8 +20,7 @@
 
   - name: Install docker
     dnf:
-      name:
-        - docker-ce
+      name: docker-ce
       state: latest
 
   - name: install docker for python

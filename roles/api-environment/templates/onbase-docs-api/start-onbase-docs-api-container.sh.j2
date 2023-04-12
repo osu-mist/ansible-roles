@@ -57,6 +57,7 @@ docker run -d \
            --volume {{ api_home }}/{{ docker_run_onbase_docs_api_script }}:$workdir/{{ docker_run_onbase_docs_api_script }}:ro \
            --volume /apis/keytool_files/onbase-docs-api:$workdir/keytool_files:ro \
            --volume $config_dir/api-config.yaml:$workdir/OnBaseDocsApi/api-config.yaml:ro \
+           --volume $config_dir/log4net.config:$workdir/OnBaseDocsApi/log4net.config:ro \
            --volume $api_dir:$workdir \
            --volume {{ nginx_conf_dest }}:$workdir/conf/nginx.conf \
            --network host \
